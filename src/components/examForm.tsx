@@ -6,7 +6,12 @@ import {
     ModalBody, 
     Button,
     Input,
-    FormLabel
+    FormLabel,
+    FormControl,
+    FormErrorMessage,
+    RadioGroup,
+    HStack,
+    Radio
 } from "@chakra-ui/react";
 
 import { useForm } from "react-hook-form";
@@ -14,7 +19,7 @@ import { useForm } from "react-hook-form";
 
 export type ExamFormModel = {
     name: string,
-    date: Date,
+    date: string,
 
 }
 
@@ -26,8 +31,9 @@ const ExamForm = () => {
         formState: {errors, isSubmitting},
     } = useForm<ExamFormModel>();
 
-    const onSubmit = () => {
-
+    const onSubmit = (values: ExamFormModel) => {
+        const {name, date} = values;
+        alert(name + date)
     }
 
 
@@ -38,21 +44,43 @@ const ExamForm = () => {
             </ModalHeader>
             <ModalBody>
                 <form id="exam-form" onSubmit={handleSubmit(onSubmit)}>
-                    <FormLabel> nazwa egzaminu: </FormLabel>
-                    <Input
-                        id="name"
-                        placeholder="name"
-                        {...register(
-                            'name', {
-                                required: "This is required!"
-                            }
-                        )}
-                    />
+                    <FormControl isInvalid={errors.name?.message != null}>
+                        <FormLabel> nazwa: </FormLabel>
+                        <Input
+                            id="name"
+                            placeholder="name"
+                            {...register(
+                                'name', {
+                                    required: "Pole nie może być puste!"
+                                }
+                            )} />
+                        <FormErrorMessage> {errors.name && errors.name?.message} </FormErrorMessage>
+                    </FormControl>
+                    <FormControl>
+                        <FormLabel> rodzaj: </FormLabel>
+                        <RadioGroup>
+                            <HStack>
+                                <Radio value="podstawa">podstawowy</Radio>
+                                <Radio value="rozszerzenie">rozszerzony</Radio>
+                                <Radio value="ustny">ustny</Radio>
+                            </HStack>
+                        </RadioGroup>
+                    </FormControl>
+                    <FormControl isInvalid={errors.date?.message != null}>
+                        <FormLabel> data: </FormLabel>
+                        <Input
+                            id="date"
+                            type="date"
+                            {...register(
+                                'date', {
+                                    required: "Pole nie może być puste!"
+                                }
+                            )} />
+                        <FormErrorMessage> {errors.date && errors.date?.message}</FormErrorMessage>
+                    </FormControl>
+                    <Button type="submit" id="exam-form" isLoading={isSubmitting}>Zatwierdź!</Button>
                 </form>
             </ModalBody>
-            <ModalFooter>
-                <Button type="submit" id="exam-form" isLoading={isSubmitting}>Zatwierdź!</Button>
-            </ModalFooter>
         </ModalContent>
     )
 }
