@@ -4,7 +4,7 @@ function App() {
 
   return (
     <ChakraProvider>
-      <Button>test</Button>
+      <Button>Start</Button>
     </ChakraProvider>
   )
 }
