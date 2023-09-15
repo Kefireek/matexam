@@ -20,10 +20,10 @@ function App() {
   return (
     <ChakraProvider theme={theme}>
       <Button>Start</Button>
-    <ChakraProvider>
-      
     </ChakraProvider>
   )
+
 }
+
 
 export default App
