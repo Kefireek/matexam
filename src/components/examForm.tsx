@@ -35,8 +35,7 @@ const ExamForm = () => {
         const {name, date} = values;
         alert(name + date)
     }
-
-
+    
     return (
         <ModalContent>
             <ModalHeader>
