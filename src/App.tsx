@@ -1,4 +1,4 @@
-import { Button, ChakraProvider } from "@chakra-ui/react"
+import { Button, ChakraProvider, Modal, ModalOverlay, useDisclosure } from "@chakra-ui/react"
 
 import { extendTheme, type ThemeConfig } from '@chakra-ui/react'
 
@@ -16,10 +16,12 @@ const theme = extendTheme({ config,
   }, })
 
 function App() {
-
+  
   return (
     <ChakraProvider theme={theme}>
       <Button>Start</Button>
+    <ChakraProvider>
+      
     </ChakraProvider>
   )
 }
