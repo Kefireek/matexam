@@ -2,6 +2,7 @@ import { Button, ChakraProvider, Modal, ModalOverlay, useDisclosure } from "@cha
 
 import { extendTheme, type ThemeConfig } from '@chakra-ui/react'
 import ExamForm from "./components/examForm"
+import LeftMenu from "./components/shared/leftMenu"
 
 // 2. Add your color mode config
 const config: ThemeConfig = {
@@ -20,15 +21,11 @@ const theme = extendTheme({ config,
 
 function App() {
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  
 
   return (
     <ChakraProvider theme={theme}>
-      <Button onClick={onOpen}>Start</Button>
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay/>
-        <ExamForm/>
-      </Modal>
+      <LeftMenu />
     </ChakraProvider>
   )
 
