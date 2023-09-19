@@ -1,5 +1,5 @@
 import { useDisclosure } from '@chakra-ui/react'
-import ExamForm from '../examForm'
+import ExamForm from '../examForm.tsx'
 import {
     Text,
     Box,
@@ -16,16 +16,15 @@ import {
 
 function LeftMenu() {
 
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen, onOpen, onClose } = useDisclosure();
      
     return(
-        <Box border="1px solid white" width="10vw" height="100vh" position="fixed">
+        <Box borderRight="1px solid white" width="10vw" height="100vh" position="fixed">
             <Text fontSize="40">matExam</Text>
-            <Button onClick={onOpen}>Open Modal</Button>
-
+            <Button onClick={onOpen} margin="3">Dodaj egzamin</Button>
             <Modal isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
-                <ExamForm />
+                <ModalOverlay/>
+                <ExamForm/>
             </Modal>
 
             <Accordion allowMultiple>
