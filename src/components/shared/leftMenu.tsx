@@ -14,9 +14,17 @@ import {
     Divider
   } from '@chakra-ui/react'
 
+import { useColorMode } from '@chakra-ui/react';
+
+import { useNavigate } from 'react-router-dom';
+
 function LeftMenu() {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
+
+    const { colorMode, toggleColorMode } = useColorMode()
+
+    const navigate = useNavigate();
      
     return(
         <Box borderRight="1px solid white" width="10vw" height="100vh" position="fixed">
@@ -60,6 +68,10 @@ function LeftMenu() {
                     </AccordionPanel>
                 </AccordionItem>
             </Accordion>
+            <Button onClick={()=> navigate("/login")} margin="3">Zaloguj się</Button>
+            <Button onClick={toggleColorMode}>
+                {colorMode === 'light' ? 'Ciemny' : 'Jasny'} motyw
+            </Button>
         </Box>
     )
 }
