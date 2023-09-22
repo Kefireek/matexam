@@ -1,4 +1,4 @@
-import { Button, ChakraProvider, Modal, ModalOverlay, useDisclosure, Spinner } from "@chakra-ui/react"
+import { Button, ChakraProvider, Modal, ModalOverlay, useDisclosure, Spinner, Box, HStack, VStack, ModalBody, ModalContent, Center } from "@chakra-ui/react"
 import { extendTheme, type ThemeConfig } from '@chakra-ui/react'
 import LeftMenu from "./components/shared/leftMenu"
 import { getPage } from "./services/AuthService"
@@ -23,11 +23,16 @@ function App() {
 
   const [loading, setLoading] = useState<boolean>(true);
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   useEffect(() => {
+    onOpen()
     getPage()
     .then(
       () => {
         setLoading(false);
+        onClose()
+        
       }
     )
     .catch(
@@ -41,7 +46,19 @@ function App() {
   return (
     <ChakraProvider theme={theme}>
       <LeftMenu />
-      {loading && <Spinner size="md"/> }
+      <Box>
+        {loading &&
+        <Modal isOpen={isOpen} onClose={onClose} isCentered>
+          <ModalContent>
+            <ModalOverlay/>
+            <ModalBody>
+              <VStack>
+                <Spinner size="md"/> 
+              </VStack>
+            </ModalBody>
+          </ModalContent>
+        </Modal>}
+      </Box>
     </ChakraProvider>
   )
 
