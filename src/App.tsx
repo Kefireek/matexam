@@ -1,8 +1,9 @@
-import { Button, ChakraProvider, Modal, ModalOverlay, useDisclosure, Spinner, Box, HStack, VStack, ModalBody, ModalContent, Center } from "@chakra-ui/react"
+import { Button, ChakraProvider, Modal, ModalOverlay, useDisclosure, Spinner, Box, HStack, VStack, ModalBody, ModalContent, Center, useColorMode, useColorModeValue } from "@chakra-ui/react"
 import { extendTheme, type ThemeConfig } from '@chakra-ui/react'
 import LeftMenu from "./components/shared/leftMenu"
 import { getPage } from "./services/AuthService"
 import { useState, useEffect } from "react"
+import ModalSpinner from "./components/modalSpinner"
 
 // 2. Add your color mode config
 const config: ThemeConfig = {
@@ -49,14 +50,7 @@ function App() {
       <Box>
         {loading &&
         <Modal isOpen={isOpen} onClose={onClose} isCentered>
-          <ModalContent>
-            <ModalOverlay/>
-            <ModalBody>
-              <VStack>
-                <Spinner size="md"/> 
-              </VStack>
-            </ModalBody>
-          </ModalContent>
+          <ModalSpinner/>
         </Modal>}
       </Box>
     </ChakraProvider>
