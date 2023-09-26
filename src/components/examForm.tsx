@@ -42,7 +42,7 @@ const ExamForm = () => {
             </ModalHeader>
             <ModalBody>
                 <form id="exam-form" onSubmit={handleSubmit(onSubmit)}>
-                    <FormControl isInvalid={errors.name?.message != null} mb="6">
+                    <FormControl isInvalid={errors.name?.message != null} mb="5">
                         <FormLabel> nazwa </FormLabel>
                         <Input
                             id="name"
