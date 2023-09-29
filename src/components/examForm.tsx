@@ -42,11 +42,11 @@ const ExamForm = () => {
             </ModalHeader>
             <ModalBody>
                 <form id="exam-form" onSubmit={handleSubmit(onSubmit)}>
-                    <FormControl isInvalid={errors.name?.message != null}>
-                        <FormLabel> nazwa: </FormLabel>
+                    <FormControl isInvalid={errors.name?.message != null} mb="5">
+                        <FormLabel> nazwa </FormLabel>
                         <Input
                             id="name"
-                            placeholder="name"
+                            placeholder="nawa"
                             {...register(
                                 'name', {
                                     required: "Pole nie może być puste!"
@@ -54,18 +54,18 @@ const ExamForm = () => {
                             )} />
                         <FormErrorMessage> {errors.name && errors.name?.message} </FormErrorMessage>
                     </FormControl>
-                    <FormControl>
-                        <FormLabel> rodzaj: </FormLabel>
+                    <FormControl mb="5">
+                        <FormLabel> rodzaj </FormLabel>
                         <RadioGroup>
                             <HStack>
-                                <Radio value="podstawa">podstawowy</Radio>
-                                <Radio value="rozszerzenie">rozszerzony</Radio>
+                                <Radio value="podstawa" defaultChecked>podstawowy</Radio>
+                                <Radio value="rozszerzenie" >rozszerzony</Radio>
                                 <Radio value="ustny">ustny</Radio>
                             </HStack>
                         </RadioGroup>
                     </FormControl>
-                    <FormControl isInvalid={errors.date?.message != null}>
-                        <FormLabel> data: </FormLabel>
+                    <FormControl isInvalid={errors.date?.message != null} mb="5">
+                        <FormLabel> data </FormLabel>
                         <Input
                             id="date"
                             type="date"
