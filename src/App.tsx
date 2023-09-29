@@ -30,7 +30,7 @@ function App() {
   
 
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider>
       <LeftMenu />
       <Box>
         {loading &&
