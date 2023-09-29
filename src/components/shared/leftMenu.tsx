@@ -1,4 +1,5 @@
 import { useDisclosure } from '@chakra-ui/react'
+import { MoonIcon, SunIcon } from '@chakra-ui/icons'
 import ExamForm from '../examForm.tsx'
 import {
     Text,
@@ -28,7 +29,7 @@ function LeftMenu() {
      
     return(
         <Box borderRight="1px solid white" width="10vw" height="100vh" position="fixed">
-            <Text fontSize="40">matExam</Text>
+            <Text fontSize="4xl">matExam</Text>
             <Button onClick={onOpen} margin="3">Dodaj egzamin</Button>
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay/>
@@ -70,7 +71,7 @@ function LeftMenu() {
             </Accordion>
             <Button onClick={()=> navigate("/login")} margin="3">Zaloguj się</Button>
             <Button onClick={toggleColorMode}>
-                {colorMode === 'light' ? 'Ciemny' : 'Jasny'} motyw
+            {colorMode === 'light' ? <MoonIcon></MoonIcon> : <SunIcon></SunIcon>}
             </Button>
         </Box>
     )
