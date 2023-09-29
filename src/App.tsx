@@ -32,7 +32,7 @@ function App() {
 
   return (
     <>
-    <LeftMenu />
+      <LeftMenu />
       <Box>
         {loading &&
         <Modal isOpen={isOpen} onClose={onClose} isCentered>
