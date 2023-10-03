@@ -1,3 +1,4 @@
+
 import { Modal, useDisclosure, Box } from "@chakra-ui/react"
 import LeftMenu from "./components/shared/leftMenu"
 import { getPage } from "./services/api/healthCheck/HealthCheckService"
