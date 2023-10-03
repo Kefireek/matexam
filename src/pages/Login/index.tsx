@@ -11,6 +11,8 @@ import {
   Button,
 } from '@chakra-ui/react'
 
+import AuthAPIService from '../../services/api/auth/AuthAPIService';
+
 export default function HookForm() {
   const {
     handleSubmit,
@@ -23,28 +25,15 @@ export default function HookForm() {
 
   const navigate = useNavigate();
 
-  const onSubmit = (e) =>{
-        e.preventDefault();
-        const body = JSON.stringify({
-            "login": login,
-            "password": password,
-        })
-        axios({
-            method: 'post',
-            url: process.env.REACT_APP_API_URL + "/auth/login",
-            headers: {"Content-Type" : "application/json"}, 
-            data: body
-        })
-        .then((response) => {
-            console.log(response)
-            
-            navigate("/");
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-        
-    }
+  const onSubmit = () =>{
+      AuthAPIService.login(login, password).then((res) => {
+        localStorage.setItem("token", res.data.token)
+      }
+      ).catch((err) => {
+        throw err
+      })
+
+  }
 
 
   return (
