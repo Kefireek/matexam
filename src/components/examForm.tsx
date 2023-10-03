@@ -43,10 +43,10 @@ const ExamForm = () => {
             <ModalBody>
                 <form id="exam-form" onSubmit={handleSubmit(onSubmit)}>
                     <FormControl isInvalid={errors.name?.message != null} mb="5">
-                        <FormLabel> nazwa </FormLabel>
+                        <FormLabel> Nazwa </FormLabel>
                         <Input
                             id="name"
-                            placeholder="nawa"
+                            placeholder="Nazwa"
                             {...register(
                                 'name', {
                                     required: "Pole nie może być puste!"
@@ -55,7 +55,7 @@ const ExamForm = () => {
                         <FormErrorMessage> {errors.name && errors.name?.message} </FormErrorMessage>
                     </FormControl>
                     <FormControl mb="5">
-                        <FormLabel> rodzaj </FormLabel>
+                        <FormLabel> Rodzaj </FormLabel>
                         <RadioGroup>
                             <HStack>
                                 <Radio value="podstawa" defaultChecked>podstawowy</Radio>
@@ -65,7 +65,7 @@ const ExamForm = () => {
                         </RadioGroup>
                     </FormControl>
                     <FormControl isInvalid={errors.date?.message != null} mb="5">
-                        <FormLabel> data </FormLabel>
+                        <FormLabel> Data </FormLabel>
                         <Input
                             id="date"
                             type="date"
@@ -76,7 +76,7 @@ const ExamForm = () => {
                             )} />
                         <FormErrorMessage> {errors.date && errors.date?.message}</FormErrorMessage>
                     </FormControl>
-                    <Button type="submit" id="exam-form" isLoading={isSubmitting}>Zatwierdź!</Button>
+                    <Button type="submit" id="exam-form" isLoading={isSubmitting} colorScheme='teal'>Zatwierdź!</Button>
                 </form>
             </ModalBody>
         </ModalContent>
