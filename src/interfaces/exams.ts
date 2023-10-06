@@ -6,5 +6,13 @@ export interface ExamsList {
 interface ExamItem {
   id: number,
   name: string,
-  date: Date
+  type: ExamType,
+  startTime?: Date,
+  endTime?: Date
+}
+
+enum ExamType {
+  Basic = "basic",
+  Extended = "extended",
+  Oral = "oral"
 }

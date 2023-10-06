@@ -26,7 +26,6 @@ function App() {
       () => {
         setLoading(false);
         onClose()
-        
       }
     )
     .catch(
