@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useForm } from 'react-hook-form'
 import {
@@ -11,7 +10,7 @@ import {
   Button,
 } from '@chakra-ui/react'
 
-import AuthAPIService from '../../services/api/auth/AuthAPIService';
+import { AuthService } from '../../services/auth/AuthService';
 
 export default function HookForm() {
   const {
@@ -26,8 +25,10 @@ export default function HookForm() {
   const navigate = useNavigate();
 
   const onSubmit = () =>{
-      AuthAPIService.login(login, password).then((res) => {
-        localStorage.setItem("token", res.data.token)
+      AuthService.login(login, password).then((succed) => {
+        if(succed)
+          navigate("/")
+        
       }
       ).catch((err) => {
         throw err
