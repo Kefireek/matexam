@@ -1,8 +1,8 @@
-import { useDisclosure, Card, CardBody, Stack, Heading, Badge } from '@chakra-ui/react'
+import { useDisclosure, Card, CardBody, Stack, Heading, Badge, HStack, Spinner } from '@chakra-ui/react'
 import { MoonIcon, SunIcon } from '@chakra-ui/icons'
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
 import ExamForm from '../examForm.tsx'
-import { ExamsList } from '../../interfaces/exams.ts'
+import { ExamItem, ExamsList } from '../../interfaces/exams.ts'
 import {
     Text,
     Box,
@@ -33,12 +33,12 @@ function LeftMenu() {
     const navigate = useNavigate();
 
     useEffect(()=>{
-        ExamsAPIService.getExams().then((res)=>{
-            setExams(res.data)
-            console.log(res.data)
-        }).catch((err)=>{
-            console.log(err);
-        });
+        // ExamsAPIService.getExams().then((res)=>{
+        //     setExams(res.data)
+        //     console.log(res.data)
+        // }).catch((err)=>{
+        //     console.log(err);
+        // });
     }, []);
      
     return(
@@ -55,35 +55,42 @@ function LeftMenu() {
                     <h2>
                     <AccordionButton>
                         <Box as="span" flex='1' textAlign='left'>
-                            <Text fontSize="20">Egzaminy</Text>
+                            <HStack>
+                                <Text fontSize="20">Egzaminy</Text>
+                                {exams?.total !== undefined ?
+                                    <Badge>{exams?.total}</Badge>
+                                    : <Spinner size="sm" />
+                                }
+                            </HStack>
                         </Box>
                         <AccordionIcon />
                     </AccordionButton>
                     </h2>
                     <AccordionPanel pb={4}>
                         <Stack spacing="3">
-                            <Card key="key1" variant="elevated">
-                                <CardBody>
-                                    <Heading fontSize='md'> 
-                                        Matematyka 
-                                        <Badge ml='1'>
-                                            P
-                                        </Badge>
-                                    </Heading>
-                                    <Text fontSize="sm">Śr., 07.10.2023r.</Text>
-                                </CardBody>
-                            </Card>
-                            <Card key="key2" variant="elevated">
-                                <CardBody>
-                                    <Heading fontSize='md'> 
-                                        Język polski
-                                        <Badge ml='1'>
-                                            R
-                                        </Badge>
-                                    </Heading>
-                                    <Text fontSize="sm">Czw., 08.10.2023r.</Text>
-                                </CardBody>
-                            </Card>
+                            {exams?.items.map((exam: ExamItem) =>
+                                <Card key={exam.id} variant="elevated">
+                                    <CardBody>
+                                        <HStack>
+                                            <Heading fontSize='md'> 
+                                                {exam.name}
+                                            </Heading>
+                                            {exam.type == "basic" &&
+                                                 <Badge>P</Badge>
+                                            }
+                                            {exam.type == "extended" &&
+                                                 <Badge>R</Badge>
+                                            }
+                                            {exam.type == "oral" &&
+                                                 <Badge>U</Badge>
+                                            }
+                                        </HStack>
+                                        {exam.startTime &&
+                                            <Text fontSize="sm">{exam.startTime.toString()}</Text>
+                                        }
+                                    </CardBody> 
+                                </Card>
+                            ) ?? <Text>Wczytywanie...</Text>}
                         </Stack>
                     </AccordionPanel>
                 </AccordionItem>
