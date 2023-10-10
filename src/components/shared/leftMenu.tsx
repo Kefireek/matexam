@@ -1,5 +1,9 @@
 import { useDisclosure } from '@chakra-ui/react'
-import { MoonIcon, SunIcon } from '@chakra-ui/icons'
+import { 
+    MoonIcon, 
+    SunIcon, 
+    AddIcon 
+} from '@chakra-ui/icons'
 import ExamForm from '../examForm.tsx'
 import {
     Text,
@@ -18,10 +22,12 @@ import {
 import { useColorMode } from '@chakra-ui/react';
 
 import { useNavigate } from 'react-router-dom';
+import CsvModal from '../csvModal.tsx';
 
 function LeftMenu() {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const {isOpen: isCsvOpen, onOpen: onCsvOpen, onClose: onCsvClose} = useDisclosure();
 
     const { colorMode, toggleColorMode } = useColorMode()
 
@@ -72,6 +78,13 @@ function LeftMenu() {
             <Button onClick={()=> navigate("/login")} margin="3">Zaloguj się</Button>
             <Button onClick={toggleColorMode}>
             {colorMode === 'light' ? <MoonIcon></MoonIcon> : <SunIcon></SunIcon>}
+            </Button>
+            <Button onClick={onCsvOpen}>
+                <AddIcon/>
+                <Modal isOpen={isCsvOpen} onClose={onCsvClose}>
+                    <ModalOverlay/>
+                    <CsvModal/>
+                </Modal>
             </Button>
         </Box>
     )
