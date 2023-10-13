@@ -21,6 +21,7 @@ import { useColorMode } from '@chakra-ui/react';
 
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'
 
 function LeftMenu() {
 
@@ -33,12 +34,12 @@ function LeftMenu() {
     const navigate = useNavigate();
 
     useEffect(()=>{
-        // ExamsAPIService.getExams().then((res)=>{
-        //     setExams(res.data)
-        //     console.log(res.data)
-        // }).catch((err)=>{
-        //     console.log(err);
-        // });
+        ExamsAPIService.getExams().then((res)=>{
+            setExams(res.data)
+            console.log(res.data)
+        }).catch((err)=>{
+            console.log(err);
+        });
     }, []);
      
     return(
@@ -69,7 +70,8 @@ function LeftMenu() {
                     <AccordionPanel pb={4}>
                         <Stack spacing="3">
                             {exams?.items.map((exam: ExamItem) =>
-                                <Card key={exam.id} variant="elevated">
+                                <Card key={exam.id} variant="elevated" style={{cursor: "pointer"}}>
+                                    <Link to={`/exam/${exam.id}`}>
                                     <CardBody>
                                         <HStack>
                                             <Heading fontSize='md'> 
@@ -89,6 +91,7 @@ function LeftMenu() {
                                             <Text fontSize="sm">{exam.startTime.toString()}</Text>
                                         }
                                     </CardBody> 
+                                    </Link>
                                 </Card>
                             ) ?? <Text>Wczytywanie...</Text>}
                         </Stack>
