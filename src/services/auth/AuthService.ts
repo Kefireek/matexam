@@ -8,12 +8,14 @@ export const AuthService = {
     },
 
     login: async function(login: string, password: string) {
-        const requestBody: LoginRequestBody = { id: login, password : password}
-        AuthAPIService.login(requestBody).then((res) => {
-            localStorage.setItem("token", res.data.token);
-            return true
-        });
-        return false
+        try {
+            const requestBody: LoginRequestBody = { id: login, password : password}
+            localStorage.setItem("token", (await AuthAPIService.login(requestBody)).data.token);
+            return true;
+        }
+        catch {
+            return false;
+        }
     },
 
     getAuthenticatedConfig: function(config?: AxiosRequestConfig) {

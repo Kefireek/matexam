@@ -12,15 +12,7 @@ function App() {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  // const [isAuthenticated, setAuthenticated] = useState(() => {
-  //   const token = localStorage.getItem("token");
-  //   return token !== null;
-  // });
-
-  const token = localStorage.getItem("token");
-
   useEffect(() => {
-
     onOpen()
     getPage()
     .then(
@@ -40,7 +32,7 @@ function App() {
   return (
     <>
       <LeftMenu />
-      <Box>
+      <Box marginLeft='10vw'>
         {loading &&
         <Modal isOpen={isOpen} onClose={onClose} isCentered>
           <ModalSpinner/>

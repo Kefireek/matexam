@@ -28,7 +28,6 @@ export default function HookForm() {
       AuthService.login(login, password).then((succed) => {
         if(succed)
           navigate("/")
-        
       }
       ).catch((err) => {
         throw err
