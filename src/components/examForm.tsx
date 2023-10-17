@@ -15,6 +15,7 @@ import {
 
 import { useForm } from "react-hook-form";
 import { ExamType } from "../interfaces/exams";
+import ExamsAPIService from "../services/api/exams/ExamsAPIService";
 
 
 export type ExamFormModel = {
@@ -43,7 +44,9 @@ const ExamForm = () => {
             alert("Data zakończenia powinna być później niż data rozpoczęcia")
         }
         else{
-            alert(name + startDate + endDate + type)
+            const exam = {name, type, startDate, endDate}
+
+            ExamsAPIService.addExam(exam)
         }
     }
     

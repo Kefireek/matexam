@@ -11,6 +11,13 @@ export interface ExamItem {
   endTime?: Date
 }
 
+export interface ExamBody {
+  name: string,
+  type: ExamType,
+  startTime?: Date,
+  endTime?: Date
+}
+
 export enum ExamType {
   Basic = "basic",
   Extended = "extended",
