@@ -1,10 +1,8 @@
-import { useDisclosure } from '@chakra-ui/react'
-import { 
-    MoonIcon, 
-    SunIcon, 
-    AddIcon 
-} from '@chakra-ui/icons'
+import { useDisclosure, Card, CardBody, Stack, Heading, Badge, HStack, Spinner } from '@chakra-ui/react'
+import { MoonIcon, SunIcon, AddIcon } from '@chakra-ui/icons'
+import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
 import ExamForm from '../examForm.tsx'
+import { ExamItem, ExamsList } from '../../interfaces/exams.ts'
 import {
     Text,
     Box,
@@ -18,11 +16,12 @@ import {
     AccordionIcon,
     Divider
   } from '@chakra-ui/react'
-
 import { useColorMode } from '@chakra-ui/react';
-
 import { useNavigate } from 'react-router-dom';
 import CsvModal from '../csvModal.tsx';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'
+
 
 function LeftMenu() {
 
@@ -31,7 +30,18 @@ function LeftMenu() {
 
     const { colorMode, toggleColorMode } = useColorMode()
 
+    const [exams, setExams] = useState<ExamsList>();
+
     const navigate = useNavigate();
+
+    useEffect(()=>{
+        ExamsAPIService.getExams().then((res)=>{
+            setExams(res.data)
+            console.log(res.data)
+        }).catch((err)=>{
+            console.log(err);
+        });
+    }, []);
      
     return(
         <Box borderRight="1px solid white" width="10vw" height="100vh" position="fixed">
@@ -47,14 +57,45 @@ function LeftMenu() {
                     <h2>
                     <AccordionButton>
                         <Box as="span" flex='1' textAlign='left'>
-                            <Text fontSize="20">Egzaminy</Text>
+                            <HStack>
+                                <Text fontSize="20">Egzaminy</Text>
+                                {exams?.total !== undefined ?
+                                    <Badge>{exams?.total}</Badge>
+                                    : <Spinner size="sm" />
+                                }
+                            </HStack>
                         </Box>
                         <AccordionIcon />
                     </AccordionButton>
                     </h2>
                     <AccordionPanel pb={4}>
-                        <Text>Egzamin 1</Text>
-                        <Text>Egzamin 2</Text>
+                        <Stack spacing="3">
+                            {exams?.items.map((exam: ExamItem) =>
+                                <Card key={exam.id} variant="elevated" style={{cursor: "pointer"}}>
+                                    <Link to={`/exam/${exam.id}`}>
+                                    <CardBody>
+                                        <HStack>
+                                            <Heading fontSize='md'> 
+                                                {exam.name}
+                                            </Heading>
+                                            {exam.type == "basic" &&
+                                                 <Badge>P</Badge>
+                                            }
+                                            {exam.type == "extended" &&
+                                                 <Badge>R</Badge>
+                                            }
+                                            {exam.type == "oral" &&
+                                                 <Badge>U</Badge>
+                                            }
+                                        </HStack>
+                                        {exam.startTime &&
+                                            <Text fontSize="sm">{exam.startTime.toString()}</Text>
+                                        }
+                                    </CardBody> 
+                                    </Link>
+                                </Card>
+                            ) ?? <Text>Wczytywanie...</Text>}
+                        </Stack>
                     </AccordionPanel>
                 </AccordionItem>
                 <Divider />

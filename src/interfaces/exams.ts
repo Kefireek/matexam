@@ -3,8 +3,16 @@ export interface ExamsList {
   total: number
 }
 
-interface ExamItem {
+export interface ExamItem {
   id: number,
   name: string,
-  date: Date
+  type: ExamType,
+  startTime?: Date,
+  endTime?: Date
+}
+
+export enum ExamType {
+  Basic = "basic",
+  Extended = "extended",
+  Oral = "oral"
 }
