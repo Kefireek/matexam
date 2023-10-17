@@ -1,7 +1,6 @@
 import { 
     ModalContent, 
     ModalHeader, 
-    ModalFooter, 
     ModalCloseButton, 
     ModalBody, 
     Button,
@@ -15,12 +14,14 @@ import {
 } from "@chakra-ui/react";
 
 import { useForm } from "react-hook-form";
+import { ExamType } from "../interfaces/exams";
 
 
 export type ExamFormModel = {
     name: string,
-    date: string,
-
+    startDate: Date,
+    endDate: Date,
+    type: ExamType
 }
 
 const ExamForm = () => {
@@ -31,9 +32,19 @@ const ExamForm = () => {
         formState: {errors, isSubmitting},
     } = useForm<ExamFormModel>();
 
+    function compareTime(time1: Date, time2: Date) {
+        return new Date(time1) < new Date(time2); // true if time2 is later
+    }
+
     const onSubmit = (values: ExamFormModel) => {
-        const {name, date} = values;
-        alert(name + date)
+        const {name, startDate, endDate, type} = values;
+        const validDates = compareTime(startDate, endDate);
+        if(validDates !== true){
+            alert("Data zakończenia powinna być później niż data rozpoczęcia")
+        }
+        else{
+            alert(name + startDate + endDate + type)
+        }
     }
     
     return (
@@ -43,41 +54,54 @@ const ExamForm = () => {
             </ModalHeader>
             <ModalBody>
                 <form id="exam-form" onSubmit={handleSubmit(onSubmit)}>
-                    <FormControl isInvalid={errors.name?.message != null} mb="6">
-                        <FormLabel> nazwa </FormLabel>
+                    <FormControl isInvalid={errors.name?.message != null} mb="5">
+                        <FormLabel> Nazwa </FormLabel>
                         <Input
                             id="name"
-                            placeholder="nawa"
+                            placeholder="Nazwa"
                             {...register(
                                 'name', {
-                                    required: "Pole nie może być puste!"
+                                    required: "Pole nie może być puste!",
+                                    maxLength: 100
                                 }
                             )} />
                         <FormErrorMessage> {errors.name && errors.name?.message} </FormErrorMessage>
                     </FormControl>
                     <FormControl mb="5">
-                        <FormLabel> rodzaj </FormLabel>
-                        <RadioGroup>
+                        <FormLabel> Rodzaj </FormLabel>
+                        <RadioGroup defaultValue="basic">
                             <HStack>
-                                <Radio value="podstawa" defaultChecked>podstawowy</Radio>
-                                <Radio value="rozszerzenie" >rozszerzony</Radio>
-                                <Radio value="ustny">ustny</Radio>
+                                <Radio value="basic" defaultChecked={true} {...register('type')}>podstawowy</Radio>
+                                <Radio value="extended" {...register('type')}>rozszerzony</Radio>
+                                <Radio value="oral" {...register('type')}>ustny</Radio>
                             </HStack>
                         </RadioGroup>
                     </FormControl>
-                    <FormControl isInvalid={errors.date?.message != null} mb="5">
-                        <FormLabel> data </FormLabel>
+                    <FormControl isInvalid={errors.startDate?.message != null} mb="5">
+                        <FormLabel> Data i godzina rozpoczęcia </FormLabel>
                         <Input
-                            id="date"
-                            type="date"
+                            id="startDate"
+                            type="datetime-local"
                             {...register(
-                                'date', {
+                                'startDate', {
                                     required: "Pole nie może być puste!"
                                 }
                             )} />
-                        <FormErrorMessage> {errors.date && errors.date?.message}</FormErrorMessage>
+                        <FormErrorMessage> {errors.startDate && errors.startDate?.message}</FormErrorMessage>
                     </FormControl>
-                    <Button type="submit" id="exam-form" isLoading={isSubmitting}>Zatwierdź!</Button>
+                    <FormControl isInvalid={errors.endDate?.message != null} mb="5">
+                        <FormLabel> Data i godzina zakończenia </FormLabel>
+                        <Input
+                            id="endDate"
+                            type="datetime-local"
+                            {...register(
+                                'endDate', {
+                                    required: "Pole nie może być puste!"
+                                }
+                            )} />
+                        <FormErrorMessage> {errors.endDate && errors.endDate?.message}</FormErrorMessage>
+                    </FormControl>
+                    <Button type="submit" id="exam-form" isLoading={isSubmitting} colorScheme='teal'>Zatwierdź!</Button>
                 </form>
             </ModalBody>
         </ModalContent>

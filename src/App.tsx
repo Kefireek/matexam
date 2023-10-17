@@ -1,32 +1,45 @@
-import { Button, ChakraProvider, Modal, ModalOverlay, useDisclosure } from "@chakra-ui/react"
 
-import { extendTheme, type ThemeConfig } from '@chakra-ui/react'
-import ExamForm from "./components/examForm"
+import { Modal, useDisclosure, Box, Text } from "@chakra-ui/react"
 import LeftMenu from "./components/shared/leftMenu"
-
-// 2. Add your color mode config
-const config: ThemeConfig = {
-  initialColorMode: 'dark',
-  useSystemColorMode: false,
-}
-
-
-
-// 3. extend the theme
-const theme = extendTheme({ config,
-   fonts: {
-    heading: `'Open Sans', sans-serif`,
-    body: `'Raleway', sans-serif`,
-  }, })
+import { getPage } from "./services/api/healthCheck/HealthCheckService"
+import { useState, useEffect } from "react"
+import ModalSpinner from "./components/modalSpinner"
+import { Outlet } from "react-router-dom"
 
 function App() {
 
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  useEffect(() => {
+    onOpen()
+    getPage()
+    .then(
+      () => {
+        setLoading(false);
+        onClose()
+      }
+    )
+    .catch(
+      () => {
+        setLoading(true);
+      }
+    )
+  }, [])
   
 
   return (
-    <ChakraProvider theme={theme}>
+    <>
       <LeftMenu />
-    </ChakraProvider>
+      <Box marginLeft='10vw'>
+        {loading &&
+        <Modal isOpen={isOpen} onClose={onClose} isCentered>
+          <ModalSpinner/>
+        </Modal>}
+        <Outlet />
+      </Box>
+    </>
   )
 
 }
