@@ -1,5 +1,5 @@
 import { useDisclosure, Card, CardBody, Stack, Heading, Badge, HStack, Spinner } from '@chakra-ui/react'
-import { MoonIcon, SunIcon } from '@chakra-ui/icons'
+import { MoonIcon, SunIcon, AddIcon } from '@chakra-ui/icons'
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
 import ExamForm from '../examForm.tsx'
 import { ExamItem, ExamsList } from '../../interfaces/exams.ts'
@@ -16,16 +16,17 @@ import {
     AccordionIcon,
     Divider
   } from '@chakra-ui/react'
-
 import { useColorMode } from '@chakra-ui/react';
-
 import { useNavigate } from 'react-router-dom';
+import CsvModal from '../csvModal.tsx';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
+
 
 function LeftMenu() {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const {isOpen: isCsvOpen, onOpen: onCsvOpen, onClose: onCsvClose} = useDisclosure();
 
     const { colorMode, toggleColorMode } = useColorMode()
 
@@ -118,6 +119,13 @@ function LeftMenu() {
             <Button onClick={()=> navigate("/login")} margin="3">Zaloguj się</Button>
             <Button onClick={toggleColorMode}>
             {colorMode === 'light' ? <MoonIcon></MoonIcon> : <SunIcon></SunIcon>}
+            </Button>
+            <Button onClick={onCsvOpen}>
+                <AddIcon/>
+                <Modal isOpen={isCsvOpen} onClose={onCsvClose}>
+                    <ModalOverlay/>
+                    <CsvModal/>
+                </Modal>
             </Button>
         </Box>
     )
