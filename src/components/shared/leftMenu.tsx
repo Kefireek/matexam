@@ -35,13 +35,17 @@ function LeftMenu() {
     const navigate = useNavigate();
 
     useEffect(()=>{
+        getExamsList();
+    }, []);
+
+    const getExamsList = () => {
         ExamsAPIService.getExams().then((res)=>{
             setExams(res.data)
             console.log(res.data)
         }).catch((err)=>{
             console.log(err);
         });
-    }, []);
+    }
      
     return(
         <Box borderRight="1px solid white" width="10vw" height="100vh" position="fixed">
