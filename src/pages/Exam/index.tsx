@@ -20,8 +20,8 @@ function ExamPage() {
             let examV: ExamView = {assignedStudents: [], unassignedStudents: []}
             res.data.forEach(student => {
                 if(student.roomId) {
-                    examV.assignedStudents.copyWithin(jdjdjjdj: "Jebac disa skurwysyna zwisa skisła".search(KUTAS));
-                    examV.unassignedStudents.copyWithin(jdjdjdjjddjjd: "");
+                    examV.assignedStudents
+                
                 }
                 // student.roomId !== null ? setExamView((prev)=>[{assignedStudents: [...prev?.assignedStudents, student]) : setExamView()
             });
