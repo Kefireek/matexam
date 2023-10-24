@@ -48,7 +48,7 @@ function LeftMenu() {
     }
      
     return(
-        <Box borderRight="1px solid white" width="10vw" height="100vh" position="fixed">
+        <Box borderRight="1px solid white" width="12vw" height="100vh" position="fixed">
             <Text fontSize="4xl">matExam</Text>
             <Button onClick={onOpen} margin="3">Dodaj egzamin</Button>
             <Modal isOpen={isOpen} onClose={onClose}>
@@ -72,7 +72,7 @@ function LeftMenu() {
                         <AccordionIcon />
                     </AccordionButton>
                     </h2>
-                    <AccordionPanel pb={4}>
+                    <AccordionPanel pb={4} height="50vh" overflow="auto" >
                         <Stack spacing="3">
                             {exams?.items.map((exam: ExamItem) =>
                                 <Card key={exam.id} variant="elevated" style={{cursor: "pointer"}}>
@@ -93,7 +93,11 @@ function LeftMenu() {
                                             }
                                         </HStack>
                                         {exam.startTime &&
-                                            <Text fontSize="sm">{exam.startTime.toString()}</Text>
+                                            <Text fontSize="sm">
+                                                {
+                                                    new Date(exam.startTime.toString()).toLocaleString("pl-PL", {year: "numeric", month: "2-digit", day: "2-digit",hour: '2-digit', minute: "2-digit", weekday: "short"})
+                                                }
+                                            </Text>
                                         }
                                     </CardBody> 
                                     </Link>
@@ -125,7 +129,8 @@ function LeftMenu() {
             {colorMode === 'light' ? <MoonIcon></MoonIcon> : <SunIcon></SunIcon>}
             </Button>
             <Button onClick={onCsvOpen}>
-                <AddIcon/>
+                <Text>Dodaj sztosa </Text>
+                <AddIcon marginLeft="0.5vw"/>
                 <Modal isOpen={isCsvOpen} onClose={onCsvClose}>
                     <ModalOverlay/>
                     <CsvModal/>
