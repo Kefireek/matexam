@@ -25,7 +25,7 @@ export type ExamFormModel = {
     type: ExamType
 }
 
-const ExamForm = () => {
+const ExamForm = (props: {refreshExams: Function, isOpen: Boolean}) => {
     
     const { 
         handleSubmit,
@@ -45,7 +45,8 @@ const ExamForm = () => {
         }
         else{
             const exam = {name, type, startTime, endTime}
-
+            props.refreshExams();
+            props.isOpen == false;
             ExamsAPIService.addExam(exam)
         }
     }
