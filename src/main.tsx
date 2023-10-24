@@ -9,7 +9,7 @@ import { ColorModeScript } from '@chakra-ui/react'
 import theme from "./theme.ts";
 import axios from 'axios';
 import ErrorPage from './pages/Error/index.tsx';
-import ExamPage from './pages/Exam/index.tsx';
+import ExamPage from "./pages/Exam/index.tsx";
 
 const router = createBrowserRouter([
   {

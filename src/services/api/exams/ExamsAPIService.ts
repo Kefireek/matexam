@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ExamBody, ExamItem, ExamsList } from '../../../interfaces/exams'
+import { ExamBody, ExamItem, ExamsList, StudentAssignedToRoom } from '../../../interfaces/exams'
 import { AuthService } from '../../auth/AuthService'
 
 const ExamsAPIService = {
@@ -8,6 +8,9 @@ const ExamsAPIService = {
     },
     addExam: function(examBody: ExamBody) {
         return axios.post<ExamItem>(`${import.meta.env.VITE_API_URL}${import.meta.env.VITE_GET_EXAMS}`, examBody, AuthService.getAuthenticatedConfig())
+    },
+    getExam: function(id: number) {
+        return axios.get<StudentAssignedToRoom[]>(`${import.meta.env.VITE_API_URL}${import.meta.env.VITE_GET_EXAMS}${id}`, AuthService.getAuthenticatedConfig())
     }
 }
 

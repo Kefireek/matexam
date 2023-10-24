@@ -32,7 +32,7 @@ function App() {
   return (
     <>
       <LeftMenu />
-      <Box marginLeft='10vw'>
+      <Box marginLeft='12vw'>
         {loading &&
         <Modal isOpen={isOpen} onClose={onClose} isCentered>
           <ModalSpinner/>
