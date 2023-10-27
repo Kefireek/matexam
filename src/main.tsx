@@ -10,8 +10,8 @@ import theme from "./theme.ts";
 import axios from 'axios';
 import ErrorPage from './pages/Error/index.tsx';
 import ExamPage from './pages/Exam/index.tsx';
-
-const router = createBrowserRouter([
+import { interceptorInit } from './interceptors/authInterceptor.ts';
+export const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
@@ -36,6 +36,7 @@ const router = createBrowserRouter([
 ]);
 
 axios.defaults.baseURL = 'http://localhost:8000';
+interceptorInit();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
