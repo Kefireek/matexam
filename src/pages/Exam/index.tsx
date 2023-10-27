@@ -20,7 +20,14 @@ function ExamPage() {
             let examV: ExamView = {assignedStudents: [], unassignedStudents: []}
             res.data.forEach(student => {
                 if(student.roomId) {
-                    examV.assignedStudents
+                    let assigned = false
+                    examV.assignedStudents.forEach(room=>{
+                        if(room.number == student.roomId){
+                            room.students.push(student)
+                            assigned = true
+                        }
+                        
+                    })
                 
                 }
                 // student.roomId !== null ? setExamView((prev)=>[{assignedStudents: [...prev?.assignedStudents, student]) : setExamView()
