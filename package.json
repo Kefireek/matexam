@@ -17,6 +17,7 @@
     "@fontsource/roboto": "^5.0.8",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.5.0",
+    "chakra-ui-contextmenu": "^1.0.5",
     "framer-motion": "^10.16.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

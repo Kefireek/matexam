@@ -1,4 +1,3 @@
-import { AxiosHeaders, AxiosRequestConfig } from "axios";
 import { LoginRequestBody } from "../../interfaces/auth";
 import AuthAPIService from "../api/auth/AuthAPIService";
 

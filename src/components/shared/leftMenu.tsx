@@ -22,6 +22,7 @@ import CsvModal from '../csvModal.tsx';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
 import AuthAPIService from '../../services/api/auth/AuthAPIService.ts'
+import { ContextMenu } from 'chakra-ui-contextmenu'
 
 
 function LeftMenu() {
@@ -107,13 +108,16 @@ function LeftMenu() {
                                         
                                     </CardBody> 
                                     </Link>
-                                    <Menu size="s">
-                                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}/>
-                                        <MenuList>
-                                            <MenuItem> <EditIcon/> Edytuj </MenuItem>
-                                            <MenuItem> <DeleteIcon/> Usuń </MenuItem>
-                                        </MenuList>
-                                    </Menu>
+                                    <ContextMenu<HTMLDivElement>
+                                        renderMenu = {() => (
+                                            <MenuList>
+                                                <MenuItem>Context Menu Item 1</MenuItem>
+                                                <MenuItem>Context Menu Item 2</MenuItem>
+                                            </MenuList>
+                                        )}
+                                    >
+                                        {ref => <div ref={ref}>Target</div>}
+                                    </ContextMenu>
                                 </Card>
                             ) ?? <Text>Wczytywanie...</Text>}
                         </Stack>
