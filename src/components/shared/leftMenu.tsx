@@ -53,7 +53,7 @@ function LeftMenu() {
             <Button onClick={onOpen} margin="3">Dodaj egzamin</Button>
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay/>
-                <ExamForm/>
+                <ExamForm refreshExams={getExamsList} onCloseExam={onClose}/>
             </Modal>
 
             <Accordion allowMultiple>

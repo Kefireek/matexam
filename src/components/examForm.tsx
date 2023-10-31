@@ -25,7 +25,7 @@ export type ExamFormModel = {
     type: ExamType
 }
 
-const ExamForm = () => {
+const ExamForm = (props: {refreshExams: Function, onCloseExam: Function}) => {
     
     const { 
         handleSubmit,
@@ -37,7 +37,7 @@ const ExamForm = () => {
         return new Date(time1) < new Date(time2); // true if time2 is later
     }
 
-    const onSubmit = (values: ExamFormModel) => {
+    const onSubmit = async (values: ExamFormModel) => {
         const {name, startTime, endTime, type} = values;
         const validDates = compareTime(startTime, endTime);
         if(validDates !== true){
@@ -45,8 +45,9 @@ const ExamForm = () => {
         }
         else{
             const exam = {name, type, startTime, endTime}
-
-            ExamsAPIService.addExam(exam)
+            await ExamsAPIService.addExam(exam);
+            props.refreshExams();
+            props.onCloseExam();
         }
     }
     

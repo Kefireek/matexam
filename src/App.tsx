@@ -6,11 +6,15 @@ import { useState, useEffect } from "react"
 import ModalSpinner from "./components/modalSpinner"
 import { Outlet } from "react-router-dom"
 
+
+
 function App() {
 
+  
   const [loading, setLoading] = useState<boolean>(true);
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  
 
   useEffect(() => {
     onOpen()
