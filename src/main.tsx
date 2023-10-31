@@ -12,6 +12,7 @@ import ErrorPage from './pages/Error/index.tsx';
 import ExamPage from './pages/Exam/index.tsx';
 import { interceptorInit } from './interceptors/authInterceptor.ts';
 export const router = createBrowserRouter([
+
   {
     path: "/",
     element: <App />,
