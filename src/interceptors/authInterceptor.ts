@@ -1,8 +1,5 @@
 import axios from "axios";
 import { AuthService } from "../services/auth/AuthService";
-import globalRouter from "./globalNavigate";
-
-
 
 export const interceptorInit = () => {
     axios.interceptors.request.use(
@@ -23,7 +20,7 @@ export const interceptorInit = () => {
             return response;
         },
         error => {
-            if(error.response.status === 401){
+            if(error.response.status === 401 || error.response.status === 403){
                 window.location.href = "/login";
                 return Promise.reject(error);
             }
