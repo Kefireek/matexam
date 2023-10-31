@@ -1,5 +1,5 @@
-import { useDisclosure, Card, CardBody, Stack, Heading, Badge, HStack, Spinner } from '@chakra-ui/react'
-import { MoonIcon, SunIcon, AddIcon } from '@chakra-ui/icons'
+import { useDisclosure, Card, CardBody, Stack, Heading, Badge, HStack, Spinner, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react'
+import { MoonIcon, SunIcon, AddIcon, ChevronDownIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons'
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
 import ExamForm from '../examForm.tsx'
 import { ExamItem, ExamsList } from '../../interfaces/exams.ts'
@@ -21,6 +21,7 @@ import { useNavigate } from 'react-router-dom';
 import CsvModal from '../csvModal.tsx';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
+import AuthAPIService from '../../services/api/auth/AuthAPIService.ts'
 
 
 function LeftMenu() {
@@ -45,6 +46,10 @@ function LeftMenu() {
         }).catch((err)=>{
             console.log(err);
         });
+    }
+    const logoutUser = () => {
+        AuthAPIService.logout();
+        navigate("/login");
     }
      
     return(
@@ -99,8 +104,16 @@ function LeftMenu() {
                                                 }
                                             </Text>
                                         }
+                                        
                                     </CardBody> 
                                     </Link>
+                                    <Menu size="s">
+                                        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}/>
+                                        <MenuList>
+                                            <MenuItem> <EditIcon/> Edytuj </MenuItem>
+                                            <MenuItem> <DeleteIcon/> Usuń </MenuItem>
+                                        </MenuList>
+                                    </Menu>
                                 </Card>
                             ) ?? <Text>Wczytywanie...</Text>}
                         </Stack>
@@ -124,7 +137,7 @@ function LeftMenu() {
                     </AccordionPanel>
                 </AccordionItem>
             </Accordion>
-            <Button onClick={()=> navigate("/login")} margin="3">Zaloguj się</Button>
+            <Button onClick={() => logoutUser()} margin="3">Wyloguj się</Button>
             <Button onClick={toggleColorMode}>
             {colorMode === 'light' ? <MoonIcon></MoonIcon> : <SunIcon></SunIcon>}
             </Button>

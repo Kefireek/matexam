@@ -1,8 +1,5 @@
 import axios from "axios";
 import { AuthService } from "../services/auth/AuthService";
-import globalRouter from "./globalNavigate";
-
-
 
 export const interceptorInit = () => {
     axios.interceptors.request.use(
