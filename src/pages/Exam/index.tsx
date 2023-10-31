@@ -17,22 +17,7 @@ function ExamPage() {
     const getExam = (examid: number) => {
         ExamsAPIService.getExam(examid).then((res)=>{
             console.log(res.data)
-            let examV: ExamView = {assignedStudents: [], unassignedStudents: []}
-            res.data.forEach(student => {
-                if(student.roomId) {
-                    let assigned = false
-                    examV.assignedStudents.forEach(room=>{
-                        if(room.number == student.roomId){
-                            room.students.push(student)
-                            assigned = true
-                        }
-                        
-                    })
-                
-                }
-                // student.roomId !== null ? setExamView((prev)=>[{assignedStudents: [...prev?.assignedStudents, student]) : setExamView()
-            });
-            setExamView(examV)
+            setExamView(res.data)
         }).catch((err)=>{
             console.log(err);
         });
