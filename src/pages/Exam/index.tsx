@@ -1,12 +1,14 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Badge, Box, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
+import { Badge, Box, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { ExamView, StudentAssignedToRoom } from "../../interfaces/exams";
+import { ExamView } from "../../interfaces/exams";
 import ExamsAPIService from "../../services/api/exams/ExamsAPIService";
+import ExamDetailsModal from "./ExamDetailsModal";
 
 function ExamPage() {
 
     const { examid } = useParams();
+
 
     const [examView, setExamView] = useState<ExamView>();
 
@@ -52,41 +54,51 @@ function ExamPage() {
                     }
                 </Text>
             </Box>
-            <Box>
-                <TableContainer width="44vw">
-                    <Table variant='striped' colorScheme='teal'>
-                        <TableCaption>Nieprzypisani uczniowie</TableCaption>
-                        <Thead>
-                        <Tr>
-                            <Th>Nr w dzienniku</Th>
-                            <Th>Oddział</Th>
-                            <Th>Nazwisko</Th>
-                            <Th>Imię</Th>
-                            <Th>PESEL</Th>
-                        </Tr>
-                        </Thead>
-                        <Tbody>
-                            {examView?.unassignedStudents.map((result)=>
-                                <Tr key={result.PESEL}>
-                                    <Td>{result.ordinalNumber}</Td>
-                                    <Td>{result.department}</Td>
-                                    <Td>{result.surname}</Td>
-                                    <Td>{result.name}</Td>
-                                    <Td>{result.PESEL}</Td>
-                                </Tr>
-                            )}
-                        </Tbody>
-                        <Tfoot>
-                        <Tr>
-                            <Th>Nr w dzienniku</Th>
-                            <Th>Oddział</Th>
-                            <Th>Nazwisko</Th>
-                            <Th>Imię</Th>
-                            <Th>PESEL</Th>
-                        </Tr>
-                        </Tfoot>
-                    </Table>
-                </TableContainer>
+            <Box marginTop="2vw" display="flex" justifyContent="space-between">
+                <Box>
+                    <SimpleGrid width="40vw" spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))'>
+                        {examView?.assignedStudents.map((room) =>
+                            <ExamDetailsModal key={room.number} number={room.number} students={room.students} computers={room.computers} size={room.size} />
+                        )
+                        }
+                    </SimpleGrid>
+                </Box>
+                <Box>
+                    <TableContainer width="40vw">
+                        <Table variant='striped' colorScheme='teal'>
+                            <TableCaption>Nieprzypisani uczniowie</TableCaption>
+                            <Thead>
+                            <Tr>
+                                <Th>Nr w dzienniku</Th>
+                                <Th>Oddział</Th>
+                                <Th>Nazwisko</Th>
+                                <Th>Imię</Th>
+                                <Th>PESEL</Th>
+                            </Tr>
+                            </Thead>
+                            <Tbody>
+                                {examView?.unassignedStudents.map((result)=>
+                                    <Tr key={result.PESEL}>
+                                        <Td>{result.ordinalNumber}</Td>
+                                        <Td>{result.department}</Td>
+                                        <Td>{result.surname}</Td>
+                                        <Td>{result.name}</Td>
+                                        <Td>{result.PESEL}</Td>
+                                    </Tr>
+                                )}
+                            </Tbody>
+                            <Tfoot>
+                            <Tr>
+                                <Th>Nr w dzienniku</Th>
+                                <Th>Oddział</Th>
+                                <Th>Nazwisko</Th>
+                                <Th>Imię</Th>
+                                <Th>PESEL</Th>
+                            </Tr>
+                            </Tfoot>
+                        </Table>
+                    </TableContainer>
+                </Box>
             </Box>
         </Box>
     )
