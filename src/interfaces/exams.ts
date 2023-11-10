@@ -3,42 +3,46 @@ export interface ExamsList {
   total: number
 }
 
-export interface ExamItem {
-  id: number,
+export interface ExamItem extends ExamId {
   name: string,
   type: ExamType,
   startTime?: Date,
   endTime?: Date
 }
 
-export interface ExamBody {
-  name: string,
-  type: ExamType,
-  startTime?: Date,
-  endTime?: Date
+export interface ExamId {
+  id: number
 }
 
-export interface ExamView {
+export interface ExamView extends ExamItem {
   assignedStudents: RoomStudents[],
-  unassignedStudents: Student[]
+  unassignedStudents: StudentDescriptive[]
 }
 
-export interface Room {
-  number: number,
+export interface RoomId {
+  number: number
+}
+
+export interface RoomDescriptive extends RoomId {
   size: number,
   computers?: boolean
 }
 
-export interface RoomStudents extends Room {
-  students: Student[]
+export interface RoomStudents extends RoomId {
+  students?: StudentDescriptive[]
 }
 
-export interface StudentAssignedToRoom extends Student {
+export interface StudentAssignedToRoom extends StudentDescriptive {
   roomId?: number
 }
 
-export interface Student {
-  PESEL: string,
+export interface StudentRoom extends StudentId, RoomId { }
+
+export interface StudentId {
+  PESEL: string
+}
+
+export interface StudentDescriptive extends StudentId {
   name: string,
   surname: string,
   department: string,
@@ -48,7 +52,7 @@ export interface Student {
   document?: string
 }
 
-export enum ExamType {
+enum ExamType {
   Basic = "basic",
   Extended = "extended",
   Oral = "oral"
