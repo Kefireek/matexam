@@ -1,6 +1,5 @@
 import axios from 'axios'
-import { ExamItem, ExamView, ExamsList, StudentAssignedToRoom } from '../../../interfaces/exams'
-import { AuthService } from '../../auth/AuthService'
+import { ExamBody, ExamItem, ExamsList, StudentAssignedToRoom } from '../../../interfaces/exams'
 
 const ExamsAPIService = {
     getExams: function() {
