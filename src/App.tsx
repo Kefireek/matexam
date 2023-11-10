@@ -1,5 +1,4 @@
-
-import { Modal, useDisclosure, Box, Text } from "@chakra-ui/react"
+import { Modal, useDisclosure, Box } from "@chakra-ui/react"
 import LeftMenu from "./components/shared/leftMenu"
 import { getPage } from "./services/api/healthCheck/HealthCheckService"
 import { useState, useEffect } from "react"

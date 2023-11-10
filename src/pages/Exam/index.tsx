@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { Box, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { ExamView, StudentAssignedToRoom } from "../../interfaces/exams";
+import { ExamView } from "../../interfaces/exams";
 import ExamsAPIService from "../../services/api/exams/ExamsAPIService";
 
 function ExamPage() {

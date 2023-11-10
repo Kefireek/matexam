@@ -1,5 +1,5 @@
-import { useDisclosure, Card, CardBody, Stack, Heading, Badge, HStack, Spinner, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react'
-import { MoonIcon, SunIcon, AddIcon, ChevronDownIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons'
+import { useDisclosure, Card, CardBody, Stack, Heading, Badge, HStack, Spinner, MenuList, MenuItem } from '@chakra-ui/react'
+import { MoonIcon, SunIcon, AddIcon} from '@chakra-ui/icons'
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
 import ExamForm from '../examForm.tsx'
 import { ExamItem, ExamsList } from '../../interfaces/exams.ts'
@@ -55,8 +55,8 @@ function LeftMenu() {
      
     return(
         <Box borderRight="1px solid white" width="12vw" height="100vh" position="fixed">
-            <Text fontSize="4xl">matExam</Text>
-            <Button onClick={onOpen} margin="3">Dodaj egzamin</Button>
+            <Text fontSize="4xl" margin={["0", "0", "0", "3"]}>matExam</Text>
+            <Button onClick={onOpen} margin={["0", "0", "0", "3"]}>Dodaj egzamin</Button>
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay/>
                 <ExamForm refreshExams={getExamsList} onCloseExam={onClose}/>
@@ -109,13 +109,12 @@ function LeftMenu() {
                                     </CardBody> 
                                     </Link>
                                     <ContextMenu<HTMLDivElement>
-                                        renderMenu = {() => (
-                                            <MenuList>
-                                                <MenuItem>Context Menu Item 1</MenuItem>
-                                                <MenuItem>Context Menu Item 2</MenuItem>
-                                            </MenuList>
-                                        )}
-                                    >
+                                        renderMenu={() => (
+                                        <MenuList>
+                                            <MenuItem>Context Menu Item 1</MenuItem>
+                                            <MenuItem>Context Menu Item 2</MenuItem>
+                                        </MenuList>
+                                        )}>
                                         {ref => <div ref={ref}>Target</div>}
                                     </ContextMenu>
                                 </Card>
@@ -145,10 +144,10 @@ function LeftMenu() {
             <Button onClick={toggleColorMode}>
             {colorMode === 'light' ? <MoonIcon></MoonIcon> : <SunIcon></SunIcon>}
             </Button>
-            <Button onClick={onCsvOpen}>
+            <Button onClick={onCsvOpen} margin={["0", "0", "0", "3"]}>
                 <Text>Dodaj sztosa </Text>
                 <AddIcon marginLeft="0.5vw"/>
-                <Modal isOpen={isCsvOpen} onClose={onCsvClose}>
+                <Modal isOpen={isCsvOpen} onClose={onCsvClose} size="full">
                     <ModalOverlay/>
                     <CsvModal/>
                 </Modal>
