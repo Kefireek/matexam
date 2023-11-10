@@ -52,7 +52,7 @@ export interface StudentDescriptive extends StudentId {
   document?: string
 }
 
-enum ExamType {
+export enum ExamType {
   Basic = "basic",
   Extended = "extended",
   Oral = "oral"
