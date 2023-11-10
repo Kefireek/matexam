@@ -38,7 +38,7 @@ const CsvModal = () => {
             try{
                 const file = e.target.files[0];
                 const fileUrl = URL.createObjectURL(file);
-                const res = await fetch(fileUrl).then(async (resp) => {
+                await fetch(fileUrl).then(async (resp) => {
                     var data = await resp.text();
                     var data_ = data.split("\r");
                     var _data = data_.map((row) => row.split(","));
