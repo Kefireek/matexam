@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import { AiOutlineDesktop } from "react-icons/ai";
 import { Badge, Box, Button, Card, CardBody, CardFooter, CardHeader, Collapse, Flex, Heading, Icon, ScaleFade, Slide, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
+import { RoomStudents } from "../../../interfaces/exams";
 
-function ExamDetailsModal(props) {
+function ExamDetailsModal(props : {room : RoomStudents}) {
 
     const { isOpen, onToggle } = useDisclosure()
 
@@ -13,14 +14,14 @@ function ExamDetailsModal(props) {
             <Box key={props.number}>
                 <Card>
                     <CardHeader>
-                        <Heading size='md'> Sala {props.number}
-                        {props.computers !== null && props.computers === true  &&
+                        <Heading size='md'> Sala {props.room.number}
+                        {props.room.computers !== null && props.room.computers === true  &&
                             <Badge><Icon fontSize="1vw" as={AiOutlineDesktop} /></Badge>
                         }
                         </Heading>
                     </CardHeader>
                     <CardBody>
-                        <Text>Pojemność sali: {props.size}</Text>
+                        <Text>Pojemność sali: {props.room.size}</Text>
                     </CardBody>
                     <CardFooter>
                         <Button onClick={onToggle}>Zobacz</Button>
@@ -41,8 +42,8 @@ function ExamDetailsModal(props) {
                 >
                     <Flex justifyContent="space-between">
                         <Heading>
-                            Sala {props.number} <Badge></Badge>
-                            <Text fontSize="18px">Pojemność: {props.size}</Text>
+                            Sala {props.room.number} <Badge></Badge>
+                            <Text fontSize="18px">Pojemność: {props.room.size}</Text>
                         </Heading>
                         <Button onClick={onToggle}><CloseIcon /></Button>
                     </Flex>
@@ -59,7 +60,7 @@ function ExamDetailsModal(props) {
                             </Tr>
                             </Thead>
                             <Tbody>
-                                {props.students.map((result)=>
+                                {props.room.students.map((result)=>
                                     <Tr key={result.PESEL}>
                                         <Td>{result.ordinalNumber}</Td>
                                         <Td>{result.department}</Td>

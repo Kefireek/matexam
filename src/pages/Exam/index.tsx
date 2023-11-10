@@ -58,7 +58,7 @@ function ExamPage() {
                 <Box>
                     <SimpleGrid width="40vw" spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))'>
                         {examView?.assignedStudents.map((room) =>
-                            <ExamDetailsModal key={room.number} number={room.number} students={room.students} computers={room.computers} size={room.size} />
+                            <ExamDetailsModal key={room.number} room={room}/>
                         )
                         }
                     </SimpleGrid>
