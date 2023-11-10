@@ -55,7 +55,7 @@ function LeftMenu() {
      
     return(
         <Box borderRight="1px solid white" width="12vw" height="100vh" position="fixed">
-            <Text fontSize="4xl" margin={["0", "0", "0", "3"]}>matExam</Text>
+            <Text fontSize="4xl" onClick={()=> navigate("/")} style={{cursor: "pointer"}}  margin={["0", "0", "0", "3"]}>matExam</Text>
             <Button onClick={onOpen} margin={["0", "0", "0", "3"]}>Dodaj egzamin</Button>
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay/>

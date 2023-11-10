@@ -17,7 +17,7 @@ export const AuthService = {
         }
     },
 
-    /*getAuthenticatedConfig: function(config?: AxiosRequestConfig) {
+    getAuthenticatedConfig: function(config?: AxiosRequestConfig) {
         if(config) {
             config.headers = config.headers ?? new AxiosHeaders();
             config.headers.Authorization = `Bearer ${this.getToken()}`;
@@ -28,5 +28,5 @@ export const AuthService = {
             config.headers.setAuthorization(`Bearer ${this.getToken()}`)
         }
         return config
-    } */
+    }
 }
