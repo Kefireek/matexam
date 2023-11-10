@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { AiOutlineDesktop } from "react-icons/ai";
-import { Badge, Box, Button, Card, CardBody, CardFooter, CardHeader, Collapse, Flex, Heading, Icon, ScaleFade, Slide, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
-import { CloseIcon } from "@chakra-ui/icons";
-import { RoomStudents } from "../../../interfaces/exams";
+import { Badge, Box, Button, Card, CardBody, CardFooter, CardHeader, Collapse, Flex, Heading, Icon, IconButton, Menu, MenuButton, MenuItem, MenuList, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
+import { CloseIcon, HamburgerIcon, MinusIcon } from "@chakra-ui/icons";
+import { RoomStudents } from "../../../interfaces/rooms";
 
 function ExamDetailsModal(props : {room : RoomStudents}) {
 
@@ -11,7 +11,7 @@ function ExamDetailsModal(props : {room : RoomStudents}) {
 
     return(
         <>
-            <Box key={props.number}>
+            <Box key={props.room.number}>
                 <Card>
                     <CardHeader>
                         <Heading size='md'> Sala {props.room.number}
@@ -60,13 +60,16 @@ function ExamDetailsModal(props : {room : RoomStudents}) {
                             </Tr>
                             </Thead>
                             <Tbody>
-                                {props.room.students.map((result)=>
+                                {props.room.students?.map((result)=>
                                     <Tr key={result.PESEL}>
                                         <Td>{result.ordinalNumber}</Td>
                                         <Td>{result.department}</Td>
                                         <Td>{result.surname}</Td>
                                         <Td>{result.name}</Td>
                                         <Td>{result.PESEL}</Td>
+                                        <Td>
+                                            <IconButton aria-label="Delete Student" icon={<MinusIcon/>}></IconButton>
+                                        </Td>
                                     </Tr>
                                 )}
                             </Tbody>

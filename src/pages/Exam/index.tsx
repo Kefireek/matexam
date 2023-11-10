@@ -1,9 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Badge, Box, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
+import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Badge, Box, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { ExamView } from "../../interfaces/exams";
+import { ExamView, StudentRoom } from "../../interfaces/exams";
 import ExamsAPIService from "../../services/api/exams/ExamsAPIService";
 import ExamDetailsModal from "./ExamDetailsModal";
+import { AddIcon, ArrowForwardIcon, HamburgerIcon } from "@chakra-ui/icons";
 
 function ExamPage() {
 
@@ -30,6 +31,14 @@ function ExamPage() {
         }).catch((err)=>{
             console.log(err);
         });
+    }
+
+    const onSubmit = async (values: StudentRoom) => {
+        const {PESEL, number} = values;
+        const studentRoom = {PESEL, number};
+        await ExamsAPIService.addExam(exam);
+        props.refreshExams();
+        props.onCloseExam();
     }
 
     return(
@@ -84,6 +93,24 @@ function ExamPage() {
                                         <Td>{result.surname}</Td>
                                         <Td>{result.name}</Td>
                                         <Td>{result.PESEL}</Td>
+                                        <Td>
+                                            <Menu>
+                                                <MenuButton
+                                                    as={IconButton}
+                                                    aria-label='Options'
+                                                    icon={<AddIcon />}
+                                                    variant='outline'
+                                                />
+                                                <MenuList>
+                                                    <MenuGroup title="Dodaj do sali">
+                                                    {examView?.assignedStudents.map((room) =>
+                                                        <MenuItem key={room.number}> Sala nr {room.number}</MenuItem>
+                                                    )
+                                                    }
+                                                    </MenuGroup>
+                                                </MenuList>
+                                            </Menu>
+                                        </Td>
                                     </Tr>
                                 )}
                             </Tbody>

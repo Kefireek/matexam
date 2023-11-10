@@ -1,6 +1,5 @@
 import axios from 'axios'
-import { ExamItem, ExamView, ExamsList, StudentAssignedToRoom } from '../../../interfaces/exams'
-import { AuthService } from '../../auth/AuthService'
+import { ExamItem, ExamView, ExamsList, StudentRoom } from '../../../interfaces/exams'
 
 const ExamsAPIService = {
     getExams: function() {
@@ -14,6 +13,9 @@ const ExamsAPIService = {
     },
     deleteExam: function(id: number) {
         return axios.delete<void>(`${import.meta.env.VITE_API_URL}${import.meta.env.VITE_GET_EXAMS}${id}`)
+    },
+    updateRoomAssignments: function(studentRoom: StudentRoom) {
+        return axios.put<StudentRoom>(`${import.meta.env.VITE_API_URL}${import.meta.env.VITE_GET_EXAMS}${id}`)
     }
 }
 
