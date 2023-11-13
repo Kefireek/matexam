@@ -18,6 +18,9 @@ import {
 } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
+import { CsvInput } from "../interfaces/data";
+import { ExamCsvInput, StudentDescriptive } from "../interfaces/exams";
+import DataService from "../services/api/data/dataService";
 
 
 const CsvModal = () => {
@@ -30,8 +33,28 @@ const CsvModal = () => {
 
     const [headers, setHeaders] = useState<String[]>();
     const [rows, setRows] = useState<String[][]>();
-   
+    const [data, setData] = useState<CsvInput>();
 
+    const csvToArr = (stringVal: string) => {
+        var finalObj: CsvInput = {students: [], exams: []};
+        const [keys, ...rest] = stringVal.trim().split("\n").map((item) => item.split(","));
+        console.log(keys);
+        console.log(rest);
+        
+        rest.forEach((item) => {
+            var studentObject: {[key: string] : string} = {};
+            keys.forEach((key, index) => (studentObject[key] = item[index]));
+            finalObj.students.push(studentObject as any as StudentDescriptive);
+            let foundExam = finalObj.exams.find((obj) => obj.name === studentObject["nazwa egzaminu"]);
+            if(!foundExam){
+                foundExam = finalObj.exams[finalObj.exams.push({name: studentObject["nazwa egzaminu"], studentIds: []}) - 1];
+            }
+            foundExam.studentIds.push({PESEL: studentObject["PESEL"]});
+
+        })
+        return finalObj;
+
+    }
 
     const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
         if(e.target.files){
@@ -40,13 +63,8 @@ const CsvModal = () => {
                 const fileUrl = URL.createObjectURL(file);
                 await fetch(fileUrl).then(async (resp) => {
                     var data = await resp.text();
-                    var data_ = data.split("\r");
-                    var _data = data_.map((row) => row.split(","));
-                    console.log(_data)
-                    console.log(_data[0])
-                    console.log(_data.slice(1))
-                    setHeaders(_data[0]);
-                    setRows(_data.slice(1));
+                    const arr = csvToArr(data);
+                    setData(arr);
                 })
                 
             }
@@ -55,8 +73,12 @@ const CsvModal = () => {
             }
         }
     }
-    const onSubmit = () => {
-        
+    const onSubmit = async () => {
+        await DataService.postData(data!).then(
+            (res) => {
+                console.log(res.data);
+            }
+        );
     }
 
     return (
@@ -78,7 +100,7 @@ const CsvModal = () => {
                         />
                         <FormErrorMessage> </FormErrorMessage>
                     </FormControl>
-                <Button type="submit" id="csv-form" isLoading={isSubmitting} colorScheme='teal'>Zatwierdź!</Button>
+                <Button type="submit" id="csv-form" isLoading={isSubmitting} colorScheme='teal' disabled={data != undefined}>Zatwierdź!</Button>
                 </form>
                 <TableContainer>
                     <Table variant='simple' colorScheme='teal'>

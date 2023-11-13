@@ -43,13 +43,18 @@ export interface StudentId {
 }
 
 export interface StudentDescriptive extends StudentId {
-  name: string,
-  surname: string,
-  department: string,
+  name: String,
+  surname: String,
+  department: String,
   ordinalNumber: number,
-  phone?: string,
-  email?: string,
-  document?: string
+  phone?: String,
+  email?: String,
+  document?: String
+}
+
+export interface ExamCsvInput {
+  name: String,
+  studentIds: StudentId[]
 }
 
 export enum ExamType {
