@@ -1,13 +1,20 @@
-import { useEffect } from "react";
 import { AiOutlineDesktop } from "react-icons/ai";
-import { Badge, Box, Button, Card, CardBody, CardFooter, CardHeader, Collapse, Flex, Heading, Icon, IconButton, Menu, MenuButton, MenuItem, MenuList, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
-import { CloseIcon, HamburgerIcon, MinusIcon } from "@chakra-ui/icons";
+import { Badge, Box, Button, Card, CardBody, CardFooter, CardHeader, Collapse, Flex, Heading, Icon, IconButton, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
+import { CloseIcon, MinusIcon } from "@chakra-ui/icons";
 import { RoomStudents } from "../../../interfaces/rooms";
+import ExamsAPIService from "../../../services/api/exams/ExamsAPIService";
 
-function ExamDetailsModal(props : {room : RoomStudents}) {
+function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam: CallableFunction}) {
 
     const { isOpen, onToggle } = useDisclosure()
 
+    const unassignStudent = async (pesel : string) => {
+        ExamsAPIService.updateRoomAssignments(props.examid, [{PESEL : pesel}]).then(()=>{
+            props.getExam(props.examid);
+        });
+        // props.refreshExams();
+        // props.onCloseExam();
+    }
 
     return(
         <>
@@ -47,7 +54,7 @@ function ExamDetailsModal(props : {room : RoomStudents}) {
                         </Heading>
                         <Button onClick={onToggle}><CloseIcon /></Button>
                     </Flex>
-                    <TableContainer width="40vw">
+                    <TableContainer width="40vw" style={{overflow: "hidden"}}>
                         <Table variant='striped' colorScheme='teal'>
                             <TableCaption>Przypisani uczniowie</TableCaption>
                             <Thead>
@@ -68,7 +75,7 @@ function ExamDetailsModal(props : {room : RoomStudents}) {
                                         <Td>{result.name}</Td>
                                         <Td>{result.PESEL}</Td>
                                         <Td>
-                                            <IconButton aria-label="Delete Student" icon={<MinusIcon/>}></IconButton>
+                                            <IconButton aria-label="Delete Student" icon={<MinusIcon/>} onClick={()=>unassignStudent(result.PESEL)}></IconButton>
                                         </Td>
                                     </Tr>
                                 )}
