@@ -54,8 +54,8 @@ function LeftMenu() {
      
     return(
         <Box borderRight="1px solid white" width="12vw" height="100vh" position="fixed">
-            <Text fontSize="4xl" onClick={()=> navigate("/")} style={{cursor: "pointer"}}  margin={["0", "0", "0", "3"]}>matExam</Text>
-            <Button onClick={onOpen} margin={["0", "0", "0", "3"]}>Dodaj egzamin</Button>
+            <Text fontSize="2vw" onClick={()=> navigate("/")} style={{cursor: "pointer"}}  margin={["0", "0", "0", "3"]}>matExam</Text>
+            <Button fontSize="1vw" onClick={onOpen} margin={["0", "0", "0", "3"]}>Dodaj egzamin</Button>
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay/>
                 <ExamForm refreshExams={getExamsList} onCloseExam={onClose}/>
@@ -67,7 +67,7 @@ function LeftMenu() {
                     <AccordionButton>
                         <Box as="span" flex='1' textAlign='left'>
                             <HStack>
-                                <Text fontSize="20">Egzaminy</Text>
+                                <Text fontSize="1vw">Egzaminy</Text>
                                 {exams?.total !== undefined ?
                                     <Badge>{exams?.total}</Badge>
                                     : <Spinner size="sm" />
@@ -77,28 +77,28 @@ function LeftMenu() {
                         <AccordionIcon />
                     </AccordionButton>
                     </h2>
-                    <AccordionPanel pb={4} height="50vh" overflow="auto" >
+                    <AccordionPanel pb={4} height="50vh" overflow="hidden" >
                         <Stack spacing="3">
                             {exams?.items.map((exam: ExamItem) =>
                                 <Card key={exam.id} variant="elevated" style={{cursor: "pointer"}}>
                                     <Link to={`/exam/${exam.id}`}>
                                     <CardBody>
                                         <HStack>
-                                            <Heading fontSize='md'> 
+                                            <Heading fontSize='1vw'> 
                                                 {exam.name}
                                             </Heading>
                                             {exam.type == "basic" &&
-                                                 <Badge>P</Badge>
+                                                 <Badge fontSize="0.6vw">P</Badge>
                                             }
                                             {exam.type == "extended" &&
-                                                 <Badge>R</Badge>
+                                                 <Badge fontSize="0.6vw">R</Badge>
                                             }
                                             {exam.type == "oral" &&
-                                                 <Badge>U</Badge>
+                                                 <Badge fontSize="0.6vw">U</Badge>
                                             }
                                         </HStack>
                                         {exam.startTime &&
-                                            <Text fontSize="sm">
+                                            <Text fontSize="0.7vw">
                                                 {
                                                     new Date(exam.startTime.toString()).toLocaleString("pl-PL", {year: "numeric", month: "2-digit", day: "2-digit",hour: '2-digit', minute: "2-digit", weekday: "short"})
                                                 }
