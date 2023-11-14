@@ -1,5 +1,5 @@
-import { useDisclosure, Card, CardBody, Stack, Heading, Badge, HStack, Spinner, MenuList, MenuItem } from '@chakra-ui/react'
-import { MoonIcon, SunIcon, AddIcon} from '@chakra-ui/icons'
+import { useDisclosure, Card, CardBody, Stack, Heading, Badge, HStack, Spinner, MenuList, MenuItem, Menu, MenuButton } from '@chakra-ui/react'
+import { MoonIcon, SunIcon, AddIcon, ChevronDownIcon} from '@chakra-ui/icons'
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
 import ExamForm from '../examForm.tsx'
 import { ExamItem, ExamsList } from '../../interfaces/exams.ts'
@@ -14,7 +14,7 @@ import {
     AccordionButton,
     AccordionPanel,
     AccordionIcon,
-    Divider
+    Divider,
   } from '@chakra-ui/react'
 import { useColorMode } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
@@ -22,7 +22,6 @@ import CsvModal from '../csvModal.tsx';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
 import AuthAPIService from '../../services/api/auth/AuthAPIService.ts'
-import { ContextMenu } from 'chakra-ui-contextmenu'
 
 
 function LeftMenu() {
@@ -108,44 +107,32 @@ function LeftMenu() {
                                         
                                     </CardBody> 
                                     </Link>
-                                    <ContextMenu<HTMLDivElement>
-                                        renderMenu={() => (
-                                        <MenuList>
-                                            <MenuItem>Context Menu Item 1</MenuItem>
-                                            <MenuItem>Context Menu Item 2</MenuItem>
-                                        </MenuList>
-                                        )}>
-                                        {ref => <div ref={ref}>Target</div>}
-                                    </ContextMenu>
+                                    <Menu>
+                                        {({ isOpen }) => (
+                                            <>
+                                                <MenuButton isActive={isOpen} as={Button} rightIcon={<ChevronDownIcon />}>
+                                                    
+                                                </MenuButton>
+                                                <MenuList>
+                                                    <MenuItem>Edit</MenuItem>
+                                                    <MenuItem>Delete</MenuItem>
+                                                </MenuList>
+                                            </>
+                                        )}
+                                    </Menu>
                                 </Card>
                             ) ?? <Text>Wczytywanie...</Text>}
                         </Stack>
                     </AccordionPanel>
                 </AccordionItem>
                 <Divider />
-                <AccordionItem>
-                    <h2>
-                    <AccordionButton>
-                        <Box as="span" flex='1' textAlign='left'>
-                        Section 2 title
-                        </Box>
-                        <AccordionIcon />
-                    </AccordionButton>
-                    </h2>
-                    <AccordionPanel pb={4}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                    veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                    commodo consequat.
-                    </AccordionPanel>
-                </AccordionItem>
             </Accordion>
             <Button onClick={() => logoutUser()} margin="3">Wyloguj się</Button>
             <Button onClick={toggleColorMode}>
             {colorMode === 'light' ? <MoonIcon></MoonIcon> : <SunIcon></SunIcon>}
             </Button>
             <Button onClick={onCsvOpen} margin={["0", "0", "0", "3"]}>
-                <Text>Dodaj sztosa </Text>
+                <Text>Wypełnij dane </Text>
                 <AddIcon marginLeft="0.5vw"/>
                 <Modal isOpen={isCsvOpen} onClose={onCsvClose} size="full">
                     <ModalOverlay/>
