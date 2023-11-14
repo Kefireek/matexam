@@ -1,5 +1,5 @@
-import { useDisclosure, Card, CardBody, Stack, Heading, Badge, HStack, Spinner, MenuList, MenuItem } from '@chakra-ui/react'
-import { MoonIcon, SunIcon, AddIcon} from '@chakra-ui/icons'
+import { useDisclosure, Card, CardBody, Stack, Heading, Badge, HStack, Spinner, MenuList, MenuItem, Menu, MenuButton } from '@chakra-ui/react'
+import { MoonIcon, SunIcon, AddIcon, ChevronDownIcon} from '@chakra-ui/icons'
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
 import ExamForm from '../examForm.tsx'
 import { ExamItem, ExamsList } from '../../interfaces/exams.ts'
@@ -14,7 +14,7 @@ import {
     AccordionButton,
     AccordionPanel,
     AccordionIcon,
-    Divider
+    Divider,
   } from '@chakra-ui/react'
 import { useColorMode } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
@@ -108,15 +108,19 @@ function LeftMenu() {
                                         
                                     </CardBody> 
                                     </Link>
-                                    <ContextMenu<HTMLDivElement>
-                                        renderMenu={() => (
-                                        <MenuList>
-                                            <MenuItem>Context Menu Item 1</MenuItem>
-                                            <MenuItem>Context Menu Item 2</MenuItem>
-                                        </MenuList>
-                                        )}>
-                                        {ref => <div ref={ref}>Target</div>}
-                                    </ContextMenu>
+                                    <Menu>
+                                        {({ isOpen }) => (
+                                            <>
+                                                <MenuButton isActive={isOpen} as={Button} rightIcon={<ChevronDownIcon />}>
+                                                    
+                                                </MenuButton>
+                                                <MenuList>
+                                                    <MenuItem>Edit</MenuItem>
+                                                    <MenuItem>Delete</MenuItem>
+                                                </MenuList>
+                                            </>
+                                        )}
+                                    </Menu>
                                 </Card>
                             ) ?? <Text>Wczytywanie...</Text>}
                         </Stack>

@@ -37,21 +37,22 @@ const CsvModal = () => {
 
     const csvToArr = (stringVal: string) => {
         var finalObj: CsvInput = {students: [], exams: []};
-        const [keys, ...rest] = stringVal.trim().split("\n").map((item) => item.split(","));
-        console.log(keys);
-        console.log(rest);
+        const [keys, ...rest] = stringVal.trim().split("\r").map((item) => item.split(","));
+        setHeaders(keys);
+        setRows(rest);
         
         rest.forEach((item) => {
             var studentObject: {[key: string] : string} = {};
             keys.forEach((key, index) => (studentObject[key] = item[index]));
             finalObj.students.push(studentObject as any as StudentDescriptive);
-            let foundExam = finalObj.exams.find((obj) => obj.name === studentObject["nazwa egzaminu"]);
+            let foundExam = finalObj.exams.find((obj) => obj.name === studentObject["examName"]);
             if(!foundExam){
-                foundExam = finalObj.exams[finalObj.exams.push({name: studentObject["nazwa egzaminu"], studentIds: []}) - 1];
+                foundExam = finalObj.exams[finalObj.exams.push({name: studentObject["examName"], studentIds: []}) - 1];
             }
             foundExam.studentIds.push({PESEL: studentObject["PESEL"]});
 
         })
+        console.log(finalObj);
         return finalObj;
 
     }
@@ -63,6 +64,7 @@ const CsvModal = () => {
                 const fileUrl = URL.createObjectURL(file);
                 await fetch(fileUrl).then(async (resp) => {
                     var data = await resp.text();
+                    console.log(data);
                     const arr = csvToArr(data);
                     setData(arr);
                 })
