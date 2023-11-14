@@ -7,7 +7,9 @@ export interface ExamsList {
 }
 
 export interface ExamItem extends ExamId, ExamBody { }
-
+export interface Student {
+  number?: number;
+}
 export interface ExamBody {
   name: string,
   type?: ExamType,
@@ -32,30 +34,12 @@ export interface RoomDescriptive extends RoomId {
   computers?: boolean
 }
 
-export interface RoomStudents extends RoomId {
-  students?: StudentDescriptive[]
-}
-
 export interface StudentAssignedToRoom extends StudentDescriptive {
   roomId?: number
 }
 
 export interface StudentRoom extends StudentId, RoomId {
-  number?: number;
-}
-
-export interface StudentId {
-  PESEL: string
-}
-
-export interface StudentDescriptive extends StudentId {
-  name: String,
-  surname: String,
-  department: String,
-  ordinalNumber: number,
-  phone?: String,
-  email?: String,
-  document?: String
+  
 }
 
 export interface ExamCsvInput {
