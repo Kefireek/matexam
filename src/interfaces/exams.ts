@@ -38,8 +38,8 @@ export interface StudentAssignedToRoom extends StudentDescriptive {
   roomId?: number
 }
 
-export interface StudentRoom extends StudentId, RoomId {
-  
+export interface StudentRoom extends StudentId {
+  number?: number
 }
 
 export interface ExamCsvInput {
