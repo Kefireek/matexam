@@ -36,7 +36,7 @@ export const router = createBrowserRouter([
   },
 ]);
 
-axios.defaults.baseURL = 'http://localhost:8000';
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 interceptorInit();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

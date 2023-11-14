@@ -1,13 +1,14 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Badge, Box, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
+import { Badge, Box, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { ExamView } from "../../interfaces/exams";
 import ExamsAPIService from "../../services/api/exams/ExamsAPIService";
 import ExamDetailsModal from "./ExamDetailsModal";
+import { AddIcon } from "@chakra-ui/icons";
 
 function ExamPage() {
 
-    const { examid } = useParams();
+    const { examid } = useParams() as any as examParams;
 
 
     const [examView, setExamView] = useState<ExamView>();
@@ -19,7 +20,7 @@ function ExamPage() {
             navigate("/error")
         }
         else if(examid != undefined){
-            getExam(parseInt(examid))
+            getExam(examid)
         }
     }, [])
 
@@ -30,6 +31,14 @@ function ExamPage() {
         }).catch((err)=>{
             console.log(err);
         });
+    }
+
+    const assignStudent = async (pesel : string, numberp : number) => {
+        ExamsAPIService.updateRoomAssignments(examid, [{PESEL : pesel, number : numberp}]).then(()=>{
+            getExam(examid);
+        });
+        // props.refreshExams();
+        // props.onCloseExam();
     }
 
     return(
@@ -58,7 +67,7 @@ function ExamPage() {
                 <Box>
                     <SimpleGrid width="40vw" spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))'>
                         {examView?.assignedStudents.map((room) =>
-                            <ExamDetailsModal key={room.number} room={room}/>
+                            <ExamDetailsModal key={room.number} room={room} examid={examid} getExam={getExam}/>
                         )
                         }
                     </SimpleGrid>
@@ -77,13 +86,31 @@ function ExamPage() {
                             </Tr>
                             </Thead>
                             <Tbody>
-                                {examView?.unassignedStudents.map((result)=>
-                                    <Tr key={result.PESEL}>
-                                        <Td>{result.ordinalNumber}</Td>
-                                        <Td>{result.department}</Td>
-                                        <Td>{result.surname}</Td>
-                                        <Td>{result.name}</Td>
-                                        <Td>{result.PESEL}</Td>
+                                {examView?.unassignedStudents.map((student)=>
+                                    <Tr key={student.PESEL}>
+                                        <Td>{student.ordinalNumber}</Td>
+                                        <Td>{student.department}</Td>
+                                        <Td>{student.surname}</Td>
+                                        <Td>{student.name}</Td>
+                                        <Td>{student.PESEL}</Td>
+                                        <Td>
+                                            <Menu>
+                                                <MenuButton
+                                                    as={IconButton}
+                                                    aria-label='Options'
+                                                    icon={<AddIcon />}
+                                                    variant='outline'
+                                                />
+                                                <MenuList>
+                                                    <MenuGroup title="Dodaj do sali">
+                                                    {examView?.assignedStudents.map((room) =>
+                                                        <MenuItem key={room.number} onClick={()=> assignStudent(student.PESEL, room.number)}> Sala nr {room.number}</MenuItem>
+                                                    )
+                                                    }
+                                                    </MenuGroup>
+                                                </MenuList>
+                                            </Menu>
+                                        </Td>
                                     </Tr>
                                 )}
                             </Tbody>
@@ -105,3 +132,5 @@ function ExamPage() {
 }
 
 export default ExamPage
+
+type examParams = {examid : number}
