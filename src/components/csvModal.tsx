@@ -15,11 +15,12 @@ import {
     Th,
     Tbody,
     Td,
+    Box,
 } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { CsvInput } from "../interfaces/data";
-import { ExamCsvInput, StudentDescriptive } from "../interfaces/exams";
+import { StudentDescriptive } from "../interfaces/students";
 import DataService from "../services/api/data/dataService";
 
 
@@ -34,6 +35,7 @@ const CsvModal = () => {
     const [headers, setHeaders] = useState<String[]>();
     const [rows, setRows] = useState<String[][]>();
     const [data, setData] = useState<CsvInput>();
+    const [result, setResult] = useState<string>()
 
     const csvToArr = (stringVal: string) => {
         var finalObj: CsvInput = {students: [], exams: []};
@@ -78,7 +80,7 @@ const CsvModal = () => {
     const onSubmit = async () => {
         await DataService.postData(data!).then(
             (res) => {
-                console.log(res.data);
+                setResult(res.data)
             }
         );
     }
@@ -124,6 +126,9 @@ const CsvModal = () => {
                         </Tbody>
                     </Table>
                 </TableContainer>
+                <Box style={{whiteSpace: "pre-line"}}>
+                    {result}
+                </Box>
             </ModalBody>
         </ModalContent>
     )

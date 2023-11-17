@@ -22,7 +22,6 @@ import CsvModal from '../csvModal.tsx';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
 import AuthAPIService from '../../services/api/auth/AuthAPIService.ts'
-import { ContextMenu } from 'chakra-ui-contextmenu'
 
 
 function LeftMenu() {
@@ -127,29 +126,13 @@ function LeftMenu() {
                     </AccordionPanel>
                 </AccordionItem>
                 <Divider />
-                <AccordionItem>
-                    <h2>
-                    <AccordionButton>
-                        <Box as="span" flex='1' textAlign='left'>
-                        Section 2 title
-                        </Box>
-                        <AccordionIcon />
-                    </AccordionButton>
-                    </h2>
-                    <AccordionPanel pb={4}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                    veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                    commodo consequat.
-                    </AccordionPanel>
-                </AccordionItem>
             </Accordion>
             <Button onClick={() => logoutUser()} margin="3">Wyloguj się</Button>
             <Button onClick={toggleColorMode}>
             {colorMode === 'light' ? <MoonIcon></MoonIcon> : <SunIcon></SunIcon>}
             </Button>
             <Button onClick={onCsvOpen} margin={["0", "0", "0", "3"]}>
-                <Text>Dodaj sztosa </Text>
+                <Text>Wypełnij dane </Text>
                 <AddIcon marginLeft="0.5vw"/>
                 <Modal isOpen={isCsvOpen} onClose={onCsvClose} size="full">
                     <ModalOverlay/>
