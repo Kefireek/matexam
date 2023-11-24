@@ -134,7 +134,7 @@ function LeftMenu() {
             <Button onClick={onCsvOpen} margin={["0", "0", "0", "3"]}>
                 <Text>Wypełnij dane </Text>
                 <AddIcon marginLeft="0.5vw"/>
-                <Modal isOpen={isCsvOpen} onClose={onCsvClose} size="full">
+                <Modal isOpen={isCsvOpen} onClose={onCsvClose} size="xl">
                     <ModalOverlay/>
                     <CsvModal refreshExams={getExamsList}/>
                 </Modal>

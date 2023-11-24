@@ -70,7 +70,6 @@ const CsvModal = (props: {refreshExams: Function}) => {
                     console.log(data);
                     const arr = csvToArr(data);
                     setData(arr);
-                    props.refreshExams();
                 })
                 
             }
@@ -83,6 +82,7 @@ const CsvModal = (props: {refreshExams: Function}) => {
         await DataService.postData(data!).then(
             (res) => {
                 setResult(res.data);
+                props.refreshExams();
             })
         .catch((err) => {
             setErrorMsg(err);
@@ -105,6 +105,7 @@ const CsvModal = (props: {refreshExams: Function}) => {
                             )}
                             accept=".csv"
                             onChange={handleChange}
+                            display="none"
                         />
                         <FormErrorMessage> {errorMsg} </FormErrorMessage>
                     </FormControl>
