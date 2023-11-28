@@ -44,7 +44,7 @@ function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam:
                     rounded='md'
                     shadow='md'
                     width="40vw"
-                    height="60vh"
+                    height="70vh"
                     margin="0"
                 >
                     <Flex justifyContent="space-between">
@@ -54,20 +54,7 @@ function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam:
                         </Heading>
                         <Button onClick={onToggle}><CloseIcon /></Button>
                     </Flex>
-                    <TableContainer width="40vw" style={{overflow: "hidden"}}>
-                        <Table variant='striped' colorScheme='teal'>
-                            <TableCaption>Przypisani uczniowie</TableCaption>
-                            <Thead>
-                            <Tr>
-                                <Th>Nr w dzienniku</Th>
-                                <Th>Oddział</Th>
-                                <Th>Nazwisko</Th>
-                                <Th>Imię</Th>
-                                <Th>PESEL</Th>
-                            </Tr>
-                            </Thead>
-                            <Tbody>
-                                {props.room.students?.map((result)=>
+                    {/* {props.room.students?.map((result)=>
                                     <Tr key={result.PESEL}>
                                         <Td>{result.ordinalNumber}</Td>
                                         <Td>{result.department}</Td>
@@ -78,19 +65,8 @@ function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam:
                                             <IconButton aria-label="Delete Student" icon={<MinusIcon/>} onClick={()=>unassignStudent(result.PESEL)}></IconButton>
                                         </Td>
                                     </Tr>
-                                )}
-                            </Tbody>
-                            <Tfoot>
-                            <Tr>
-                                <Th>Nr w dzienniku</Th>
-                                <Th>Oddział</Th>
-                                <Th>Nazwisko</Th>
-                                <Th>Imię</Th>
-                                <Th>PESEL</Th>
-                            </Tr>
-                            </Tfoot>
-                        </Table>
-                    </TableContainer>
+                    )} */}
+
                 </Box>
             </Box>
         </>
