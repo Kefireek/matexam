@@ -24,7 +24,7 @@ import { StudentDescriptive } from "../interfaces/students";
 import DataService from "../services/api/data/dataService";
 
 
-const CsvModal = () => {
+const CsvModal = (props: {refreshExams: Function}) => {
 
     const {
         handleSubmit,
@@ -35,7 +35,8 @@ const CsvModal = () => {
     const [headers, setHeaders] = useState<String[]>();
     const [rows, setRows] = useState<String[][]>();
     const [data, setData] = useState<CsvInput>();
-    const [result, setResult] = useState<string>()
+    const [result, setResult] = useState<String>();
+    const [errorMsg, setErrorMsg] = useState<String>();
 
     const csvToArr = (stringVal: string) => {
         var finalObj: CsvInput = {students: [], exams: []};
@@ -80,9 +81,12 @@ const CsvModal = () => {
     const onSubmit = async () => {
         await DataService.postData(data!).then(
             (res) => {
-                setResult(res.data)
-            }
-        );
+                setResult(res.data);
+                props.refreshExams();
+            })
+        .catch((err) => {
+            setErrorMsg(err);
+        })
     }
 
     return (
@@ -101,8 +105,9 @@ const CsvModal = () => {
                             )}
                             accept=".csv"
                             onChange={handleChange}
+                            display="none"
                         />
-                        <FormErrorMessage> </FormErrorMessage>
+                        <FormErrorMessage> {errorMsg} </FormErrorMessage>
                     </FormControl>
                 <Button type="submit" id="csv-form" isLoading={isSubmitting} colorScheme='teal' disabled={data != undefined}>Zatwierdź!</Button>
                 </form>
