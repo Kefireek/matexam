@@ -1,4 +1,4 @@
-import { useDisclosure, Card, CardBody, Stack, Heading, Badge, HStack, Spinner, MenuList, MenuItem, Menu, MenuButton, IconButton, Flex, Collapse } from '@chakra-ui/react'
+import { useDisclosure, Card, CardBody, Stack, Heading, Badge, HStack, Spinner, MenuList, MenuItem, Menu, MenuButton, IconButton, Flex, Collapse, Avatar, Tooltip } from '@chakra-ui/react'
 import { MoonIcon, SunIcon, AddIcon, ChevronDownIcon, HamburgerIcon} from '@chakra-ui/icons'
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
 import ExamForm from '../examForm.tsx'
@@ -33,6 +33,7 @@ function LeftMenu() {
     const {isOpen: isCsvOpen, onOpen: onCsvOpen, onClose: onCsvClose} = useDisclosure();
     const {isOpen: isMenuWide, getButtonProps, getDisclosureProps} = useDisclosure({defaultIsOpen: true});
     const [hidden, setHidden] = useState(!isMenuWide)
+    const [hidden2, setHidden2] = useState(isMenuWide)
 
     const { colorMode, toggleColorMode } = useColorMode()
 
@@ -64,7 +65,7 @@ function LeftMenu() {
         <Box width="12vw" height="100vh" position="fixed">
             <Flex justifyContent="center" alignItems="center" height="10vh">
                 <HamburgerIcon fontSize="1.2vw" marginTop="0.5vw" {...getButtonProps()} style={{cursor: "pointer"}}/>
-                <Text unselectable='on' fontSize="2vw" onClick={()=> navigate("/")} style={{cursor: "pointer"}}  margin={["0", "0", "0", "3"]}>matExam</Text> 
+                <Text unselectable='on' fontSize="2vw" onClick={()=> navigate("/")} style={{cursor: "pointer"}}  margin={["0", "0", "0", "3"]}>matExam  </Text> 
             </Flex>
             <motion.div
                 {...getDisclosureProps()}
@@ -80,6 +81,8 @@ function LeftMenu() {
                 left: '0',
                 height: '100vh',
                 top: '10vh',
+                zIndex: "10",
+                backgroundColor: colorMode == "dark" ? "#1A202C" : "white",
                 }}
             >
                 <Button fontSize="1vw" width="90%" onClick={onOpen} margin="0.5vw">Dodaj egzamin</Button>
@@ -184,6 +187,19 @@ function LeftMenu() {
                     </Modal>
                 </Button>
             </motion.div>
+
+            {/* When left panel isn't wide  */}
+            <Box position="absolute" height="100vh" width="12vw" top="10vh" zIndex="5">
+                <Stack spacing="3">
+                    {exams?.items.map((exam: ExamItem) =>
+                    <Link to={`/exam/${exam.id}`}>
+                        <Tooltip label={exam.name} placement="right">
+                            <Avatar name={exam.name} ml="0.5vw" cursor="pointer" /> 
+                        </Tooltip>
+                    </Link>  
+                    ) ?? <Text>Wczytywanie...</Text>}
+                </Stack>
+            </Box>
         </Box>
     )
 }
