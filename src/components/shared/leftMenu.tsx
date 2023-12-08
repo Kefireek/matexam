@@ -1,9 +1,22 @@
-import { useDisclosure, Card, CardBody, Stack, Heading, Badge, HStack, Spinner, MenuList, MenuItem, Menu, MenuButton, IconButton, Flex, Collapse } from '@chakra-ui/react'
 import { MoonIcon, SunIcon, AddIcon, ChevronDownIcon, HamburgerIcon} from '@chakra-ui/icons'
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
 import ExamForm from '../examForm.tsx'
 import { ExamItem, ExamsList } from '../../interfaces/exams.ts'
 import {
+    useDisclosure, 
+    Card, 
+    CardBody, 
+    Stack, 
+    Heading,
+    Badge, 
+    HStack, 
+    Spinner, 
+    MenuList, 
+    MenuItem,
+    Menu, 
+    MenuButton, 
+    IconButton, 
+    Flex,
     Text,
     Box,
     Button,
@@ -22,15 +35,16 @@ import CsvModal from '../csvModal.tsx';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
 import AuthAPIService from '../../services/api/auth/AuthAPIService.ts'
-import styles from "../../App.module.css";
 import { useMediaQuery } from '@chakra-ui/react'
 import { motion } from "framer-motion"
+import RoomForm from '../roomForm.tsx'
 
 
 function LeftMenu() {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {isOpen: isCsvOpen, onOpen: onCsvOpen, onClose: onCsvClose} = useDisclosure();
+    const {isOpen: isRoomOpen, onOpen: onRoomOpen, onClose: onRoomClose} = useDisclosure();
     const {isOpen: isMenuWide, getButtonProps, getDisclosureProps} = useDisclosure({defaultIsOpen: true});
     const [hidden, setHidden] = useState(!isMenuWide)
 
@@ -54,6 +68,12 @@ function LeftMenu() {
         }).catch((err)=>{
             console.log(err);
         });
+    }
+
+    const delExam = (id: number) => {
+        ExamsAPIService.deleteExam(id).then(()=>{
+            getExamsList();
+        })
     }
     const logoutUser = () => {
         AuthAPIService.logout();
@@ -80,14 +100,19 @@ function LeftMenu() {
                 left: '0',
                 height: '100vh',
                 top: '10vh',
-                }}
-            >
+                display: "flex",
+                flexDirection: "column"
+                }} >
                 <Button fontSize="1vw" width="90%" onClick={onOpen} margin="0.5vw">Dodaj egzamin</Button>
                 <Modal isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay/>
                     <ExamForm refreshExams={getExamsList} onCloseExam={onClose}/>
                 </Modal>
-
+                <Button fontSize="1vw" width="90%" onClick={onRoomOpen} margin="0.5vw">Dodaj salę</Button>
+                <Modal isOpen={isRoomOpen} onClose={onRoomClose}>
+                    <ModalOverlay/>
+                    <RoomForm/>
+                </Modal>
                 <Accordion allowMultiple>
                     <AccordionItem>
                         <h2>
@@ -124,7 +149,7 @@ function LeftMenu() {
                                                     </MenuButton>
                                                     <MenuList>
                                                         <MenuItem>Edit</MenuItem>
-                                                        <MenuItem>Delete</MenuItem>
+                                                        <MenuItem onClick={() => delExam(exam.id)}>Delete</MenuItem>
                                                     </MenuList>
                                                 </>
                                             )}
@@ -178,9 +203,9 @@ function LeftMenu() {
                 <Button fontSize="1vw" width="90%" onClick={onCsvOpen} margin="0.5vw">
                     <Text>Wypełnij dane </Text>
                     <AddIcon marginLeft="0.5vw"/>
-                    <Modal isOpen={isCsvOpen} onClose={onCsvClose} size="full">
+                    <Modal isOpen={isCsvOpen} onClose={onCsvClose} size="xl">
                         <ModalOverlay/>
-                        <CsvModal/>
+                        <CsvModal refreshExams={getExamsList}/>
                     </Modal>
                 </Button>
             </motion.div>

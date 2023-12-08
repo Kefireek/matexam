@@ -22,6 +22,7 @@ import { useForm } from "react-hook-form";
 import { CsvInput } from "../interfaces/data";
 import { StudentDescriptive } from "../interfaces/students";
 import DataService from "../services/api/data/dataService";
+import { PlusSquareIcon } from "@chakra-ui/icons";
 
 
 const CsvModal = (props: {refreshExams: Function}) => {
@@ -96,20 +97,24 @@ const CsvModal = (props: {refreshExams: Function}) => {
             </ModalHeader>
             <ModalBody>
                 <form id="csv-form" onSubmit={handleSubmit(onSubmit)}>
-                    <FormControl isInvalid={errors.file?.message != null}>
-                        <FormLabel> Dodaj plik </FormLabel>
-                        <Input size=""
-                            type="file"
-                            {...register(
-                                'file'
-                            )}
-                            accept=".csv"
-                            onChange={handleChange}
-                            display="none"
-                        />
-                        <FormErrorMessage> {errorMsg} </FormErrorMessage>
-                    </FormControl>
-                <Button type="submit" id="csv-form" isLoading={isSubmitting} colorScheme='teal' disabled={data != undefined}>Zatwierdź!</Button>
+                    <Box border="1px dotted" borderColor="gray" display="flex" alignItems="center" justifyContent="center" borderRadius="md" flexDirection="column" >
+                        <Box border="1px dotted" borderColor="gray" p="10" m="5"  borderRadius="xl">    
+                            <FormControl isInvalid={errors.file?.message != null}>
+                                <FormLabel> Dodaj plik </FormLabel>
+                                    <Input size=""
+                                        type="file"
+                                        {...register(
+                                            'file'
+                                        )}
+                                        accept=".csv"
+                                        onChange={handleChange}
+                                        display="none"
+                                    />
+                                <FormErrorMessage> {errorMsg} </FormErrorMessage>
+                            </FormControl>
+                            </Box>
+                        <Button type="submit" id="csv-form" isLoading={isSubmitting} colorScheme='teal' disabled={data != undefined}>Zatwierdź!</Button>
+                    </Box>
                 </form>
                 <TableContainer>
                     <Table variant='simple' colorScheme='teal'>
