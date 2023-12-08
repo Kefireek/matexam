@@ -62,10 +62,15 @@ function LeftMenu() {
     }
      
     return(
-        <Box width="12vw" height="100vh" position="fixed">
-            <Flex justifyContent="center" alignItems="center" height="10vh">
-                <HamburgerIcon fontSize="1.2vw" marginTop="0.5vw" {...getButtonProps()} style={{cursor: "pointer"}}/>
-                <Text unselectable='on' fontSize="2vw" onClick={()=> navigate("/")} style={{cursor: "pointer"}}  margin={["0", "0", "0", "3"]}>matExam  </Text> 
+        <Flex height="100vh" flexDirection="column">
+            <Flex justifyContent="left" alignItems="center" height="10vh">
+                <HamburgerIcon fontSize="1.2vw" ml="1vw" marginTop="0.5vw" {...getButtonProps()} style={{cursor: "pointer"}}/>
+                {!isMenuWide &&
+                    <Text unselectable='on' fontSize="2vw" onClick={()=> navigate("/")} style={{cursor: "pointer"}}  margin={["0", "0", "0", "3"]}>mE</Text>    
+                }
+                {isMenuWide &&
+                    <Text unselectable='on' fontSize="2vw" onClick={()=> navigate("/")} style={{cursor: "pointer"}}  margin={["0", "0", "0", "3"]}>matExam</Text>    
+                }
             </Flex>
             <motion.div
                 {...getDisclosureProps()}
@@ -77,7 +82,6 @@ function LeftMenu() {
                 style={{
                 overflow: 'hidden',
                 whiteSpace: 'nowrap',
-                position: 'absolute',
                 left: '0',
                 height: '100vh',
                 top: '10vh',
@@ -189,18 +193,18 @@ function LeftMenu() {
             </motion.div>
 
             {/* When left panel isn't wide  */}
-            <Box position="absolute" height="100vh" width="12vw" top="10vh" zIndex="5">
+            <Box position="absolute" ml="1vw" height="100vh" top="10vh" width="4vw" zIndex="5" float="left" onMouseEnter={()=> setHidden(false)}>
                 <Stack spacing="3">
                     {exams?.items.map((exam: ExamItem) =>
                     <Link to={`/exam/${exam.id}`}>
                         <Tooltip label={exam.name} placement="right">
-                            <Avatar name={exam.name} ml="0.5vw" cursor="pointer" /> 
+                            <Text>{Array.from(exam.name)[0]}</Text>
                         </Tooltip>
                     </Link>  
                     ) ?? <Text>Wczytywanie...</Text>}
                 </Stack>
             </Box>
-        </Box>
+        </Flex>
     )
 }
 

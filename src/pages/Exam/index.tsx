@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Badge, Box, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
+import { Badge, Box, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { ExamView } from "../../interfaces/exams";
 import ExamsAPIService from "../../services/api/exams/ExamsAPIService";
@@ -47,27 +47,32 @@ function ExamPage() {
     }
 
     return(
-        <Box padding="1.5vw">
-            <Box>
-                <Text fontSize="4xl">
+        <Box display="contents">
+        <Box paddingLeft="1.5vw">
+            <Flex justifyContent="left" alignItems="center" height="10vh">
+                <Text fontSize="2vw">
                     {examView?.name}
                     <Badge marginLeft="0.5vw" fontSize="2xl">{examView?.type == "basic" ? "Podstawowy" : (examView?.type == "extended" ? "Rozszerzony" : "Ustny")}</Badge>
                 </Text>
-                <Text>
-                    Od: <b></b>
-                    {
-                        examView?.startTime &&
-                            new Date(examView?.startTime?.toString()).toLocaleString("pl-PL", {year: "numeric", month: "2-digit", day: "2-digit",hour: '2-digit', minute: "2-digit", weekday: "short"})
-                    }
-                </Text>
-                <Text>
-                    Do: <b></b>
-                    {
-                        examView?.endTime &&
-                            new Date(examView?.endTime?.toString()).toLocaleString("pl-PL", {year: "numeric", month: "2-digit", day: "2-digit",hour: '2-digit', minute: "2-digit", weekday: "short"})
-                    }
-                </Text>
-            </Box>
+                <Box ml="1vw">
+                    <Text fontSize="1vw">
+                        Od: <b></b>
+                        {
+                            examView?.startTime &&
+                                new Date(examView?.startTime?.toString()).toLocaleString("pl-PL", {year: "numeric", month: "2-digit", day: "2-digit",hour: '2-digit', minute: "2-digit", weekday: "short"})
+                        }
+                    </Text>
+                    <Text fontSize="1vw">
+                        Do: <b></b>
+                        {
+                            examView?.endTime &&
+                                new Date(examView?.endTime?.toString()).toLocaleString("pl-PL", {year: "numeric", month: "2-digit", day: "2-digit",hour: '2-digit', minute: "2-digit", weekday: "short"})
+                        }
+                    </Text>
+                </Box>
+            </Flex>
+        </Box>
+         <Box paddingLeft="1.5vw">
             <Box marginTop="2vw" display="flex" justifyContent="space-between">
                 <Box>
                     <SimpleGrid width="40vw" spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))'>
@@ -77,7 +82,7 @@ function ExamPage() {
                         }
                     </SimpleGrid>
                 </Box>
-                <Box>
+                <Box ml="1vw">
                     <TableContainer width="40vw">
                         <Table variant='striped' colorScheme='teal'>
                             <TableCaption>Nieprzypisani uczniowie</TableCaption>
@@ -132,6 +137,7 @@ function ExamPage() {
                     </TableContainer>
                 </Box>
             </Box>
+        </Box>
         </Box>
     )
 }
