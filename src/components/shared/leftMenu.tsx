@@ -1,9 +1,24 @@
 import { useDisclosure, Card, CardBody, Stack, Heading, Badge, HStack, Spinner, MenuList, MenuItem, Menu, MenuButton, IconButton, Flex, Collapse, Avatar, Tooltip, Image } from '@chakra-ui/react'
+
 import { MoonIcon, SunIcon, AddIcon, ChevronDownIcon, HamburgerIcon} from '@chakra-ui/icons'
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
 import ExamForm from '../examForm.tsx'
-import { ExamItem, ExamsList } from '../../interfaces/exams.ts'
+import { ExamItem } from '../../interfaces/exams.ts'
 import {
+    useDisclosure, 
+    Card, 
+    CardBody, 
+    Stack, 
+    Heading,
+    Badge, 
+    HStack, 
+    Spinner, 
+    MenuList, 
+    MenuItem,
+    Menu, 
+    MenuButton, 
+    IconButton, 
+    Flex,
     Text,
     Box,
     Button,
@@ -22,23 +37,26 @@ import CsvModal from '../csvModal.tsx';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
 import AuthAPIService from '../../services/api/auth/AuthAPIService.ts'
-import styles from "../../App.module.css";
 import { useMediaQuery } from '@chakra-ui/react'
 import { motion } from "framer-motion"
+import RoomForm from '../roomForm.tsx'
 import logo_white from "../../assets/logo_white.png"
 import logo_black from "../../assets/logo_black.png"
+
 
 
 function LeftMenu() {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {isOpen: isCsvOpen, onOpen: onCsvOpen, onClose: onCsvClose} = useDisclosure();
+    const {isOpen: isRoomOpen, onOpen: onRoomOpen, onClose: onRoomClose} = useDisclosure();
     const {isOpen: isMenuWide, onOpen: onMenuOpen, onClose: onMenuClose, getButtonProps, getDisclosureProps} = useDisclosure({defaultIsOpen: true});
+
     const [hidden, setHidden] = useState(!isMenuWide)
 
     const { colorMode, toggleColorMode } = useColorMode()
 
-    const [exams, setExams] = useState<ExamsList>();
+    const [exams, setExams] = useState<ExamItem[]>();
 
     const navigate = useNavigate();
 
@@ -57,6 +75,12 @@ function LeftMenu() {
         }).catch((err)=>{
             console.log(err);
         });
+    }
+
+    const delExam = (id: number) => {
+        ExamsAPIService.deleteExam(id).then(()=>{
+            getExamsList();
+        })
     }
     const logoutUser = () => {
         AuthAPIService.logout();
@@ -94,7 +118,11 @@ function LeftMenu() {
                     <ModalOverlay/>
                     <ExamForm refreshExams={getExamsList} onCloseExam={onClose}/>
                 </Modal>
-
+                <Button fontSize="1vw" width="90%" onClick={onRoomOpen} margin="0.5vw">Dodaj salę</Button>
+                <Modal isOpen={isRoomOpen} onClose={onRoomClose}>
+                    <ModalOverlay/>
+                    <RoomForm/>
+                </Modal>
                 <Accordion allowMultiple>
                     <AccordionItem>
                         <h2>
@@ -102,8 +130,8 @@ function LeftMenu() {
                             <Box as="span" flex='1' textAlign='left'>
                                 <HStack>
                                     <Text fontSize="1.2vw">Egzaminy</Text>
-                                    {exams?.total !== undefined ?
-                                        <Badge>{exams?.total}</Badge>
+                                    {exams?.length !== undefined ?
+                                        <Badge>{exams?.length}</Badge>
                                         : <Spinner size="sm" />
                                     }
                                 </HStack>
@@ -113,7 +141,7 @@ function LeftMenu() {
                         </h2>
                         <AccordionPanel pb={4} height="40vh" overflowY="auto" overflowX="hidden" >
                             <Stack spacing="3">
-                                {exams?.items.map((exam: ExamItem) =>
+                                {exams?.map((exam: ExamItem) =>
                                     <Card key={exam.id} variant="elevated" style={{cursor: "pointer"}}>
                                         <Link to={`/exam/${exam.id}`}>
                                         <Menu>
@@ -131,7 +159,7 @@ function LeftMenu() {
                                                     </MenuButton>
                                                     <MenuList>
                                                         <MenuItem>Edit</MenuItem>
-                                                        <MenuItem>Delete</MenuItem>
+                                                        <MenuItem onClick={() => delExam(exam.id)}>Delete</MenuItem>
                                                     </MenuList>
                                                 </>
                                             )}
@@ -177,7 +205,7 @@ function LeftMenu() {
                     <Divider />
                 </Accordion>
                 <Flex width="90%" margin="0.5vw" justifyContent="space-around">
-                    <Button width="65%" fontSize="1vw" onClick={() => logoutUser}>Wyloguj się</Button>
+                    <Button width="65%" fontSize="1vw" onClick={logoutUser}>Wyloguj się</Button>
                     <Button width="25%" fontSize="1vw" onClick={toggleColorMode}>
                         {colorMode === 'light' ? <MoonIcon></MoonIcon> : <SunIcon></SunIcon>}
                     </Button>
@@ -185,9 +213,9 @@ function LeftMenu() {
                 <Button fontSize="1vw" width="90%" onClick={onCsvOpen} margin="0.5vw">
                     <Text>Wypełnij dane </Text>
                     <AddIcon marginLeft="0.5vw"/>
-                    <Modal isOpen={isCsvOpen} onClose={onCsvClose} size="full">
+                    <Modal isOpen={isCsvOpen} onClose={onCsvClose} size="xl">
                         <ModalOverlay/>
-                        <CsvModal/>
+                        <CsvModal refreshExams={getExamsList}/>
                     </Modal>
                 </Button>
             </motion.div>
