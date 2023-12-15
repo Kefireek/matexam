@@ -10,23 +10,25 @@ import {
     FormErrorMessage,
     RadioGroup,
     HStack,
-    Radio
+    Radio,
+    Checkbox
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
+import RoomService from "../services/api/rooms/RoomsService";
+import { RoomDescriptive } from "../interfaces/rooms";
 
-export type RoomFormModel = {
-    roomNumber: number,
-    roomSize: number,
-    hasComputers: boolean
-}
+
 const RoomForm = () => {
     const { 
         handleSubmit,
         register,
         formState: {errors, isSubmitting},
-    } = useForm<RoomFormModel>();
-    const onSubmit = () => {
+    } = useForm<RoomDescriptive>();
 
+    const onSubmit = async (values: RoomDescriptive) => {
+        const {number, size, computers} = values;
+        console.log(number, size)
+        await RoomService.createRoom({number, size, computers});
     }
 
     return (
@@ -36,43 +38,35 @@ const RoomForm = () => {
         </ModalHeader>
         <ModalBody>
             <form id="exam-form" onSubmit={handleSubmit(onSubmit)}>
-                <FormControl isInvalid={errors.roomNumber?.message != null} mb="5">
+                <FormControl isInvalid={errors.number?.message != null} mb="5">
                     <FormLabel> nazwa </FormLabel>
                     <Input
-                        id="roomNumber"
+                        id="number"
                         placeholder="numer sali"
                         type="number"
                         {...register(
-                            'roomNumber', {
+                            'number', {
                                 required: "Pole nie może być puste!",
                             }
                         )} />
-                    <FormErrorMessage> {errors.roomNumber && errors.roomNumber.message} </FormErrorMessage>
+                    <FormErrorMessage> {errors.number && errors.number.message} </FormErrorMessage>
                 </FormControl>
-                <FormControl isInvalid={errors.roomSize?.message != null} mb="5">
+                <FormControl isInvalid={errors.size?.message != null} mb="5">
                     <FormLabel> rozmiar </FormLabel>
                     <Input
-                        id="roomSize"
+                        id="sze"
                         placeholder="rozmiar sali"
                         type="number"
                         {...register(
-                            'roomSize', {
+                            'size', {
                                 required: "Pole nie może być puste!"
                             }
                         )} />
-                    <FormErrorMessage> {errors.roomSize && errors.roomSize.message}</FormErrorMessage>
+                    <FormErrorMessage> {errors.size && errors.size.message}</FormErrorMessage>
                 </FormControl>
                 <FormControl>
-                    <FormLabel>czy sala posiada komputery?</FormLabel>
-                    <Input
-                        id="hasComputers"
-                        type="checkbox"
-                        {...register(
-                            'hasComputers', {
-                                
-                            }
-                        )}
-                    />
+                    <FormLabel>czy sala posiada komputery?</FormLabel> 
+                    <Checkbox {...register('computers')}/>
                 </FormControl>
                 <Button type="submit" id="exam-form" isLoading={isSubmitting} colorScheme='teal'>Zatwierdź!</Button>
             </form>

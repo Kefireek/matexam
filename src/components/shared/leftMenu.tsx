@@ -1,7 +1,7 @@
 import { MoonIcon, SunIcon, AddIcon, ChevronDownIcon, HamburgerIcon} from '@chakra-ui/icons'
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
 import ExamForm from '../examForm.tsx'
-import { ExamItem, ExamsList } from '../../interfaces/exams.ts'
+import { ExamItem } from '../../interfaces/exams.ts'
 import {
     useDisclosure, 
     Card, 
@@ -50,7 +50,7 @@ function LeftMenu() {
 
     const { colorMode, toggleColorMode } = useColorMode()
 
-    const [exams, setExams] = useState<ExamsList>();
+    const [exams, setExams] = useState<ExamItem[]>();
 
     const navigate = useNavigate();
 
@@ -120,8 +120,8 @@ function LeftMenu() {
                             <Box as="span" flex='1' textAlign='left'>
                                 <HStack>
                                     <Text fontSize="1.2vw">Egzaminy</Text>
-                                    {exams?.total !== undefined ?
-                                        <Badge>{exams?.total}</Badge>
+                                    {exams?.length !== undefined ?
+                                        <Badge>{exams?.length}</Badge>
                                         : <Spinner size="sm" />
                                     }
                                 </HStack>
@@ -131,7 +131,7 @@ function LeftMenu() {
                         </h2>
                         <AccordionPanel pb={4} height="40vh" overflowY="auto" overflowX="hidden" >
                             <Stack spacing="3">
-                                {exams?.items.map((exam: ExamItem) =>
+                                {exams?.map((exam: ExamItem) =>
                                     <Card key={exam.id} variant="elevated" style={{cursor: "pointer"}}>
                                         <Link to={`/exam/${exam.id}`}>
                                         <Menu>
@@ -195,7 +195,7 @@ function LeftMenu() {
                     <Divider />
                 </Accordion>
                 <Flex width="90%" margin="0.5vw" justifyContent="space-around">
-                    <Button width="65%" fontSize="1vw" onClick={() => logoutUser}>Wyloguj się</Button>
+                    <Button width="65%" fontSize="1vw" onClick={logoutUser}>Wyloguj się</Button>
                     <Button width="25%" fontSize="1vw" onClick={toggleColorMode}>
                         {colorMode === 'light' ? <MoonIcon></MoonIcon> : <SunIcon></SunIcon>}
                     </Button>
