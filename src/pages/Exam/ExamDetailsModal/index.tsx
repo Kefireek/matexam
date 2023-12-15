@@ -54,7 +54,9 @@ function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam:
                         </Heading>
                         <Button onClick={onToggle}><CloseIcon /></Button>
                     </Flex>
-                    {/* {props.room.students?.map((result)=>
+                    <Table>
+                        <TableContainer>
+                    {props.room.students?.map((result)=>
                                     <Tr key={result.PESEL}>
                                         <Td>{result.ordinalNumber}</Td>
                                         <Td>{result.department}</Td>
@@ -65,7 +67,9 @@ function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam:
                                             <IconButton aria-label="Delete Student" icon={<MinusIcon/>} onClick={()=>unassignStudent(result.PESEL)}></IconButton>
                                         </Td>
                                     </Tr>
-                    )} */}
+                    )}
+                        </TableContainer>
+                    </Table>
 
                 </Box>
             </Box>

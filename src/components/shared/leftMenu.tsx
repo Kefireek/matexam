@@ -1,3 +1,5 @@
+import { useDisclosure, Card, CardBody, Stack, Heading, Badge, HStack, Spinner, MenuList, MenuItem, Menu, MenuButton, IconButton, Flex, Collapse, Avatar, Tooltip, Image } from '@chakra-ui/react'
+
 import { MoonIcon, SunIcon, AddIcon, ChevronDownIcon, HamburgerIcon} from '@chakra-ui/icons'
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
 import ExamForm from '../examForm.tsx'
@@ -38,6 +40,9 @@ import AuthAPIService from '../../services/api/auth/AuthAPIService.ts'
 import { useMediaQuery } from '@chakra-ui/react'
 import { motion } from "framer-motion"
 import RoomForm from '../roomForm.tsx'
+import logo_white from "../../assets/logo_white.png"
+import logo_black from "../../assets/logo_black.png"
+
 
 
 function LeftMenu() {
@@ -45,7 +50,8 @@ function LeftMenu() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {isOpen: isCsvOpen, onOpen: onCsvOpen, onClose: onCsvClose} = useDisclosure();
     const {isOpen: isRoomOpen, onOpen: onRoomOpen, onClose: onRoomClose} = useDisclosure();
-    const {isOpen: isMenuWide, getButtonProps, getDisclosureProps} = useDisclosure({defaultIsOpen: true});
+    const {isOpen: isMenuWide, onOpen: onMenuOpen, onClose: onMenuClose, getButtonProps, getDisclosureProps} = useDisclosure({defaultIsOpen: true});
+
     const [hidden, setHidden] = useState(!isMenuWide)
 
     const { colorMode, toggleColorMode } = useColorMode()
@@ -59,7 +65,8 @@ function LeftMenu() {
 
     useEffect(()=>{
         getExamsList();
-    }, []);
+        console.log(hidden)
+    }, [hidden]);
 
     const getExamsList = () => {
         ExamsAPIService.getExams().then((res)=>{
@@ -81,28 +88,31 @@ function LeftMenu() {
     }
      
     return(
-        <Box width="12vw" height="100vh" position="fixed">
-            <Flex justifyContent="center" alignItems="center" height="10vh">
-                <HamburgerIcon fontSize="1.2vw" marginTop="0.5vw" {...getButtonProps()} style={{cursor: "pointer"}}/>
-                <Text unselectable='on' fontSize="2vw" onClick={()=> navigate("/")} style={{cursor: "pointer"}}  margin={["0", "0", "0", "3"]}>matExam</Text> 
-            </Flex>
+        <Flex height="100vh" flexDirection="column">
             <motion.div
                 {...getDisclosureProps()}
                 hidden={hidden}
                 initial={false}
                 onAnimationStart={() => setHidden(false)}
                 onAnimationComplete={() => setHidden(!isMenuWide)}
-                animate={{ width: isMenuWide ? "12vw" : 0 }}
+                animate={{ width: isMenuWide ? "12vw" : "4vw" }}
+                onMouseLeave={()=> onMenuClose()}
                 style={{
                 overflow: 'hidden',
+                position: "absolute",
                 whiteSpace: 'nowrap',
-                position: 'absolute',
                 left: '0',
                 height: '100vh',
-                top: '10vh',
-                display: "flex",
-                flexDirection: "column"
-                }} >
+                top: '0',
+                zIndex: "10",
+                boxShadow: "8px 8px 24px 0px rgba(0, 0, 0, 0.6)",
+                backgroundColor: colorMode == "dark" ? "#1A202C" : "white",
+                }}
+            >
+                <Flex justifyContent="center" alignItems="center" height="10vh">
+                    <Image ml="0.3vw" mr="0.5vw" src={colorMode === "dark" ? logo_white : logo_black} width="2vw"></Image>
+                    <Text unselectable='on' fontSize="2vw" onClick={()=> navigate("/")} style={{cursor: "pointer"}} >matExam</Text>    
+                </Flex>
                 <Button fontSize="1vw" width="90%" onClick={onOpen} margin="0.5vw">Dodaj egzamin</Button>
                 <Modal isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay/>
@@ -209,7 +219,23 @@ function LeftMenu() {
                     </Modal>
                 </Button>
             </motion.div>
-        </Box>
+
+            {/* When left panel isn't wide  */}
+            <Box paddingLeft="1vw" height="100vh" top="10vh" width="4vw" zIndex="5" float="left" style={{boxShadow: "8px 8px 24px 0px rgba(0, 0, 0, 0.6)"}} onMouseEnter={()=> onMenuOpen()}>
+                <Flex height="10vh" justifyContent="left" alignItems="center">
+                    <Image src={colorMode === "dark" ? logo_white : logo_black} width="2vw"></Image>
+                </Flex>
+                <Stack spacing="3">
+                    {exams?.items.map((exam: ExamItem) =>
+                    <Link to={`/exam/${exam.id}`}>
+                        <Tooltip label={exam.name} placement="right">
+                            <Text>{Array.from(exam.name)[0]}</Text>
+                        </Tooltip>
+                    </Link>  
+                    ) ?? <Text>Wczytywanie...</Text>}
+                </Stack>
+            </Box>
+        </Flex>
     )
 }
 

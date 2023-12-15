@@ -1,4 +1,4 @@
-import { Modal, useDisclosure, Box } from "@chakra-ui/react"
+import { Modal, useDisclosure, Box, Flex } from "@chakra-ui/react"
 import LeftMenu from "./components/shared/leftMenu"
 import { getPage } from "./services/api/healthCheck/HealthCheckService"
 import { useState, useEffect } from "react"
@@ -35,15 +35,16 @@ function App() {
 
   return (
     <>
-      <LeftMenu />
-      <Box marginLeft='12vw'>
-        {loading &&
-        <Modal isOpen={isOpen} onClose={onClose} isCentered>
-          <ModalSpinner/>
-        </Modal>}
-        <MainPage/>
-        <Outlet />
-      </Box>
+      <Flex>
+        <LeftMenu />
+        <Box>
+          {loading &&
+          <Modal isOpen={isOpen} onClose={onClose} isCentered>
+            <ModalSpinner/>
+          </Modal>}
+          <Outlet />
+        </Box>
+      </Flex>
     </>
   )
 
