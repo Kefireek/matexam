@@ -18,7 +18,7 @@ import RoomService from "../services/api/rooms/RoomsService";
 import { RoomDescriptive } from "../interfaces/rooms";
 
 
-const RoomForm = () => {
+const RoomForm = (props: {onRoomClose: Function}) => {
     const { 
         handleSubmit,
         register,
@@ -29,6 +29,7 @@ const RoomForm = () => {
         const {number, size, computers} = values;
         console.log(number, size)
         await RoomService.createRoom({number, size, computers});
+        props.onRoomClose();
     }
 
     return (
@@ -39,7 +40,7 @@ const RoomForm = () => {
         <ModalBody>
             <form id="exam-form" onSubmit={handleSubmit(onSubmit)}>
                 <FormControl isInvalid={errors.number?.message != null} mb="5">
-                    <FormLabel> nazwa </FormLabel>
+                    <FormLabel> Numer </FormLabel>
                     <Input
                         id="number"
                         placeholder="numer sali"
@@ -52,7 +53,7 @@ const RoomForm = () => {
                     <FormErrorMessage> {errors.number && errors.number.message} </FormErrorMessage>
                 </FormControl>
                 <FormControl isInvalid={errors.size?.message != null} mb="5">
-                    <FormLabel> rozmiar </FormLabel>
+                    <FormLabel> Rozmiar </FormLabel>
                     <Input
                         id="sze"
                         placeholder="rozmiar sali"

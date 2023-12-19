@@ -1,4 +1,4 @@
-import { useDisclosure, Card, CardBody, Stack, Heading, Badge, HStack, Spinner, MenuList, MenuItem, Menu, MenuButton, IconButton, Flex, Collapse, Avatar, Tooltip, Image } from '@chakra-ui/react'
+import { Collapse, Avatar, Tooltip, Image } from '@chakra-ui/react'
 
 import { MoonIcon, SunIcon, AddIcon, ChevronDownIcon, HamburgerIcon} from '@chakra-ui/icons'
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
@@ -107,6 +107,8 @@ function LeftMenu() {
                 zIndex: "10",
                 boxShadow: "8px 8px 24px 0px rgba(0, 0, 0, 0.6)",
                 backgroundColor: colorMode == "dark" ? "#1A202C" : "white",
+                display: "flex",
+                flexDirection: "column"
                 }}
             >
                 <Flex justifyContent="center" alignItems="center" height="10vh">
@@ -121,7 +123,7 @@ function LeftMenu() {
                 <Button fontSize="1vw" width="90%" onClick={onRoomOpen} margin="0.5vw">Dodaj salę</Button>
                 <Modal isOpen={isRoomOpen} onClose={onRoomClose}>
                     <ModalOverlay/>
-                    <RoomForm/>
+                    <RoomForm onRoomClose={onRoomClose}/>
                 </Modal>
                 <Accordion allowMultiple>
                     <AccordionItem>
@@ -226,7 +228,7 @@ function LeftMenu() {
                     <Image src={colorMode === "dark" ? logo_white : logo_black} width="2vw"></Image>
                 </Flex>
                 <Stack spacing="3">
-                    {exams?.items.map((exam: ExamItem) =>
+                    {exams?.map((exam: ExamItem) =>
                     <Link to={`/exam/${exam.id}`}>
                         <Tooltip label={exam.name} placement="right">
                             <Text>{Array.from(exam.name)[0]}</Text>

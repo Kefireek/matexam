@@ -33,11 +33,11 @@ const CsvModal = (props: {refreshExams: Function}) => {
         formState: {errors, isSubmitting}
     } = useForm();
 
-    const [headers, setHeaders] = useState<String[]>();
-    const [rows, setRows] = useState<String[][]>();
+    const [headers, setHeaders] = useState<string[]>();
+    const [rows, setRows] = useState<string[][]>();
     const [data, setData] = useState<CsvInput>();
-    const [result, setResult] = useState<String>();
-    const [errorMsg, setErrorMsg] = useState<String>();
+    const [result, setResult] = useState<string>();
+    const [errorMsg, setErrorMsg] = useState<string>();
 
     const csvToArr = (stringVal: string) => {
         var finalObj: CsvInput = {students: [], exams: []};
@@ -53,7 +53,7 @@ const CsvModal = (props: {refreshExams: Function}) => {
             if(!foundExam){
                 foundExam = finalObj.exams[finalObj.exams.push({name: studentObject["examName"], studentIds: []}) - 1];
             }
-            foundExam.studentIds.push({PESEL: studentObject["PESEL"]});
+            foundExam.studentIds.push(studentObject["PESEL"]);
 
         })
         console.log(finalObj);
@@ -98,7 +98,7 @@ const CsvModal = (props: {refreshExams: Function}) => {
             <ModalBody>
                 <form id="csv-form" onSubmit={handleSubmit(onSubmit)}>
                     <Box border="1px dotted" borderColor="gray" display="flex" alignItems="center" justifyContent="center" borderRadius="md" flexDirection="column" >
-                        <Box border="1px dotted" borderColor="gray" p="10" m="5"  borderRadius="xl">    
+                        <Box border="1px dotted" borderColor="gray" p="10" m="5"  borderRadius="xl" transition="0.5">    
                             <FormControl isInvalid={errors.file?.message != null}>
                                 <FormLabel> Dodaj plik </FormLabel>
                                     <Input size=""

@@ -38,8 +38,8 @@ export interface StudentRoom extends StudentId {
 }
 
 export interface ExamCsvInput {
-  name: String,
-  studentIds: StudentId[]
+  name: string,
+  studentIds: string[]
 }
 
 export enum ExamType {
