@@ -33,7 +33,7 @@ function LeftMenu() {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {isOpen: isCsvOpen, onOpen: onCsvOpen, onClose: onCsvClose} = useDisclosure();
-    const {isOpen: isMenuWide, onOpen: onMenuOpen, onClose: onMenuClose, getButtonProps, getDisclosureProps} = useDisclosure({defaultIsOpen: true});
+    const {isOpen: isMenuWide, onOpen: onMenuOpen, onClose: onMenuClose, getDisclosureProps} = useDisclosure({defaultIsOpen: true});
     const [hidden, setHidden] = useState(!isMenuWide)
 
     const { colorMode, toggleColorMode } = useColorMode()
@@ -71,7 +71,7 @@ function LeftMenu() {
                 initial={false}
                 onAnimationStart={() => setHidden(false)}
                 onAnimationComplete={() => setHidden(!isMenuWide)}
-                animate={{ width: isMenuWide ? "12vw" : "4vw" }}
+                animate={{ width: isMenuWide ? "12vw" : "4vw"}}
                 onMouseLeave={()=> onMenuClose()}
                 style={{
                 overflow: 'hidden',
@@ -85,127 +85,152 @@ function LeftMenu() {
                 backgroundColor: colorMode == "dark" ? "#1A202C" : "white",
                 }}
             >
-                <Flex justifyContent="center" alignItems="center" height="10vh">
-                    <Image ml="0.3vw" mr="0.5vw" src={colorMode === "dark" ? logo_white : logo_black} width="2vw"></Image>
-                    <Text unselectable='on' fontSize="2vw" onClick={()=> navigate("/")} style={{cursor: "pointer"}} >matExam</Text>    
+                <Flex direction="row" justifyContent="left" alignItems="center" height="10vh" width="100%" ml="1vw">
+                    <Image mr="0.5vw" src={colorMode === "dark" ? logo_white : logo_black} width="2vw" ></Image>
+                    <motion.div
+                    {...getDisclosureProps()}
+                    hidden={hidden}
+                    initial={false}
+                    animate={{opacity: isMenuWide ? "100%" : "0%" }}>
+                        <Text unselectable='on' fontSize="1.9vw" onClick={()=> navigate("/")} style={{cursor: "pointer"}} >matExam</Text>    
+                    </motion.div>
                 </Flex>
-                <Button fontSize="1vw" width="90%" onClick={onOpen} margin="0.5vw">Dodaj egzamin</Button>
-                <Modal isOpen={isOpen} onClose={onClose}>
-                    <ModalOverlay/>
-                    <ExamForm refreshExams={getExamsList} onCloseExam={onClose}/>
-                </Modal>
-
-                <Accordion allowMultiple>
-                    <AccordionItem>
-                        <h2>
-                        <AccordionButton>
-                            <Box as="span" flex='1' textAlign='left'>
-                                <HStack>
-                                    <Text fontSize="1.2vw">Egzaminy</Text>
-                                    {exams?.total !== undefined ?
-                                        <Badge>{exams?.total}</Badge>
-                                        : <Spinner size="sm" />
-                                    }
-                                </HStack>
-                            </Box>
-                            <AccordionIcon />
-                        </AccordionButton>
-                        </h2>
-                        <AccordionPanel pb={4} height="40vh" overflowY="auto" overflowX="hidden" >
-                            <Stack spacing="3">
-                                {exams?.items.map((exam: ExamItem) =>
-                                    <Card key={exam.id} variant="elevated" style={{cursor: "pointer"}}>
-                                        <Link to={`/exam/${exam.id}`}>
-                                        <Menu>
-                                            {({ isOpen }) => (
-                                                <>
-                                                    <MenuButton isActive={isOpen}
-                                                        as={IconButton}
-                                                        aria-label='Options'
-                                                        icon={<ChevronDownIcon />}
-                                                        variant='outline'
-                                                        size="sm"
-                                                        float="right"
-                                                        border="none"
-                                                    >
-                                                    </MenuButton>
-                                                    <MenuList>
-                                                        <MenuItem>Edit</MenuItem>
-                                                        <MenuItem>Delete</MenuItem>
-                                                    </MenuList>
-                                                </>
-                                            )}
-                                        </Menu>
-                                        <CardBody>
-                                            <HStack>
-                                                <Heading fontSize='0.9vw'> 
-                                                    {exam.name}
-                                                </Heading>
-                                                {exam.type == "basic" && isLargerThan1800 &&
-                                                    <Badge fontSize="0.5vw">P</Badge>
-                                                }
-                                                {exam.type == "extended" && isLargerThan1800 &&
-                                                    <Badge fontSize="0.5vw">R</Badge>
-                                                }
-                                                {exam.type == "oral" && isLargerThan1800 &&
-                                                    <Badge fontSize="0.5vw">U</Badge>
-                                                }
-                                            </HStack>
-                                            {exam.type == "basic" && !isLargerThan1800 &&
-                                                <Badge fontSize="0.5vw">Podstawowy</Badge>
-                                            }
-                                            {exam.type == "extended" && !isLargerThan1800 &&
-                                                <Badge fontSize="0.5vw">Rozszerzony</Badge>
-                                            }
-                                            {exam.type == "oral" && !isLargerThan1800 &&
-                                                <Badge fontSize="0.5vw">Ustny</Badge>
-                                            }
-                                            {exam.startTime &&
-                                                <Text fontSize="0.6vw">
-                                                    {
-                                                        new Date(exam.startTime.toString()).toLocaleString("pl-PL", {year: "numeric", month: "2-digit", day: "2-digit",hour: '2-digit', minute: "2-digit", weekday: "short"})
-                                                    }
-                                                </Text>
-                                            }
-                                        </CardBody> 
-                                        </Link>
-                                    </Card>
-                                ) ?? <Text>Wczytywanie...</Text>}
-                            </Stack>
-                        </AccordionPanel>
-                    </AccordionItem>
-                    <Divider />
-                </Accordion>
-                <Flex width="90%" margin="0.5vw" justifyContent="space-around">
-                    <Button width="65%" fontSize="1vw" onClick={() => logoutUser}>Wyloguj się</Button>
-                    <Button width="25%" fontSize="1vw" onClick={toggleColorMode}>
-                        {colorMode === 'light' ? <MoonIcon></MoonIcon> : <SunIcon></SunIcon>}
-                    </Button>
-                </Flex>
-                <Button fontSize="1vw" width="90%" onClick={onCsvOpen} margin="0.5vw">
-                    <Text>Wypełnij dane </Text>
-                    <AddIcon marginLeft="0.5vw"/>
-                    <Modal isOpen={isCsvOpen} onClose={onCsvClose} size="full">
+                <motion.div
+                {...getDisclosureProps()}
+                hidden={hidden}
+                initial={false}
+                animate={{opacity: isMenuWide ? "100%" : "0%" }}>
+                    <Button fontSize="1vw" width="90%" onClick={onOpen} margin="0.5vw">Dodaj egzamin</Button>
+                    <Modal isOpen={isOpen} onClose={onClose}>
                         <ModalOverlay/>
-                        <CsvModal/>
+                        <ExamForm refreshExams={getExamsList} onCloseExam={onClose}/>
                     </Modal>
-                </Button>
+
+                    <Accordion allowMultiple>
+                        <AccordionItem>
+                            <h2>
+                            <AccordionButton>
+                                <Box as="span" flex='1' textAlign='left'>
+                                    <HStack>
+                                        <Text fontSize="1.2vw">Egzaminy</Text>
+                                        {exams?.total !== undefined ?
+                                            <Badge>{exams?.total}</Badge>
+                                            : <Spinner size="sm" />
+                                        }
+                                    </HStack>
+                                </Box>
+                                <AccordionIcon />
+                            </AccordionButton>
+                            </h2>
+                            <AccordionPanel pb={4} height="40vh" overflowY="auto" overflowX="hidden" >
+                                <Stack spacing="3">
+                                    {exams?.items.map((exam: ExamItem) =>
+                                        <Card key={exam.id} variant="elevated" style={{cursor: "pointer"}}>
+                                            <Link to={`/exam/${exam.id}`}>
+                                            <Menu>
+                                                {({ isOpen }) => (
+                                                    <>
+                                                        <MenuButton isActive={isOpen}
+                                                            as={IconButton}
+                                                            aria-label='Options'
+                                                            icon={<ChevronDownIcon />}
+                                                            variant='outline'
+                                                            size="sm"
+                                                            float="right"
+                                                            border="none"
+                                                        >
+                                                        </MenuButton>
+                                                        <MenuList>
+                                                            <MenuItem>Edit</MenuItem>
+                                                            <MenuItem>Delete</MenuItem>
+                                                        </MenuList>
+                                                    </>
+                                                )}
+                                            </Menu>
+                                            <CardBody>
+                                                <HStack>
+                                                    <Heading fontSize='0.9vw'> 
+                                                        {exam.name}
+                                                    </Heading>
+                                                    {exam.type == "basic" && isLargerThan1800 &&
+                                                        <Badge fontSize="0.5vw">P</Badge>
+                                                    }
+                                                    {exam.type == "extended" && isLargerThan1800 &&
+                                                        <Badge fontSize="0.5vw">R</Badge>
+                                                    }
+                                                    {exam.type == "oral" && isLargerThan1800 &&
+                                                        <Badge fontSize="0.5vw">U</Badge>
+                                                    }
+                                                </HStack>
+                                                {exam.type == "basic" && !isLargerThan1800 &&
+                                                    <Badge fontSize="0.5vw">Podstawowy</Badge>
+                                                }
+                                                {exam.type == "extended" && !isLargerThan1800 &&
+                                                    <Badge fontSize="0.5vw">Rozszerzony</Badge>
+                                                }
+                                                {exam.type == "oral" && !isLargerThan1800 &&
+                                                    <Badge fontSize="0.5vw">Ustny</Badge>
+                                                }
+                                                {exam.startTime &&
+                                                    <Text fontSize="0.6vw">
+                                                        {
+                                                            new Date(exam.startTime.toString()).toLocaleString("pl-PL", {year: "numeric", month: "2-digit", day: "2-digit",hour: '2-digit', minute: "2-digit", weekday: "short"})
+                                                        }
+                                                    </Text>
+                                                }
+                                            </CardBody> 
+                                            </Link>
+                                        </Card>
+                                    ) ?? <Text>Wczytywanie...</Text>}
+                                </Stack>
+                            </AccordionPanel>
+                        </AccordionItem>
+                        <Divider />
+                    </Accordion>
+                    <Flex position="absolute" bottom="0" direction="column" justifyContent="center" alignItems="center" width="100%" mb="1vw">
+                        <Flex width="90%" margin="0.5vw" justifyContent="space-around">
+                            <Button width="65%" fontSize="1vw" onClick={() => logoutUser}>Wyloguj się</Button>
+                            <Button width="25%" fontSize="1vw" onClick={toggleColorMode}>
+                                {colorMode === 'light' ? <MoonIcon></MoonIcon> : <SunIcon></SunIcon>}
+                            </Button>
+                        </Flex>
+                        <Button fontSize="1vw" width="90%" onClick={onCsvOpen} margin="0.5vw">
+                            <Text>Wypełnij dane </Text>
+                            <AddIcon marginLeft="0.5vw"/>
+                            <Modal isOpen={isCsvOpen} onClose={onCsvClose} size="full">
+                                <ModalOverlay/>
+                                <CsvModal/>
+                            </Modal>
+                        </Button>
+                    </Flex>
+                </motion.div>
             </motion.div>
 
             {/* When left panel isn't wide  */}
             <Box paddingLeft="1vw" height="100vh" top="10vh" width="4vw" zIndex="5" float="left" style={{boxShadow: "8px 8px 24px 0px rgba(0, 0, 0, 0.6)"}} onMouseEnter={()=> onMenuOpen()}>
                 <Flex height="10vh" justifyContent="left" alignItems="center">
-                    <Image src={colorMode === "dark" ? logo_white : logo_black} width="2vw"></Image>
+                    <Image src={colorMode === "dark" ? logo_white : logo_black} zIndex="20" width="2vw"></Image>
                 </Flex>
-                <Stack spacing="3">
-                    {exams?.items.map((exam: ExamItem) =>
-                    <Link to={`/exam/${exam.id}`}>
-                        <Tooltip label={exam.name} placement="right">
-                            <Text>{Array.from(exam.name)[0]}</Text>
-                        </Tooltip>
-                    </Link>  
-                    ) ?? <Text>Wczytywanie...</Text>}
-                </Stack>
+                <motion.div
+                {...getDisclosureProps()}
+                hidden={!hidden}
+                initial={false}
+                animate={{opacity: isMenuWide ? "0%" : "100%" }}
+                transition={{delay: "0.5"}}
+                style={{
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                }}>
+                    <Stack spacing="3">
+                        {exams?.items.map((exam: ExamItem) =>
+                        <Link to={`/exam/${exam.id}`}>
+                            <Tooltip label={exam.name} placement="right">
+                                <Badge fontSize="0.9vw">{Array.from(exam.name)[0]}{Array.from(exam.name)[1]}{Array.from(exam.name)[2]}</Badge>
+                            </Tooltip>
+                        </Link>  
+                        ) ?? <Text>Wczytywanie...</Text>}
+                    </Stack>
+                </motion.div>
             </Box>
         </Flex>
     )
