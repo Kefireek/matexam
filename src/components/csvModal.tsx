@@ -24,7 +24,7 @@ import { StudentDescriptive } from "../interfaces/students";
 import DataService from "../services/api/data/dataService";
 
 
-const CsvModal = () => {
+const CsvModal = (props: {refreshExams: Function}) => {
 
     const {
         handleSubmit,
