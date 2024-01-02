@@ -3,15 +3,16 @@ import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import Login from "./pages/Login"
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-
 import { ChakraProvider } from '@chakra-ui/react';
 import { ColorModeScript } from '@chakra-ui/react'
 import theme from "./theme.ts";
 import axios from 'axios';
 import ErrorPage from './pages/Error/index.tsx';
 import ExamPage from './pages/Exam/index.tsx';
+import { interceptorInit } from './interceptors/authInterceptor.ts';
 
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
+
   {
     path: "/",
     element: <App />,
@@ -35,7 +36,8 @@ const router = createBrowserRouter([
   },
 ]);
 
-axios.defaults.baseURL = 'http://localhost:8000';
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
+interceptorInit();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

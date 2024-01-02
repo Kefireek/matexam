@@ -15,16 +15,17 @@ import {
 
 import { useForm } from "react-hook-form";
 import { ExamType } from "../interfaces/exams";
+import ExamsAPIService from "../services/api/exams/ExamsAPIService";
 
 
 export type ExamFormModel = {
     name: string,
-    startDate: Date,
-    endDate: Date,
+    startTime: Date,
+    endTime: Date,
     type: ExamType
 }
 
-const ExamForm = () => {
+const ExamForm = (props: {refreshExams: Function, onCloseExam: Function}) => {
     
     const { 
         handleSubmit,
@@ -36,14 +37,17 @@ const ExamForm = () => {
         return new Date(time1) < new Date(time2); // true if time2 is later
     }
 
-    const onSubmit = (values: ExamFormModel) => {
-        const {name, startDate, endDate, type} = values;
-        const validDates = compareTime(startDate, endDate);
+    const onSubmit = async (values: ExamFormModel) => {
+        const {name, startTime, endTime, type} = values;
+        const validDates = compareTime(startTime, endTime);
         if(validDates !== true){
             alert("Data zakończenia powinna być później niż data rozpoczęcia")
         }
         else{
-            alert(name + startDate + endDate + type)
+            const exam = {name, type, startTime, endTime}
+            await ExamsAPIService.addExam(exam);
+            props.refreshExams();
+            props.onCloseExam();
         }
     }
     
@@ -77,29 +81,29 @@ const ExamForm = () => {
                             </HStack>
                         </RadioGroup>
                     </FormControl>
-                    <FormControl isInvalid={errors.startDate?.message != null} mb="5">
+                    <FormControl isInvalid={errors.startTime?.message != null} mb="5">
                         <FormLabel> Data i godzina rozpoczęcia </FormLabel>
                         <Input
                             id="startDate"
                             type="datetime-local"
                             {...register(
-                                'startDate', {
+                                'startTime', {
                                     required: "Pole nie może być puste!"
                                 }
                             )} />
-                        <FormErrorMessage> {errors.startDate && errors.startDate?.message}</FormErrorMessage>
+                        <FormErrorMessage> {errors.startTime && errors.startTime?.message}</FormErrorMessage>
                     </FormControl>
-                    <FormControl isInvalid={errors.endDate?.message != null} mb="5">
+                    <FormControl isInvalid={errors.endTime?.message != null} mb="5">
                         <FormLabel> Data i godzina zakończenia </FormLabel>
                         <Input
                             id="endDate"
                             type="datetime-local"
                             {...register(
-                                'endDate', {
+                                'endTime', {
                                     required: "Pole nie może być puste!"
                                 }
                             )} />
-                        <FormErrorMessage> {errors.endDate && errors.endDate?.message}</FormErrorMessage>
+                        <FormErrorMessage> {errors.endTime && errors.endTime?.message}</FormErrorMessage>
                     </FormControl>
                     <Button type="submit" id="exam-form" isLoading={isSubmitting} colorScheme='teal'>Zatwierdź!</Button>
                 </form>

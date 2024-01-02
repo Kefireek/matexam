@@ -1,5 +1,4 @@
-
-import { Modal, useDisclosure, Box, Text } from "@chakra-ui/react"
+import { Modal, useDisclosure, Box, Flex } from "@chakra-ui/react"
 import LeftMenu from "./components/shared/leftMenu"
 import { getPage } from "./services/api/healthCheck/HealthCheckService"
 import { useState, useEffect } from "react"
@@ -8,9 +7,11 @@ import { Outlet } from "react-router-dom"
 
 function App() {
 
+  
   const [loading, setLoading] = useState<boolean>(true);
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  
 
   useEffect(() => {
     onOpen()
@@ -22,8 +23,9 @@ function App() {
       }
     )
     .catch(
-      () => {
-        setLoading(true);
+      (err: any) => {
+        console.log(err)
+        throw new Error('Unable to load page due to server health check error')
       }
     )
   }, [])
@@ -31,14 +33,16 @@ function App() {
 
   return (
     <>
-      <LeftMenu />
-      <Box marginLeft='10vw'>
-        {loading &&
-        <Modal isOpen={isOpen} onClose={onClose} isCentered>
-          <ModalSpinner/>
-        </Modal>}
-        <Outlet />
-      </Box>
+      <Flex>
+        <LeftMenu />
+        <Box>
+          {loading &&
+          <Modal isOpen={isOpen} onClose={onClose} isCentered>
+            <ModalSpinner/>
+          </Modal>}
+          <Outlet />
+        </Box>
+      </Flex>
     </>
   )
 
