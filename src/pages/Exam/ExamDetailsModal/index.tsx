@@ -56,18 +56,18 @@ function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam:
                     </Flex>
                     <Table>
                         <TableContainer>
-                    {props.room.students?.map((result)=>
-                                    <Tr key={result.PESEL}>
-                                        <Td>{result.ordinalNumber}</Td>
-                                        <Td>{result.department}</Td>
-                                        <Td>{result.surname}</Td>
-                                        <Td>{result.name}</Td>
-                                        <Td>{result.PESEL}</Td>
-                                        <Td>
-                                            <IconButton aria-label="Delete Student" icon={<MinusIcon/>} onClick={()=>unassignStudent(result.PESEL)}></IconButton>
-                                        </Td>
-                                    </Tr>
-                    )}
+                            {props.room.students?.map((result)=>
+                                <Tr key={result.PESEL}>
+                                    <Td>{result.ordinalNumber}</Td>
+                                    <Td>{result.department}</Td>
+                                    <Td>{result.surname}</Td>
+                                    <Td>{result.name}</Td>
+                                    <Td>{result.PESEL}</Td>
+                                    <Td>
+                                        <IconButton aria-label="Delete Student" icon={<MinusIcon/>} onClick={()=>unassignStudent(result.PESEL)}></IconButton>
+                                    </Td>
+                                </Tr>
+                            )}
                         </TableContainer>
                     </Table>
 

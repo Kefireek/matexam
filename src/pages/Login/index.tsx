@@ -26,10 +26,8 @@ export default function HookForm() {
 
   const onSubmit = () =>{
       AuthService.login(login, password).then((succed) => {
-        if(succed)
-          navigate("/")
-      }
-      ).catch((err) => {
+        if(succed) navigate("/")
+      }).catch((err) => {
         throw err
       })
 

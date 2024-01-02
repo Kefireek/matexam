@@ -16,22 +16,14 @@ function ExamPage() {
     const navigate = useNavigate();
 
     useEffect( ()=> {
-        const fetchData = async () => {
-            if(examid == undefined){
-                navigate("/error")
-            }
-            else if(examid != undefined){
-                getExam(examid)
-            }
-        }
-        fetchData().catch((err)=>{
-            console.log(err);
-        });
+        if (examid)
+            getExam(examid)
+        else
+            navigate('/error')
     }, [examid])
 
     const getExam = (examid: number) => {
         ExamsAPIService.getExam(examid).then((res)=>{
-            console.log(res.data)
             setExamView(res.data)
         }).catch((err)=>{
             console.log(err);
