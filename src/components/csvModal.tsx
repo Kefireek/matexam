@@ -22,9 +22,10 @@ import { useForm } from "react-hook-form";
 import { CsvInput } from "../interfaces/data";
 import { StudentDescriptive } from "../interfaces/students";
 import DataService from "../services/api/data/dataService";
+import { PlusSquareIcon } from "@chakra-ui/icons";
 
 
-const CsvModal = () => {
+const CsvModal = (props: {refreshExams: Function}) => {
 
     const {
         handleSubmit,
@@ -35,7 +36,8 @@ const CsvModal = () => {
     const [headers, setHeaders] = useState<String[]>();
     const [rows, setRows] = useState<String[][]>();
     const [data, setData] = useState<CsvInput>();
-    const [result, setResult] = useState<string>()
+    const [result, setResult] = useState<String>();
+    const [errorMsg, setErrorMsg] = useState<String>();
 
     const csvToArr = (stringVal: string) => {
         var finalObj: CsvInput = {students: [], exams: []};
@@ -80,9 +82,12 @@ const CsvModal = () => {
     const onSubmit = async () => {
         await DataService.postData(data!).then(
             (res) => {
-                setResult(res.data)
-            }
-        );
+                setResult(res.data);
+                props.refreshExams();
+            })
+        .catch((err) => {
+            setErrorMsg(err);
+        })
     }
 
     return (
@@ -92,19 +97,24 @@ const CsvModal = () => {
             </ModalHeader>
             <ModalBody>
                 <form id="csv-form" onSubmit={handleSubmit(onSubmit)}>
-                    <FormControl isInvalid={errors.file?.message != null}>
-                        <FormLabel> Dodaj plik </FormLabel>
-                        <Input size=""
-                            type="file"
-                            {...register(
-                                'file'
-                            )}
-                            accept=".csv"
-                            onChange={handleChange}
-                        />
-                        <FormErrorMessage> </FormErrorMessage>
-                    </FormControl>
-                <Button type="submit" id="csv-form" isLoading={isSubmitting} colorScheme='teal' disabled={data != undefined}>Zatwierdź!</Button>
+                    <Box border="1px dotted" borderColor="gray" display="flex" alignItems="center" justifyContent="center" borderRadius="md" flexDirection="column" >
+                        <Box border="1px dotted" borderColor="gray" p="10" m="5"  borderRadius="xl">    
+                            <FormControl isInvalid={errors.file?.message != null}>
+                                <FormLabel> Dodaj plik </FormLabel>
+                                    <Input size=""
+                                        type="file"
+                                        {...register(
+                                            'file'
+                                        )}
+                                        accept=".csv"
+                                        onChange={handleChange}
+                                        display="none"
+                                    />
+                                <FormErrorMessage> {errorMsg} </FormErrorMessage>
+                            </FormControl>
+                            </Box>
+                        <Button type="submit" id="csv-form" isLoading={isSubmitting} colorScheme='teal' disabled={data != undefined}>Zatwierdź!</Button>
+                    </Box>
                 </form>
                 <TableContainer>
                     <Table variant='simple' colorScheme='teal'>
