@@ -117,6 +117,11 @@ function LeftMenu() {
                         <Text unselectable='on' fontSize="1.9vw" onClick={()=> navigate("/")} style={{cursor: "pointer"}} >matExam</Text>    
                     </motion.div>
                 </Flex>
+                <motion.div
+                {...getDisclosureProps()}
+                hidden={hidden}
+                initial={false}
+                animate={{opacity: isMenuWide ? "100%" : "0%" }}>
                 <Button fontSize="1vw" width="90%" onClick={onOpen} margin="0.5vw">Dodaj egzamin</Button>
                 <Modal isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay/>
@@ -220,6 +225,7 @@ function LeftMenu() {
                             </Modal>
                         </Button>
                 </Flex>
+                </motion.div>
             </motion.div>
 
             {/* When left panel isn't wide  */}
