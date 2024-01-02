@@ -1,5 +1,5 @@
 import { AiOutlineDesktop } from "react-icons/ai";
-import { Badge, Box, Button, Card, CardBody, CardFooter, CardHeader, Collapse, Flex, Heading, Icon, IconButton, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
+import { Badge, Box, Button, Card, CardBody, CardFooter, CardHeader, Collapse, Flex, Heading, Icon, IconButton, Table, TableContainer, Td, Text, Tr, useDisclosure } from "@chakra-ui/react";
 import { CloseIcon, MinusIcon } from "@chakra-ui/icons";
 import { RoomStudents } from "../../../interfaces/rooms";
 import ExamsAPIService from "../../../services/api/exams/ExamsAPIService";
