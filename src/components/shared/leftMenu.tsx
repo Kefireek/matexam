@@ -42,6 +42,7 @@ import { motion } from "framer-motion"
 import RoomForm from '../roomForm.tsx'
 import logo_white from "../../assets/logo_white.png"
 import logo_black from "../../assets/logo_black.png"
+import StudentForm from '../studentForm.tsx'
 
 
 
@@ -50,6 +51,7 @@ function LeftMenu() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {isOpen: isCsvOpen, onOpen: onCsvOpen, onClose: onCsvClose} = useDisclosure();
     const {isOpen: isRoomOpen, onOpen: onRoomOpen, onClose: onRoomClose} = useDisclosure();
+    const {isOpen: isStudentOpen, onOpen: onStudentOpen, onClose: onStudentClose} = useDisclosure();
     const {isOpen: isMenuWide, onOpen: onMenuOpen, onClose: onMenuClose, getButtonProps, getDisclosureProps} = useDisclosure({defaultIsOpen: true});
 
     const [hidden, setHidden] = useState(!isMenuWide)
@@ -124,6 +126,11 @@ function LeftMenu() {
                 <Modal isOpen={isRoomOpen} onClose={onRoomClose}>
                     <ModalOverlay/>
                     <RoomForm onRoomClose={onRoomClose}/>
+                </Modal>
+                <Button fontSize="1vw" width="90%" onClick={onStudentOpen} margin="0.5vw">Dodaj ucznia</Button>
+                <Modal isOpen={isStudentOpen} onClose={onStudentClose}>
+                    <ModalOverlay/>
+                    <StudentForm onStudentClose={onStudentClose}/>
                 </Modal>
                 <Accordion allowMultiple>
                     <AccordionItem>
