@@ -1,6 +1,11 @@
 import { RoomStudents } from "./rooms"
 import { StudentDescriptive, StudentId } from "./students"
 
+export interface ExamsList {
+  items: ExamItem[],
+  total: number
+}
+
 export interface ExamItem extends ExamId, ExamBody { }
 export interface Student {
   number?: number;
