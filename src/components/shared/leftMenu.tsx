@@ -128,7 +128,7 @@ function LeftMenu() {
                     <RoomForm onRoomClose={onRoomClose}/>
                 </Modal>
                 <Button fontSize="1vw" width="90%" onClick={onStudentOpen} margin="0.5vw">Dodaj ucznia</Button>
-                <Modal isOpen={isStudentOpen} onClose={onStudentClose}>
+                <Modal isOpen={isStudentOpen} onClose={onStudentClose} size="lg">
                     <ModalOverlay/>
                     <StudentForm onStudentClose={onStudentClose}/>
                 </Modal>
