@@ -1,5 +1,6 @@
 import { Tooltip, Image } from '@chakra-ui/react'
-import { MoonIcon, SunIcon, AddIcon, ChevronDownIcon, HamburgerIcon} from '@chakra-ui/icons'
+import { MoonIcon, SunIcon, AddIcon, SettingsIcon, HamburgerIcon} from '@chakra-ui/icons'
+import { BiLogOut } from "react-icons/bi";
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
 import ExamForm from '../examForm.tsx'
 import { ExamItem } from '../../interfaces/exams.ts'
@@ -63,8 +64,7 @@ function LeftMenu() {
 
     useEffect(()=>{
         getExamsList();
-        console.log(hidden)
-    }, [hidden]);
+    }, []);
 
     const getExamsList = () => {
         ExamsAPIService.getExams().then((res)=>{
@@ -108,7 +108,7 @@ function LeftMenu() {
                 }}
             >
                 <Flex direction="row" justifyContent="left" alignItems="center" height="10vh" width="100%" ml="1vw">
-                    <Image mr="0.5vw" src={colorMode === "dark" ? logo_white : logo_black} width="2vw" ></Image>
+                    <Image mr="0.5vw" src={colorMode === "dark" ? logo_white : logo_black} width="2vw" onClick={()=>navigate("/")} cursor="pointer"></Image>
                     <motion.div
                     {...getDisclosureProps()}
                     hidden={hidden}
@@ -122,7 +122,7 @@ function LeftMenu() {
                 hidden={hidden}
                 initial={false}
                 animate={{opacity: isMenuWide ? "100%" : "0%" }}>
-                <Button fontSize="1vw" width="90%" onClick={onOpen} margin="0.5vw">Dodaj egzamin</Button>
+                <Button fontSize="1vw" width="90%" onClick={onOpen} margin="0.5vw">Dodaj egzamin <AddIcon ml="0.5vw" /></Button>
                 <Modal isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay/>
                     <ExamForm  refreshExams={getExamsList} onCloseExam={onClose}/>
@@ -155,9 +155,9 @@ function LeftMenu() {
                                                     <MenuButton isActive={isOpen}
                                                         as={IconButton}
                                                         aria-label='Options'
-                                                        icon={<ChevronDownIcon />}
+                                                        icon={<SettingsIcon />}
                                                         variant='outline'
-                                                        size="sm"
+                                                        size={isLargerThan1800 ? "sm" : "xs"}
                                                         float="right"
                                                         border="none"
                                                     >
@@ -170,27 +170,16 @@ function LeftMenu() {
                                             )}
                                         </Menu>
                                         <CardBody>
-                                            <HStack>
                                                 <Heading fontSize='0.9vw'> 
                                                     {exam.name}
                                                 </Heading>
-                                                {exam.type == "basic" && isLargerThan1800 &&
-                                                    <Badge fontSize="0.5vw">P</Badge>
-                                                }
-                                                {exam.type == "extended" && isLargerThan1800 &&
-                                                    <Badge fontSize="0.5vw">R</Badge>
-                                                }
-                                                {exam.type == "oral" && isLargerThan1800 &&
-                                                    <Badge fontSize="0.5vw">U</Badge>
-                                                }
-                                            </HStack>
-                                            {exam.type == "basic" && !isLargerThan1800 &&
+                                            {exam.type == "basic" &&
                                                 <Badge fontSize="0.5vw">Podstawowy</Badge>
                                             }
-                                            {exam.type == "extended" && !isLargerThan1800 &&
+                                            {exam.type == "extended" &&
                                                 <Badge fontSize="0.5vw">Rozszerzony</Badge>
                                             }
-                                            {exam.type == "oral" && !isLargerThan1800 &&
+                                            {exam.type == "oral" &&
                                                 <Badge fontSize="0.5vw">Ustny</Badge>
                                             }
                                             {exam.startTime &&
@@ -216,7 +205,7 @@ function LeftMenu() {
                                 {colorMode === 'light' ? <MoonIcon></MoonIcon> : <SunIcon></SunIcon>}
                             </Button>
                         </Flex>
-                        <Button fontSize="1vw" width="90%" onClick={onCsvOpen} margin="0.5vw">
+                        <Button fontSize="1vw" width="90%" onClick={onCsvOpen} margin="0.5vw" mb="0">
                             <Text>Wypełnij dane </Text>
                             <AddIcon marginLeft="0.5vw"/>
                             <Modal isOpen={isCsvOpen} onClose={onCsvClose} size="full">
@@ -229,7 +218,7 @@ function LeftMenu() {
             </motion.div>
 
             {/* When left panel isn't wide  */}
-            <Box paddingLeft="1vw" height="100vh" top="10vh" width="4vw" zIndex="5" float="left" style={{boxShadow: "8px 8px 24px 0px rgba(0, 0, 0, 0.6)"}} onMouseEnter={()=> onMenuOpen()}>
+            <Box paddingLeft="1vw" paddingRight="1vw" height="100vh" top="10vh" width="4vw" zIndex="5" float="left" style={{boxShadow: "8px 8px 24px 0px rgba(0, 0, 0, 0.6)"}} onMouseEnter={()=> onMenuOpen()}>
                 <Flex height="10vh" justifyContent="left" alignItems="center">
                     <Image src={colorMode === "dark" ? logo_white : logo_black} zIndex="20" width="2vw"></Image>
                 </Flex>
@@ -244,6 +233,9 @@ function LeftMenu() {
                 whiteSpace: 'nowrap',
                 }}>
                     <Stack spacing="3">
+                        <Button fontSize="0.9vw" width="100%" mt="1vh"><AddIcon /></Button>
+                        <Divider width="80%" />
+                        <Text fontSize="0.8vw">Egzam.</Text>
                         {exams?.map((exam: ExamItem) =>
                         <Link to={`/exam/${exam.id}`}>
                             <Tooltip label={exam.name} placement="right">
@@ -251,6 +243,10 @@ function LeftMenu() {
                             </Tooltip>
                         </Link>  
                         ) ?? <Text>Wczytywanie...</Text>}
+                        <Flex position="absolute" bottom="0" direction="column" justifyContent="center" alignItems="center" mb="1vw">
+                            <Button fontSize="0.9vw" size="sm" width="1vw" mt="1vh" mb="0.5vw"></Button>
+                            <Button fontSize="0.9vw" size="sm" width="1vw" mt="1vh" mb="0.5vw"></Button>
+                        </Flex>
                     </Stack>
                 </motion.div>
             </Box>
