@@ -1,4 +1,4 @@
-import { Collapse, Avatar, Tooltip, Image } from '@chakra-ui/react'
+import { Collapse, Avatar, Image } from '@chakra-ui/react'
 
 import { MoonIcon, SunIcon, AddIcon, ChevronDownIcon, HamburgerIcon} from '@chakra-ui/icons'
 
@@ -31,8 +31,7 @@ import {
     AccordionPanel,
     AccordionIcon,
     Divider,
-    Tooltip,
-    Image,
+    Tooltip
 } from '@chakra-ui/react'
 import { useColorMode } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
