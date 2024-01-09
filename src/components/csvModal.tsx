@@ -52,7 +52,7 @@ const CsvModal = (props: {refreshExams: Function}) => {
             if(!foundExam){
                 foundExam = finalObj.exams[finalObj.exams.push({name: studentObject["examName"], studentIds: []}) - 1];
             }
-            foundExam.studentIds.push({PESEL: studentObject["PESEL"]});
+            foundExam.studentIds.push(studentObject["PESEL"]);
 
         })
         console.log(finalObj);
@@ -96,7 +96,7 @@ const CsvModal = (props: {refreshExams: Function}) => {
             </ModalHeader>
             <ModalBody>
                 <form id="csv-form" onSubmit={handleSubmit(onSubmit)}>
-                    <Box border="1px dotted" borderColor="gray" display="flex" alignItems="center" justifyContent="center" borderRadius="md" flexDirection="column" >
+                    <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column" >
                         <Box border="1px dotted" borderColor="gray" p="10" m="5"  borderRadius="xl">    
                             <FormControl isInvalid={errors.file?.message != null}>
                                 <FormLabel> Dodaj plik </FormLabel>
