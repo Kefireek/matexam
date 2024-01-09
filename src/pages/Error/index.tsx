@@ -3,7 +3,7 @@ import { Link as RouterLink } from "react-router-dom";
 
 function ErrorPage() {
 
-    return(
+    return (
         <Box display="flex" height="100vh" justifyContent="center" alignItems="center">
             <div>
                 <Heading>Ups...</Heading>

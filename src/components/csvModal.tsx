@@ -22,7 +22,6 @@ import { useForm } from "react-hook-form";
 import { CsvInput } from "../interfaces/data";
 import { StudentDescriptive } from "../interfaces/students";
 import DataService from "../services/api/data/dataService";
-import { PlusSquareIcon } from "@chakra-ui/icons";
 
 
 const CsvModal = (props: {refreshExams: Function}) => {

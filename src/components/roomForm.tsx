@@ -8,9 +8,6 @@ import {
     FormLabel,
     FormControl,
     FormErrorMessage,
-    RadioGroup,
-    HStack,
-    Radio,
     Checkbox
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";

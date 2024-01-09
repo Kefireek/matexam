@@ -1,6 +1,7 @@
 import { Collapse, Avatar, Tooltip, Image } from '@chakra-ui/react'
 
 import { MoonIcon, SunIcon, AddIcon, ChevronDownIcon, HamburgerIcon} from '@chakra-ui/icons'
+
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
 import ExamForm from '../examForm.tsx'
 import { ExamItem } from '../../interfaces/exams.ts'
@@ -30,7 +31,9 @@ import {
     AccordionPanel,
     AccordionIcon,
     Divider,
-  } from '@chakra-ui/react'
+    Tooltip,
+    Image,
+} from '@chakra-ui/react'
 import { useColorMode } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import CsvModal from '../csvModal.tsx';
@@ -51,6 +54,7 @@ function LeftMenu() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {isOpen: isCsvOpen, onOpen: onCsvOpen, onClose: onCsvClose} = useDisclosure();
     const {isOpen: isRoomOpen, onOpen: onRoomOpen, onClose: onRoomClose} = useDisclosure();
+
     const {isOpen: isStudentOpen, onOpen: onStudentOpen, onClose: onStudentClose} = useDisclosure();
     const {isOpen: isMenuWide, onOpen: onMenuOpen, onClose: onMenuClose, getButtonProps, getDisclosureProps} = useDisclosure({defaultIsOpen: true});
 
@@ -139,7 +143,7 @@ function LeftMenu() {
                             <Box as="span" flex='1' textAlign='left'>
                                 <HStack>
                                     <Text fontSize="1.2vw">Egzaminy</Text>
-                                    {exams?.length !== undefined ?
+                                    {exams?.length ?
                                         <Badge>{exams?.length}</Badge>
                                         : <Spinner size="sm" />
                                     }
@@ -236,7 +240,7 @@ function LeftMenu() {
                 </Flex>
                 <Stack spacing="3">
                     {exams?.map((exam: ExamItem) =>
-                    <Link to={`/exam/${exam.id}`}>
+                    <Link to={`/exam/${exam.id}`} key={exam.id}>
                         <Tooltip label={exam.name} placement="right">
                             <Text>{Array.from(exam.name)[0]}</Text>
                         </Tooltip>
