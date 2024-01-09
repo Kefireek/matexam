@@ -1,4 +1,7 @@
-import { MoonIcon, SunIcon, AddIcon, ChevronDownIcon } from '@chakra-ui/icons'
+import { Collapse, Avatar, Tooltip, Image } from '@chakra-ui/react'
+
+import { MoonIcon, SunIcon, AddIcon, ChevronDownIcon, HamburgerIcon} from '@chakra-ui/icons'
+
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
 import ExamForm from '../examForm.tsx'
 import { ExamItem } from '../../interfaces/exams.ts'
@@ -42,6 +45,7 @@ import { motion } from "framer-motion"
 import RoomForm from '../roomForm.tsx'
 import logo_white from "../../assets/logo_white.png"
 import logo_black from "../../assets/logo_black.png"
+import StudentForm from '../studentForm.tsx'
 
 
 
@@ -50,7 +54,9 @@ function LeftMenu() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {isOpen: isCsvOpen, onOpen: onCsvOpen, onClose: onCsvClose} = useDisclosure();
     const {isOpen: isRoomOpen, onOpen: onRoomOpen, onClose: onRoomClose} = useDisclosure();
-    const {isOpen: isMenuWide, onOpen: onMenuOpen, onClose: onMenuClose, getDisclosureProps} = useDisclosure({defaultIsOpen: true});
+
+    const {isOpen: isStudentOpen, onOpen: onStudentOpen, onClose: onStudentClose} = useDisclosure();
+    const {isOpen: isMenuWide, onOpen: onMenuOpen, onClose: onMenuClose, getButtonProps, getDisclosureProps} = useDisclosure({defaultIsOpen: true});
 
     const [hidden, setHidden] = useState(!isMenuWide)
 
@@ -107,6 +113,8 @@ function LeftMenu() {
                 zIndex: "10",
                 boxShadow: "8px 8px 24px 0px rgba(0, 0, 0, 0.6)",
                 backgroundColor: colorMode == "dark" ? "#1A202C" : "white",
+                display: "flex",
+                flexDirection: "column"
                 }}
             >
                 <Flex justifyContent="center" alignItems="center" height="10vh">
@@ -121,7 +129,12 @@ function LeftMenu() {
                 <Button fontSize="1vw" width="90%" onClick={onRoomOpen} margin="0.5vw">Dodaj salę</Button>
                 <Modal isOpen={isRoomOpen} onClose={onRoomClose}>
                     <ModalOverlay/>
-                    <RoomForm/>
+                    <RoomForm onRoomClose={onRoomClose}/>
+                </Modal>
+                <Button fontSize="1vw" width="90%" onClick={onStudentOpen} margin="0.5vw">Dodaj ucznia</Button>
+                <Modal isOpen={isStudentOpen} onClose={onStudentClose} size="lg">
+                    <ModalOverlay/>
+                    <StudentForm onStudentClose={onStudentClose}/>
                 </Modal>
                 <Accordion allowMultiple>
                     <AccordionItem>
