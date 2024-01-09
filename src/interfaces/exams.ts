@@ -38,7 +38,7 @@ export interface StudentRoom extends StudentId {
 }
 
 export interface ExamCsvInput {
-  name: String,
+  name: string,
   studentIds: string[]
 }
 
