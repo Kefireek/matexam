@@ -232,10 +232,12 @@ function LeftMenu() {
                 overflow: 'hidden',
                 whiteSpace: 'nowrap',
                 }}>
-                    <Stack spacing="3">
-                        <Button fontSize="0.9vw" width="100%" mt="1vh"><AddIcon /></Button>
+                    <Flex direction="column" justifyContent="flex-start" gap="1vw" alignItems="center" height="90vh">
+                        <Flex width="100%" direction="column" justifyContent="center" alignItems="center">
+                            <Button fontSize="0.9vw" width="1vw" size="sm" mt="1vh"><AddIcon /></Button>
+                        </Flex>
                         <Divider width="80%" />
-                        <Text fontSize="0.8vw">Egzam.</Text>
+                        <Text fontSize="0.7vw">Egzam.</Text>
                         {exams?.map((exam: ExamItem) =>
                         <Link to={`/exam/${exam.id}`}>
                             <Tooltip label={exam.name} placement="right">
@@ -243,11 +245,9 @@ function LeftMenu() {
                             </Tooltip>
                         </Link>  
                         ) ?? <Text>Wczytywanie...</Text>}
-                        <Flex position="absolute" bottom="0" direction="column" justifyContent="center" alignItems="center" mb="1vw">
-                            <Button fontSize="0.9vw" size="sm" width="1vw" mt="1vh" mb="0.5vw"></Button>
-                            <Button fontSize="0.9vw" size="sm" width="1vw" mt="1vh" mb="0.5vw"></Button>
-                        </Flex>
-                    </Stack>
+                        <Button justifySelf="end" aspectRatio="1/1" fontSize="0.9vw" size="sm" width="1vw" mt="auto"><SunIcon /></Button>
+                        <Button justifySelf="end" aspectRatio="1/1" fontSize="0.9vw" size="sm" width="1vw" mb="1vw"><AddIcon /></Button>
+                    </Flex>
                 </motion.div>
             </Box>
         </Flex>

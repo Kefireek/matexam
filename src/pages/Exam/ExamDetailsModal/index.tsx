@@ -3,19 +3,30 @@ import { Badge, Box, Button, Card, CardBody, CardFooter, CardHeader, Collapse, F
 import { CloseIcon, MinusIcon } from "@chakra-ui/icons";
 import { RoomStudents } from "../../../interfaces/rooms";
 import ExamsAPIService from "../../../services/api/exams/ExamsAPIService";
+import { FaUserPlus } from "react-icons/fa";
+import { ExamView } from "../../../interfaces/exams";
+import { StudentDescriptive } from "../../../interfaces/students";
 
-function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam: CallableFunction}) {
+function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam: CallableFunction, unassignedStudents: StudentDescriptive[]}) {
 
     const { isOpen, onToggle } = useDisclosure()
 
     const { colorMode } = useColorMode()
 
+
+
     const unassignStudent = async (pesel : string) => {
-        ExamsAPIService.updateRoomAssignments(props.examid, [{PESEL : pesel}]).then(()=>{
+        ExamsAPIService.updateRoomAssignments(props.examid, [{PESEL : pesel, number: null}]).then(()=>{
             props.getExam(props.examid);
         });
         // props.refreshExams();
         // props.onCloseExam();
+    }
+
+    const fillRoom = async () => {
+        // ExamsAPIService.updateRoomAssignments(props.examid, [{PESEL : pesel, number : numberp}]).then(()=>{
+        //     props.getExam(props.examid);
+        // });
     }
 
     return(
@@ -30,10 +41,13 @@ function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam:
                         </Heading>
                     </CardHeader>
                     <CardBody>
-                        <Text>Pojemność sali: {props.room.size}</Text>
+                        <Text>Pojemność sali: {props.room.students?.length}/{props.room.size}</Text>
                     </CardBody>
                     <CardFooter>
-                        <Button onClick={onToggle}>Zobacz</Button>
+                        <Flex direction="row" justifyContent="space-between" alignContent="center">
+                            <Button onClick={onToggle} width="45%">Zobacz</Button>
+                            <Button onClick={fillRoom} width="45%">Auto<Box ml="5px"><FaUserPlus /></Box></Button>
+                        </Flex>
                     </CardFooter>
                 </Card>
             </Box>
@@ -52,7 +66,7 @@ function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam:
                     <Flex justifyContent="space-between">
                         <Heading color={colorMode == "light" ? "black" :'white'}>
                             Sala {props.room.number} <Badge></Badge>
-                            <Text fontSize="18px" fontWeight="medium">Pojemność: {props.room.size} ({props.room.students?.length}/{props.room.size})</Text>
+                            <Text fontSize="18px" fontWeight="medium">Pojemność: {props.room.students?.length}/{props.room.size}</Text>
                         </Heading>
                         <Button onClick={onToggle}><CloseIcon /></Button>
                     </Flex>

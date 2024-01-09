@@ -34,7 +34,7 @@ export interface StudentAssignedToRoom extends StudentDescriptive {
 }
 
 export interface StudentRoom extends StudentId {
-  number?: number
+  number: number | null
 }
 
 export interface ExamCsvInput {
