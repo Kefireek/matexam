@@ -1,6 +1,7 @@
 import { BiLogOut } from "react-icons/bi";
 import { Collapse, Avatar, Image } from '@chakra-ui/react'
 import { MoonIcon, SunIcon, AddIcon, SettingsIcon, ChevronDownIcon, HamburgerIcon} from '@chakra-ui/icons'
+
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
 import ExamForm from '../examForm.tsx'
 import { ExamItem } from '../../interfaces/exams.ts'
@@ -44,6 +45,7 @@ import RoomForm from '../roomForm.tsx'
 import logo_white from "../../assets/logo_white.png"
 import logo_black from "../../assets/logo_black.png"
 import StudentForm from '../studentForm.tsx'
+import ModalWindow from './ModalWindow.tsx'
 
 
 
@@ -138,6 +140,7 @@ function LeftMenu() {
                 <Modal isOpen={isRoomOpen} onClose={onRoomClose}>
                     <ModalOverlay/>
                     <RoomForm onRoomClose={onRoomClose}/>
+                    <ModalWindow onClose={onClose} dataInterface={""} />
                 </Modal>
                 <Button fontSize="1vw" width="90%" onClick={onStudentOpen} margin="0.5vw">Dodaj ucznia</Button>
                 <Modal isOpen={isStudentOpen} onClose={onStudentClose} size="lg">
