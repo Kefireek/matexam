@@ -1,4 +1,6 @@
-import { MoonIcon, SunIcon, AddIcon, ChevronDownIcon, HamburgerIcon} from '@chakra-ui/icons'
+import { BiLogOut } from "react-icons/bi";
+import { Collapse, Avatar, Image } from '@chakra-ui/react'
+import { MoonIcon, SunIcon, AddIcon, SettingsIcon, ChevronDownIcon, HamburgerIcon} from '@chakra-ui/icons'
 
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
 import ExamForm from '../examForm.tsx'
@@ -29,8 +31,7 @@ import {
     AccordionPanel,
     AccordionIcon,
     Divider,
-    Tooltip,
-    Image,
+    Tooltip
 } from '@chakra-ui/react'
 import { useColorMode } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
@@ -74,8 +75,7 @@ function LeftMenu() {
 
     useEffect(()=>{
         getExamsList();
-        console.log(hidden)
-    }, [hidden]);
+    }, []);
 
     const getExamsList = () => {
         ExamsAPIService.getExams().then((res)=>{
@@ -104,7 +104,7 @@ function LeftMenu() {
                 initial={false}
                 onAnimationStart={() => setHidden(false)}
                 onAnimationComplete={() => setHidden(!isMenuWide)}
-                animate={{ width: isMenuWide ? "12vw" : "4vw" }}
+                animate={{ width: isMenuWide ? "12vw" : "4vw"}}
                 onMouseLeave={()=> onMenuClose()}
                 style={{
                 overflow: 'hidden',
@@ -120,11 +120,22 @@ function LeftMenu() {
                 flexDirection: "column"
                 }}
             >
-                <Flex justifyContent="center" alignItems="center" height="10vh">
-                    <Image ml="0.3vw" mr="0.5vw" src={colorMode === "dark" ? logo_white : logo_black} width="2vw"></Image>
-                    <Text unselectable='on' fontSize="2vw" onClick={()=> navigate("/")} style={{cursor: "pointer"}} >matExam</Text>    
+                <Flex direction="row" justifyContent="left" alignItems="center" height="10vh" width="100%" ml="1vw">
+                    <Image mr="0.5vw" src={colorMode === "dark" ? logo_white : logo_black} width="2vw" onClick={()=>navigate("/")} cursor="pointer"></Image>
+                    <motion.div
+                    {...getDisclosureProps()}
+                    hidden={hidden}
+                    initial={false}
+                    animate={{opacity: isMenuWide ? "100%" : "0%" }}>
+                        <Text unselectable='on' fontSize="1.9vw" onClick={()=> navigate("/")} style={{cursor: "pointer"}} >matExam</Text>    
+                    </motion.div>
                 </Flex>
-                <Button fontSize="1vw" width="90%" onClick={onOpen} margin="0.5vw">Dodaj egzamin</Button>
+                <motion.div
+                {...getDisclosureProps()}
+                hidden={hidden}
+                initial={false}
+                animate={{opacity: isMenuWide ? "100%" : "0%" }}>
+                <Button fontSize="1vw" width="90%" onClick={onOpen} margin="0.5vw">Dodaj egzamin <AddIcon ml="0.5vw" /></Button>
                 <Modal isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay/>
                     <ExamForm refreshExams={getExamsList} onCloseExam={onClose}/>
@@ -140,6 +151,7 @@ function LeftMenu() {
                     <ModalOverlay/>
                     <StudentForm onStudentClose={onStudentClose}/>
                 </Modal>
+
                 <Accordion allowMultiple>
                     <AccordionItem>
                         <h2>
@@ -167,42 +179,31 @@ function LeftMenu() {
                                                     <MenuButton isActive={isOpen}
                                                         as={IconButton}
                                                         aria-label='Options'
-                                                        icon={<ChevronDownIcon />}
+                                                        icon={<SettingsIcon />}
                                                         variant='outline'
-                                                        size="sm"
+                                                        size={isLargerThan1800 ? "sm" : "xs"}
                                                         float="right"
                                                         border="none"
                                                     >
                                                     </MenuButton>
                                                     <MenuList>
-                                                        <MenuItem>Edit</MenuItem>
-                                                        <MenuItem onClick={() => delExam(exam.id)}>Delete</MenuItem>
+                                                        <MenuItem onClick={onOpen}>Edit</MenuItem>
+                                                        <MenuItem onClick={()=> delExam(exam.id)}>Delete</MenuItem>
                                                     </MenuList>
                                                 </>
                                             )}
                                         </Menu>
                                         <CardBody>
-                                            <HStack>
                                                 <Heading fontSize='0.9vw'> 
                                                     {exam.name}
                                                 </Heading>
-                                                {exam.type == "basic" && isLargerThan1800 &&
-                                                    <Badge fontSize="0.5vw">P</Badge>
-                                                }
-                                                {exam.type == "extended" && isLargerThan1800 &&
-                                                    <Badge fontSize="0.5vw">R</Badge>
-                                                }
-                                                {exam.type == "oral" && isLargerThan1800 &&
-                                                    <Badge fontSize="0.5vw">U</Badge>
-                                                }
-                                            </HStack>
-                                            {exam.type == "basic" && !isLargerThan1800 &&
+                                            {exam.type == "basic" &&
                                                 <Badge fontSize="0.5vw">Podstawowy</Badge>
                                             }
-                                            {exam.type == "extended" && !isLargerThan1800 &&
+                                            {exam.type == "extended" &&
                                                 <Badge fontSize="0.5vw">Rozszerzony</Badge>
                                             }
-                                            {exam.type == "oral" && !isLargerThan1800 &&
+                                            {exam.type == "oral" &&
                                                 <Badge fontSize="0.5vw">Ustny</Badge>
                                             }
                                             {exam.startTime &&
@@ -221,36 +222,57 @@ function LeftMenu() {
                     </AccordionItem>
                     <Divider />
                 </Accordion>
-                <Flex width="90%" margin="0.5vw" justifyContent="space-around">
-                    <Button width="65%" fontSize="1vw" onClick={logoutUser}>Wyloguj się</Button>
-                    <Button width="25%" fontSize="1vw" onClick={toggleColorMode}>
-                        {colorMode === 'light' ? <MoonIcon></MoonIcon> : <SunIcon></SunIcon>}
-                    </Button>
+                <Flex position="absolute" bottom="0" direction="column" justifyContent="center" alignItems="center" width="100%" mb="1vw">
+                        <Flex width="90%" margin="0.5vw" justifyContent="space-around">
+                            <Button width="65%" fontSize="1vw" onClick={() => logoutUser}>Wyloguj się</Button>
+                            <Button width="25%" fontSize="1vw" onClick={toggleColorMode}>
+                                {colorMode === 'light' ? <MoonIcon></MoonIcon> : <SunIcon></SunIcon>}
+                            </Button>
+                        </Flex>
+                        <Button fontSize="1vw" width="90%" onClick={onCsvOpen} margin="0.5vw" mb="0">
+                            <Text>Wypełnij dane </Text>
+                            <AddIcon marginLeft="0.5vw"/>
+                            <Modal isOpen={isCsvOpen} onClose={onCsvClose} size="full">
+                                <ModalOverlay/>
+                                <CsvModal refreshExams={getExamsList}/>
+                            </Modal>
+                        </Button>
                 </Flex>
-                <Button fontSize="1vw" width="90%" onClick={onCsvOpen} margin="0.5vw">
-                    <Text>Wypełnij dane </Text>
-                    <AddIcon marginLeft="0.5vw"/>
-                    <Modal isOpen={isCsvOpen} onClose={onCsvClose} size="xl">
-                        <ModalOverlay/>
-                        <CsvModal refreshExams={getExamsList}/>
-                    </Modal>
-                </Button>
+                </motion.div>
             </motion.div>
 
             {/* When left panel isn't wide  */}
-            <Box paddingLeft="1vw" height="100vh" top="10vh" width="4vw" zIndex="5" float="left" style={{boxShadow: "8px 8px 24px 0px rgba(0, 0, 0, 0.6)"}} onMouseEnter={()=> onMenuOpen()}>
+            <Box paddingLeft="1vw" paddingRight="1vw" height="100vh" top="10vh" width="4vw" zIndex="5" float="left" style={{boxShadow: "8px 8px 24px 0px rgba(0, 0, 0, 0.6)"}} onMouseEnter={()=> onMenuOpen()}>
                 <Flex height="10vh" justifyContent="left" alignItems="center">
-                    <Image src={colorMode === "dark" ? logo_white : logo_black} width="2vw"></Image>
+                    <Image src={colorMode === "dark" ? logo_white : logo_black} zIndex="20" width="2vw"></Image>
                 </Flex>
-                <Stack spacing="3">
-                    {exams?.map((exam: ExamItem) =>
-                    <Link to={`/exam/${exam.id}`} key={exam.id}>
-                        <Tooltip label={exam.name} placement="right">
-                            <Text>{Array.from(exam.name)[0]}</Text>
-                        </Tooltip>
-                    </Link>  
-                    ) ?? <Text>Wczytywanie...</Text>}
-                </Stack>
+                <motion.div
+                {...getDisclosureProps()}
+                hidden={!hidden}
+                initial={false}
+                animate={{opacity: isMenuWide ? "0%" : "100%" }}
+                transition={{delay: "0.5"}}
+                style={{
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                }}>
+                    <Flex direction="column" justifyContent="flex-start" gap="1vw" alignItems="center" height="90vh">
+                        <Flex width="100%" direction="column" justifyContent="center" alignItems="center">
+                            <Button fontSize="0.9vw" width="1vw" size="sm" mt="1vh"><AddIcon /></Button>
+                        </Flex>
+                        <Divider width="80%" />
+                        <Text fontSize="0.7vw">Egzam.</Text>
+                        {exams?.map((exam: ExamItem) =>
+                        <Link to={`/exam/${exam.id}`}>
+                            <Tooltip label={exam.name} placement="right">
+                                <Badge fontSize="0.9vw">{Array.from(exam.name)[0]}{Array.from(exam.name)[1]}{Array.from(exam.name)[2]}</Badge>
+                            </Tooltip>
+                        </Link>  
+                        ) ?? <Text>Wczytywanie...</Text>}
+                        <Button justifySelf="end" aspectRatio="1/1" fontSize="0.9vw" size="sm" width="1vw" mt="auto"><SunIcon /></Button>
+                        <Button justifySelf="end" aspectRatio="1/1" fontSize="0.9vw" size="sm" width="1vw" mb="1vw"><AddIcon /></Button>
+                    </Flex>
+                </motion.div>
             </Box>
         </Flex>
     )
