@@ -1,19 +1,32 @@
 import { AiOutlineDesktop } from "react-icons/ai";
-import { Badge, Box, Button, Card, CardBody, CardFooter, CardHeader, Collapse, Flex, Heading, Icon, IconButton, Table, TableContainer, Td, Text, Tr, useDisclosure } from "@chakra-ui/react";
+import { Badge, Box, Button, Card, CardBody, CardFooter, CardHeader, Collapse, Flex, Heading, Icon, IconButton, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr, useColorMode, useDisclosure } from "@chakra-ui/react";
 import { CloseIcon, MinusIcon } from "@chakra-ui/icons";
 import { RoomStudents } from "../../../interfaces/rooms";
 import ExamsAPIService from "../../../services/api/exams/ExamsAPIService";
+import { FaUserPlus } from "react-icons/fa";
+import { ExamView } from "../../../interfaces/exams";
+import { StudentDescriptive } from "../../../interfaces/students";
 
-function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam: CallableFunction}) {
+function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam: CallableFunction, unassignedStudents: StudentDescriptive[]}) {
 
     const { isOpen, onToggle } = useDisclosure()
 
+    const { colorMode } = useColorMode()
+
+
+
     const unassignStudent = async (pesel : string) => {
-        ExamsAPIService.updateRoomAssignments(props.examid, [{PESEL : pesel}]).then(()=>{
+        ExamsAPIService.updateRoomAssignments(props.examid, [{PESEL : pesel, number: null}]).then(()=>{
             props.getExam(props.examid);
         });
         // props.refreshExams();
         // props.onCloseExam();
+    }
+
+    const fillRoom = async () => {
+        // ExamsAPIService.updateRoomAssignments(props.examid, [{PESEL : pesel, number : numberp}]).then(()=>{
+        //     props.getExam(props.examid);
+        // });
     }
 
     return(
@@ -28,33 +41,49 @@ function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam:
                         </Heading>
                     </CardHeader>
                     <CardBody>
-                        <Text>Pojemność sali: {props.room.size}</Text>
+                        <Text>Pojemność sali: {props.room.students?.length}/{props.room.size}</Text>
                     </CardBody>
                     <CardFooter>
-                        <Button onClick={onToggle}>Zobacz</Button>
+                        <Flex direction="row" justifyContent="space-between" alignContent="center">
+                            <Button onClick={onToggle} width="45%">Zobacz</Button>
+                            <Button onClick={fillRoom} width="45%">Auto<Box ml="5px"><FaUserPlus /></Box></Button>
+                        </Flex>
                     </CardFooter>
                 </Card>
             </Box>
-            <Box position="absolute" zIndex="10" as={Collapse} in={isOpen} animateOpacity>
+            <Box position="absolute" zIndex="7" as={Collapse} in={isOpen} animateOpacity>
                 <Box
                     p='40px'
                     color='white'
                     mt='4'
-                    bg='#2D3748'
+                    bg={colorMode == "light" ? "#F7FAFC" :'#2D3748'}
                     rounded='md'
                     shadow='md'
-                    width="40vw"
+                    width="46vw"
                     height="70vh"
                     margin="0"
                 >
                     <Flex justifyContent="space-between">
-                        <Heading>
+                        <Heading color={colorMode == "light" ? "black" :'white'}>
                             Sala {props.room.number} <Badge></Badge>
-                            <Text fontSize="18px">Pojemność: {props.room.size}</Text>
+                            <Text fontSize="18px" fontWeight="medium">Pojemność: {props.room.students?.length}/{props.room.size}</Text>
                         </Heading>
                         <Button onClick={onToggle}><CloseIcon /></Button>
                     </Flex>
-                    <Table>
+                    <SimpleGrid mt="1vw" spacing={4} templateColumns='repeat(auto-fill, minmax(15vw, 1fr))'>
+                        {props.room.students?.map((student)=>
+                            <Card padding={4} bg={colorMode=="light" ? "RGBA(0, 0, 0, 0.08)" : "RGBA(0, 0, 0, 0.4)"}>
+                                <Flex direction="row" fontSize="0.9vw" justifyContent="space-between" alignItems="center">
+                                    <Text width="10%">{student.department}</Text>
+                                    <Text width="10%">{student.ordinalNumber}</Text>
+                                    <Text width="35%">{student.surname}</Text>
+                                    <Text width="35%">{student.name}</Text>
+                                    <IconButton width="10%" aria-label="Delete Student" icon={<MinusIcon/>} onClick={()=>unassignStudent(student.PESEL)}></IconButton>
+                                </Flex>
+                            </Card>
+                        )}
+                    </SimpleGrid>
+                    {/* <Table>
                         <TableContainer>
                             {props.room.students?.map((result)=>
                                 <Tr key={result.PESEL}>
@@ -69,7 +98,7 @@ function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam:
                                 </Tr>
                             )}
                         </TableContainer>
-                    </Table>
+                    </Table> */}
 
                 </Box>
             </Box>

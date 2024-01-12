@@ -81,12 +81,9 @@ const CsvModal = (props: {refreshExams: Function}) => {
     const onSubmit = async () => {
         await DataService.postData(data!).then(
             (res) => {
-                setResult(res.data);
-                props.refreshExams();
-            })
-        .catch((err) => {
-            setErrorMsg(err);
-        })
+                setResult(res.data)
+            }
+        );
     }
 
     return (
@@ -96,7 +93,7 @@ const CsvModal = (props: {refreshExams: Function}) => {
             </ModalHeader>
             <ModalBody>
                 <form id="csv-form" onSubmit={handleSubmit(onSubmit)}>
-                    <Box border="1px dotted" borderColor="gray" display="flex" alignItems="center" justifyContent="center" borderRadius="md" flexDirection="column" >
+                    <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column" >
                         <Box border="1px dotted" borderColor="gray" p="10" m="5"  borderRadius="xl" transition="0.5">    
                             <FormControl isInvalid={errors.file?.message != null}>
                                 <FormLabel> Dodaj plik </FormLabel>
