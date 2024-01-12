@@ -1,4 +1,4 @@
-const ModalWindow = (props: {onClose: Function, dataInterface: any, fields: object}) => {
+const ModalWindow = (props: {onClose: Function, fields: [{fieldname: string, gridNumber: number}]}) => {
     
     return (
         <>

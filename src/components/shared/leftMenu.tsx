@@ -67,6 +67,10 @@ function LeftMenu() {
 
     const [isLargerThan1800] = useMediaQuery('(min-width: 1800px)')
 
+    type formValues = {
+        fields: [{fieldname: string, gridNumber: number}]
+    }
+
 
     useEffect(()=>{
         getExamsList();
@@ -129,7 +133,7 @@ function LeftMenu() {
                 <Modal isOpen={isRoomOpen} onClose={onRoomClose}>
                     <ModalOverlay/>
                     <RoomForm onRoomClose={onRoomClose}/>
-                    <ModalWindow onClose={onClose} dataInterface={""} />
+                    <ModalWindow onClose={onClose} fields={[{fieldname: "imie",gridNumber:1}]} />
                 </Modal>
                 <Button fontSize="1vw" width="90%" onClick={onStudentOpen} margin="0.5vw">Dodaj ucznia</Button>
                 <Modal isOpen={isStudentOpen} onClose={onStudentClose} size="lg">
