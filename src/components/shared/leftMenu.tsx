@@ -239,7 +239,7 @@ function LeftMenu() {
                         <Divider width="80%" />
                         <Text fontSize="0.7vw">Egzam.</Text>
                         {exams?.map((exam: ExamItem) =>
-                        <Link to={`/exam/${exam.id}`}>
+                        <Link key={exam.id} to={`/exam/${exam.id}`}>
                             <Tooltip label={exam.name} placement="right">
                                 <Badge fontSize="0.9vw">{Array.from(exam.name)[0]}{Array.from(exam.name)[1]}{Array.from(exam.name)[2]}</Badge>
                             </Tooltip>
