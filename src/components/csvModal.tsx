@@ -81,12 +81,9 @@ const CsvModal = (props: {refreshExams: Function}) => {
     const onSubmit = async () => {
         await DataService.postData(data!).then(
             (res) => {
-                setResult(res.data);
-                props.refreshExams();
-            })
-        .catch((err) => {
-            setErrorMsg(err);
-        })
+                setResult(res.data)
+            }
+        );
     }
 
     return (

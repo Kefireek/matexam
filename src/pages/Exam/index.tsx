@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Badge, Box, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
+import { Badge, Box, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr, useColorMode } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { ExamView } from "../../interfaces/exams";
 import ExamsAPIService from "../../services/api/exams/ExamsAPIService";
@@ -10,6 +10,7 @@ function ExamPage() {
 
     const { examid } = useParams() as any as examParams;
 
+    const { colorMode } = useColorMode()
 
     const [examView, setExamView] = useState<ExamView>();
 
@@ -67,15 +68,15 @@ function ExamPage() {
          <Box paddingLeft="1.5vw">
             <Box marginTop="2vw" display="flex" justifyContent="space-between">
                 <Box>
-                    <SimpleGrid width="40vw" spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))'>
+                    <SimpleGrid width="46vw" spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))'>
                         {examView?.assignedStudents.map((room) =>
-                            <ExamDetailsModal key={room.number} room={room} examid={examid} getExam={getExam}/>
+                            <ExamDetailsModal key={room.number} room={room} examid={examid} getExam={getExam} unassignedStudents={examView?.unassignedStudents}/>
                         )
                         }
                     </SimpleGrid>
                 </Box>
                 <Box ml="1vw">
-                    <TableContainer width="40vw">
+                    <TableContainer width="46vw">
                         <Table variant='striped' colorScheme='teal'>
                             <TableCaption>Nieprzypisani uczniowie</TableCaption>
                             <Thead>
