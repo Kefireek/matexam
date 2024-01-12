@@ -32,10 +32,11 @@ const CsvModal = (props: {refreshExams: Function}) => {
         formState: {errors, isSubmitting}
     } = useForm();
 
-    const [headers, setHeaders] = useState<String[]>();
-    const [rows, setRows] = useState<String[][]>();
+    const [headers, setHeaders] = useState<string[]>();
+    const [rows, setRows] = useState<string[][]>();
     const [data, setData] = useState<CsvInput>();
-    const [result, setResult] = useState<string>()
+    const [result, setResult] = useState<string>();
+    const [errorMsg, setErrorMsg] = useState<string>();
 
     const csvToArr = (stringVal: string) => {
         var finalObj: CsvInput = {students: [], exams: []};
@@ -51,7 +52,7 @@ const CsvModal = (props: {refreshExams: Function}) => {
             if(!foundExam){
                 foundExam = finalObj.exams[finalObj.exams.push({name: studentObject["examName"], studentIds: []}) - 1];
             }
-            foundExam.studentIds.push({PESEL: studentObject["PESEL"]});
+            foundExam.studentIds.push(studentObject["PESEL"]);
 
         })
         console.log(finalObj);
@@ -92,19 +93,24 @@ const CsvModal = (props: {refreshExams: Function}) => {
             </ModalHeader>
             <ModalBody>
                 <form id="csv-form" onSubmit={handleSubmit(onSubmit)}>
-                    <FormControl isInvalid={errors.file?.message != null}>
-                        <FormLabel> Dodaj plik </FormLabel>
-                        <Input size=""
-                            type="file"
-                            {...register(
-                                'file'
-                            )}
-                            accept=".csv"
-                            onChange={handleChange}
-                        />
-                        <FormErrorMessage> </FormErrorMessage>
-                    </FormControl>
-                <Button type="submit" id="csv-form" isLoading={isSubmitting} colorScheme='teal' disabled={data != undefined}>Zatwierdź!</Button>
+                    <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column" >
+                        <Box border="1px dotted" borderColor="gray" p="10" m="5"  borderRadius="xl" transition="0.5">    
+                            <FormControl isInvalid={errors.file?.message != null}>
+                                <FormLabel> Dodaj plik </FormLabel>
+                                    <Input size=""
+                                        type="file"
+                                        {...register(
+                                            'file'
+                                        )}
+                                        accept=".csv"
+                                        onChange={handleChange}
+                                        display="none"
+                                    />
+                                <FormErrorMessage> {errorMsg} </FormErrorMessage>
+                            </FormControl>
+                            </Box>
+                        <Button type="submit" id="csv-form" isLoading={isSubmitting} colorScheme='teal' disabled={data != undefined}>Zatwierdź!</Button>
+                    </Box>
                 </form>
                 <TableContainer>
                     <Table variant='simple' colorScheme='teal'>

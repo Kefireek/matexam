@@ -1,6 +1,6 @@
-import { Tooltip, Image } from '@chakra-ui/react'
-import { MoonIcon, SunIcon, AddIcon, SettingsIcon, HamburgerIcon} from '@chakra-ui/icons'
 import { BiLogOut } from "react-icons/bi";
+import { Collapse, Avatar, Image } from '@chakra-ui/react'
+import { MoonIcon, SunIcon, AddIcon, SettingsIcon, ChevronDownIcon, HamburgerIcon} from '@chakra-ui/icons'
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
 import ExamForm from '../examForm.tsx'
 import { ExamItem } from '../../interfaces/exams.ts'
@@ -30,7 +30,8 @@ import {
     AccordionPanel,
     AccordionIcon,
     Divider,
-  } from '@chakra-ui/react'
+    Tooltip
+} from '@chakra-ui/react'
 import { useColorMode } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import CsvModal from '../csvModal.tsx';
@@ -42,6 +43,7 @@ import { motion } from "framer-motion"
 import RoomForm from '../roomForm.tsx'
 import logo_white from "../../assets/logo_white.png"
 import logo_black from "../../assets/logo_black.png"
+import StudentForm from '../studentForm.tsx'
 
 
 
@@ -49,8 +51,11 @@ function LeftMenu() {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {isOpen: isCsvOpen, onOpen: onCsvOpen, onClose: onCsvClose} = useDisclosure();
-    // const {isOpen: isRoomOpen, onOpen: onRoomOpen, onClose: onRoomClose} = useDisclosure();
-    const {isOpen: isMenuWide, onOpen: onMenuOpen, onClose: onMenuClose, getDisclosureProps} = useDisclosure({defaultIsOpen: true});
+    const {isOpen: isRoomOpen, onOpen: onRoomOpen, onClose: onRoomClose} = useDisclosure();
+
+    const {isOpen: isStudentOpen, onOpen: onStudentOpen, onClose: onStudentClose} = useDisclosure();
+    const {isOpen: isMenuWide, onOpen: onMenuOpen, onClose: onMenuClose, getButtonProps, getDisclosureProps} = useDisclosure({defaultIsOpen: true});
+
     const [hidden, setHidden] = useState(!isMenuWide)
 
     const { colorMode, toggleColorMode } = useColorMode()
@@ -105,6 +110,8 @@ function LeftMenu() {
                 zIndex: "10",
                 boxShadow: "8px 8px 24px 0px rgba(0, 0, 0, 0.6)",
                 backgroundColor: colorMode == "dark" ? "#1A202C" : "white",
+                display: "flex",
+                flexDirection: "column"
                 }}
             >
                 <Flex direction="row" justifyContent="left" alignItems="center" height="10vh" width="100%" ml="1vw">
@@ -125,7 +132,17 @@ function LeftMenu() {
                 <Button fontSize="1vw" width="90%" onClick={onOpen} margin="0.5vw">Dodaj egzamin <AddIcon ml="0.5vw" /></Button>
                 <Modal isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay/>
-                    <ExamForm  refreshExams={getExamsList} onCloseExam={onClose}/>
+                    <ExamForm refreshExams={getExamsList} onCloseExam={onClose}/>
+                </Modal>
+                <Button fontSize="1vw" width="90%" onClick={onRoomOpen} margin="0.5vw">Dodaj salę</Button>
+                <Modal isOpen={isRoomOpen} onClose={onRoomClose}>
+                    <ModalOverlay/>
+                    <RoomForm onRoomClose={onRoomClose}/>
+                </Modal>
+                <Button fontSize="1vw" width="90%" onClick={onStudentOpen} margin="0.5vw">Dodaj ucznia</Button>
+                <Modal isOpen={isStudentOpen} onClose={onStudentClose} size="lg">
+                    <ModalOverlay/>
+                    <StudentForm onStudentClose={onStudentClose}/>
                 </Modal>
 
                 <Accordion allowMultiple>
@@ -135,7 +152,7 @@ function LeftMenu() {
                             <Box as="span" flex='1' textAlign='left'>
                                 <HStack>
                                     <Text fontSize="1.2vw">Egzaminy</Text>
-                                    {exams?.length !== undefined ?
+                                    {exams?.length ?
                                         <Badge>{exams?.length}</Badge>
                                         : <Spinner size="sm" />
                                     }

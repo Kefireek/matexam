@@ -6,7 +6,6 @@ import ModalSpinner from "./components/modalSpinner"
 import { Outlet } from "react-router-dom"
 
 
-
 function App() {
 
   
@@ -25,8 +24,9 @@ function App() {
       }
     )
     .catch(
-      () => {
-        setLoading(true);
+      (err: any) => {
+        console.log(err)
+        throw new Error('Unable to load page due to server health check error')
       }
     )
   }, [])
