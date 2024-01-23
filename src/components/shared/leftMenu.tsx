@@ -69,7 +69,7 @@ function LeftMenu() {
     const [isLargerThan1800] = useMediaQuery('(min-width: 1800px)')
 
     type formValues = {
-        fields: [{fieldname: string, gridNumber: number}]
+        fields: {fieldname: string, gridNumber: number}[]
     }
 
 
@@ -138,20 +138,8 @@ function LeftMenu() {
                 <Button fontSize="1vw" width="90%" onClick={onOpen} margin="0.5vw">Dodaj egzamin <AddIcon ml="0.5vw" /></Button>
                 <Modal isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay/>
-                    <ExamForm refreshExams={getExamsList} onCloseExam={onClose}/>
+                    <ModalWindow onClose={onClose} fields={[{fieldname: "imie", gridNumber:1}, {fieldname: "essa", gridNumber: 1}]} />
                 </Modal>
-                <Button fontSize="1vw" width="90%" onClick={onRoomOpen} margin="0.5vw">Dodaj salę</Button>
-                <Modal isOpen={isRoomOpen} onClose={onRoomClose}>
-                    <ModalOverlay/>
-                    <RoomForm onRoomClose={onRoomClose}/>
-                    <ModalWindow onClose={onClose} fields={[{fieldname: "imie",gridNumber:1}]} />
-                </Modal>
-                <Button fontSize="1vw" width="90%" onClick={onStudentOpen} margin="0.5vw">Dodaj ucznia</Button>
-                <Modal isOpen={isStudentOpen} onClose={onStudentClose} size="lg">
-                    <ModalOverlay/>
-                    <StudentForm onStudentClose={onStudentClose}/>
-                </Modal>
-
                 <Accordion allowMultiple>
                     <AccordionItem>
                         <h2>
