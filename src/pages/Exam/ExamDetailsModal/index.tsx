@@ -15,6 +15,7 @@ function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam:
 
 
 
+
     const unassignStudent = async (pesel : string) => {
         ExamsAPIService.updateRoomAssignments(props.examid, [{PESEL : pesel, number: null}]).then(()=>{
             props.getExam(props.examid);
@@ -24,12 +25,23 @@ function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam:
     }
 
     const fillRoom = () => {
-        // props.unassignedStudents.forEach(student => {
-        //     ExamsAPIService.updateRoomAssignments(props.examid, [{PESEL : student.PESEL, number : props.room.number}]).then(()=>{
-        //         props.getExam(props.examid);
-        //     }); 
-        // });
-        // console.log(props.unassignedStudents)
+        let x = 0;
+        if(props.room.students){
+            x = props.room.students.length
+        }
+        props.unassignedStudents.forEach(student => {
+                x++;
+                if(props.room.size<x){
+                    console.log("Sala przepełniona")
+                }
+                else{
+                    ExamsAPIService.updateRoomAssignments(props.examid, [{PESEL : student.PESEL, number : props.room.number}]).then(()=>{
+                        props.getExam(props.examid);
+                    }); 
+                }
+            console.log(props.room.students?.length)
+        });
+
     }
 
     return(
