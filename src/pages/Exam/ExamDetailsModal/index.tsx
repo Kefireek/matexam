@@ -25,27 +25,15 @@ function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam:
     }
 
     const fillRoom = () => {
-        let x = 0;
-        if(props.room.students){
-            x = props.room.students.length
-            let new_students: Array<StudentRoom> = [];
-        
-            props.unassignedStudents.forEach(student => {
-                    x++;
-                    if(props.room.size<x){
-                        console.log("Sala przepełniona")
-                    }
-                    else{
-                        new_students.push({PESEL : student.PESEL, number : props.room.number});
-                    }
-                
-            });
-
-            ExamsAPIService.updateRoomAssignments(props.examid, new_students).then(()=>{
+        const freeSpace = props.room.size - (props.room.students?.length ?? 0);
+        if (freeSpace) {
+            ExamsAPIService.updateRoomAssignments(
+                props.examid,
+                props.unassignedStudents.slice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : props.room.number}))
+            ).then(()=>{
                 props.getExam(props.examid);
             }); 
         }
-
     }
 
     return(
