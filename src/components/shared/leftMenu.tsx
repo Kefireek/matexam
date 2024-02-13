@@ -52,6 +52,7 @@ import ModalWindow from './ModalWindow.tsx'
 function LeftMenu() {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen: isOpenEdit, onOpen: onOpenEdit, onClose: onCloseEdit } = useDisclosure();
     const {isOpen: isCsvOpen, onOpen: onCsvOpen, onClose: onCsvClose} = useDisclosure();
     const {isOpen: isRoomOpen, onOpen: onRoomOpen, onClose: onRoomClose} = useDisclosure();
 
@@ -167,6 +168,7 @@ function LeftMenu() {
                         <AccordionPanel pb={4} height="40vh" overflowY="auto" overflowX="hidden" >
                             <Stack spacing="3">
                                 {exams?.map((exam: ExamItem) =>
+                                <>
                                     <Card key={exam.id} variant="elevated" style={{cursor: "pointer"}}>
                                         <Link to={`/exam/${exam.id}`}>
                                         <Menu>
@@ -183,7 +185,7 @@ function LeftMenu() {
                                                     >
                                                     </MenuButton>
                                                     <MenuList>
-                                                        <MenuItem onClick={onOpen}>Edit</MenuItem>
+                                                        <MenuItem onClick={onOpenEdit}>Edit</MenuItem>
                                                         <MenuItem onClick={()=> delExam(exam.id)}>Delete</MenuItem>
                                                     </MenuList>
                                                 </>
@@ -212,6 +214,11 @@ function LeftMenu() {
                                         </CardBody> 
                                         </Link>
                                     </Card>
+                                    <Modal isOpen={isOpenEdit} onClose={onCloseEdit}>
+                                        <ModalOverlay/>
+                                        <ExamForm examBody={{id: exam.id, name: exam.name, type: exam.type, start_time: exam.startTime?.toString(), end_time: exam.endTime?.toString()}} refreshExams={getExamsList} onCloseExam={onCloseEdit}/>
+                                    </Modal>
+                                    </>
                                 ) ?? <Text>Wczytywanie...</Text>}
                             </Stack>
                         </AccordionPanel>
@@ -259,7 +266,7 @@ function LeftMenu() {
                         <Divider width="80%" />
                         <Text fontSize="0.7vw">Egzam.</Text>
                         {exams?.map((exam: ExamItem) =>
-                        <Link to={`/exam/${exam.id}`}>
+                        <Link key={exam.id} to={`/exam/${exam.id}`}>
                             <Tooltip label={exam.name} placement="right">
                                 <Badge fontSize="0.9vw">{Array.from(exam.name)[0]}{Array.from(exam.name)[1]}{Array.from(exam.name)[2]}</Badge>
                             </Tooltip>

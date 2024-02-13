@@ -10,12 +10,13 @@ import {
     FormErrorMessage,
     RadioGroup,
     HStack,
-    Radio
+    Radio,
 } from "@chakra-ui/react";
 
 import { useForm } from "react-hook-form";
 import { ExamType } from "../interfaces/exams";
 import ExamsAPIService from "../services/api/exams/ExamsAPIService";
+import { useEffect } from "react";
 
 
 export type ExamFormModel = {
@@ -25,7 +26,7 @@ export type ExamFormModel = {
     type: ExamType
 }
 
-const ExamForm = (props: {refreshExams: Function, onCloseExam: Function}) => {
+const ExamForm = (props: {refreshExams: Function, onCloseExam: Function,  examBody?: {id: number, name: string, type?: string, start_time?: string, end_time?: string}}) => {
     
     const { 
         handleSubmit,
@@ -36,6 +37,10 @@ const ExamForm = (props: {refreshExams: Function, onCloseExam: Function}) => {
     function compareTime(time1: Date, time2: Date) {
         return new Date(time1) < new Date(time2); // true if time2 is later
     }
+
+    useEffect(()=>{
+        console.log(props.examBody)
+    }, [])
 
     const onSubmit = async (values: ExamFormModel) => {
         const {name, startTime, endTime, type} = values;
@@ -63,6 +68,7 @@ const ExamForm = (props: {refreshExams: Function, onCloseExam: Function}) => {
                         <Input
                             id="name"
                             placeholder="Nazwa"
+                            value={props.examBody !== undefined ? props.examBody.name : ""}
                             {...register(
                                 'name', {
                                     required: "Pole nie może być puste!",
@@ -75,9 +81,9 @@ const ExamForm = (props: {refreshExams: Function, onCloseExam: Function}) => {
                         <FormLabel> Rodzaj </FormLabel>
                         <RadioGroup defaultValue="basic">
                             <HStack>
-                                <Radio value="basic" defaultChecked={true} {...register('type')}>podstawowy</Radio>
-                                <Radio value="extended" {...register('type')}>rozszerzony</Radio>
-                                <Radio value="oral" {...register('type')}>ustny</Radio>
+                                <Radio value="basic" defaultChecked={true} checked={props.examBody !== undefined && props.examBody.type == "basic" ? true : false } {...register('type')}>podstawowy</Radio>
+                                <Radio value="extended" checked={props.examBody !== undefined && props.examBody.type == "extended" ? true : false } {...register('type')}>rozszerzony</Radio>
+                                <Radio value="oral" checked={props.examBody !== undefined && props.examBody.type == "oral" ? true : false } {...register('type')}>ustny</Radio>
                             </HStack>
                         </RadioGroup>
                     </FormControl>
@@ -86,6 +92,7 @@ const ExamForm = (props: {refreshExams: Function, onCloseExam: Function}) => {
                         <Input
                             id="startDate"
                             type="datetime-local"
+                            value={props.examBody !== undefined ? props.examBody.start_time : undefined}
                             {...register(
                                 'startTime', {
                                     required: "Pole nie może być puste!"
@@ -98,6 +105,7 @@ const ExamForm = (props: {refreshExams: Function, onCloseExam: Function}) => {
                         <Input
                             id="endDate"
                             type="datetime-local"
+                            value={props.examBody !== undefined ? props.examBody.end_time : undefined}
                             {...register(
                                 'endTime', {
                                     required: "Pole nie może być puste!"

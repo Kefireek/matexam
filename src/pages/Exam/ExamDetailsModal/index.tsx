@@ -4,7 +4,7 @@ import { CloseIcon, MinusIcon } from "@chakra-ui/icons";
 import { RoomStudents } from "../../../interfaces/rooms";
 import ExamsAPIService from "../../../services/api/exams/ExamsAPIService";
 import { FaUserPlus } from "react-icons/fa";
-import { ExamView } from "../../../interfaces/exams";
+import { ExamView, StudentRoom } from "../../../interfaces/exams";
 import { StudentDescriptive } from "../../../interfaces/students";
 
 function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam: CallableFunction, unassignedStudents: StudentDescriptive[]}) {
@@ -12,6 +12,7 @@ function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam:
     const { isOpen, onToggle } = useDisclosure()
 
     const { colorMode } = useColorMode()
+
 
 
 
@@ -23,10 +24,16 @@ function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam:
         // props.onCloseExam();
     }
 
-    const fillRoom = async () => {
-        // ExamsAPIService.updateRoomAssignments(props.examid, [{PESEL : pesel, number : numberp}]).then(()=>{
-        //     props.getExam(props.examid);
-        // });
+    const fillRoom = () => {
+        const freeSpace = props.room.size - (props.room.students?.length ?? 0);
+        if (freeSpace) {
+            ExamsAPIService.updateRoomAssignments(
+                props.examid,
+                props.unassignedStudents.slice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : props.room.number}))
+            ).then(()=>{
+                props.getExam(props.examid);
+            }); 
+        }
     }
 
     return(
@@ -72,7 +79,7 @@ function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam:
                     </Flex>
                     <SimpleGrid mt="1vw" spacing={4} templateColumns='repeat(auto-fill, minmax(15vw, 1fr))'>
                         {props.room.students?.map((student)=>
-                            <Card padding={4} bg={colorMode=="light" ? "RGBA(0, 0, 0, 0.08)" : "RGBA(0, 0, 0, 0.4)"}>
+                            <Card key={student.PESEL} padding={4} bg={colorMode=="light" ? "RGBA(0, 0, 0, 0.08)" : "RGBA(0, 0, 0, 0.4)"}>
                                 <Flex direction="row" fontSize="0.9vw" justifyContent="space-between" alignItems="center">
                                     <Text width="10%">{student.department}</Text>
                                     <Text width="10%">{student.ordinalNumber}</Text>
