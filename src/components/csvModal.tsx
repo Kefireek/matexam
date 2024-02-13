@@ -82,6 +82,7 @@ const CsvModal = (props: {refreshExams: Function}) => {
         await DataService.postData(data!).then(
             (res) => {
                 setResult(res.data)
+                props.refreshExams();
             }
         );
     }

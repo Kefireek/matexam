@@ -53,9 +53,9 @@ function LeftMenu() {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {isOpen: isCsvOpen, onOpen: onCsvOpen, onClose: onCsvClose} = useDisclosure();
-    const {isOpen: isRoomOpen, onOpen: onRoomOpen, onClose: onRoomClose} = useDisclosure();
+    //const {isOpen: isRoomOpen, onOpen: onRoomOpen, onClose: onRoomClose} = useDisclosure();
 
-    const {isOpen: isStudentOpen, onOpen: onStudentOpen, onClose: onStudentClose} = useDisclosure();
+    //const {isOpen: isStudentOpen, onOpen: onStudentOpen, onClose: onStudentClose} = useDisclosure();
     const {isOpen: isMenuWide, onOpen: onMenuOpen, onClose: onMenuClose, getButtonProps, getDisclosureProps} = useDisclosure({defaultIsOpen: true});
 
     const [hidden, setHidden] = useState(!isMenuWide)

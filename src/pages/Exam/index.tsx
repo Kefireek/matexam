@@ -5,6 +5,7 @@ import { ExamView } from "../../interfaces/exams";
 import ExamsAPIService from "../../services/api/exams/ExamsAPIService";
 import ExamDetailsModal from "./ExamDetailsModal";
 import { AddIcon } from "@chakra-ui/icons";
+import SearchBar from "../../components/searchBar";
 
 function ExamPage() {
 
@@ -76,9 +77,9 @@ function ExamPage() {
                     </SimpleGrid>
                 </Box>
                 <Box ml="1vw">
+                    <SearchBar/>
                     <TableContainer width="46vw">
                         <Table variant='striped' colorScheme='teal'>
-                            <TableCaption>Nieprzypisani uczniowie</TableCaption>
                             <Thead>
                             <Tr>
                                 <Th>Nr w dzienniku</Th>
