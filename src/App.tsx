@@ -36,7 +36,7 @@ function App() {
     <>
       <Flex>
         <LeftMenu />
-        <Box>
+        <Box width="100vw">
           {loading &&
           <Modal isOpen={isOpen} onClose={onClose} isCentered>
             <ModalSpinner/>
