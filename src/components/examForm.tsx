@@ -68,7 +68,7 @@ const ExamForm = (props: {refreshExams: Function, onCloseExam: Function,  examBo
                         <Input
                             id="name"
                             placeholder="Nazwa"
-                            value={props.examBody !== undefined ? props.examBody.name : ""}
+                            // value={props.examBody !== undefined ? props.examBody.name : ""}
                             {...register(
                                 'name', {
                                     required: "Pole nie może być puste!",

@@ -39,6 +39,10 @@ function ExamPage() {
         // props.onCloseExam();
     }
 
+    const fillExam = () => {
+        examView?.assignedStudents
+    }
+
     return(
         <Box display="contents">
         <Box paddingLeft="1.5vw">

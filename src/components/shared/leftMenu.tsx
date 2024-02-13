@@ -140,7 +140,7 @@ function LeftMenu() {
                 <Modal isOpen={isRoomOpen} onClose={onRoomClose}>
                     <ModalOverlay/>
                     <RoomForm onRoomClose={onRoomClose}/>
-                    <ModalWindow onClose={onClose} dataInterface={""} />
+                    {/* <ModalWindow onClose={onClose} dataInterface={""} /> */}
                 </Modal>
                 <Button fontSize="1vw" width="90%" onClick={onStudentOpen} margin="0.5vw">Dodaj ucznia</Button>
                 <Modal isOpen={isStudentOpen} onClose={onStudentClose} size="lg">
@@ -165,7 +165,7 @@ function LeftMenu() {
                         </AccordionButton>
                         </h2>
                         <AccordionPanel pb={4} height="40vh" overflowY="auto" overflowX="hidden" >
-                            {exams?.length !== undefined && exams?.length >= 0 &&
+                            {exams?.length !== undefined && exams?.length <= 0 &&
                                 <Card height="100%">
                                     <CardBody>
                                         <Flex height="100%" width="100%" justifyContent="center" alignItems="center">
