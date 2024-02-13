@@ -4,7 +4,7 @@ import { CloseIcon, MinusIcon } from "@chakra-ui/icons";
 import { RoomStudents } from "../../../interfaces/rooms";
 import ExamsAPIService from "../../../services/api/exams/ExamsAPIService";
 import { FaUserPlus } from "react-icons/fa";
-import { ExamView } from "../../../interfaces/exams";
+import { ExamView, StudentRoom } from "../../../interfaces/exams";
 import { StudentDescriptive } from "../../../interfaces/students";
 
 function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam: CallableFunction, unassignedStudents: StudentDescriptive[]}) {
@@ -12,6 +12,7 @@ function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam:
     const { isOpen, onToggle } = useDisclosure()
 
     const { colorMode } = useColorMode()
+
 
 
 
@@ -24,12 +25,15 @@ function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam:
     }
 
     const fillRoom = () => {
-        // props.unassignedStudents.forEach(student => {
-        //     ExamsAPIService.updateRoomAssignments(props.examid, [{PESEL : student.PESEL, number : props.room.number}]).then(()=>{
-        //         props.getExam(props.examid);
-        //     }); 
-        // });
-        // console.log(props.unassignedStudents)
+        const freeSpace = props.room.size - (props.room.students?.length ?? 0);
+        if (freeSpace) {
+            ExamsAPIService.updateRoomAssignments(
+                props.examid,
+                props.unassignedStudents.slice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : props.room.number}))
+            ).then(()=>{
+                props.getExam(props.examid);
+            }); 
+        }
     }
 
     return(
