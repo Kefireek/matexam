@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Badge, Box, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr, useColorMode } from "@chakra-ui/react";
+import { Badge, Box, Button, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr, useColorMode } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { ExamView } from "../../interfaces/exams";
 import ExamsAPIService from "../../services/api/exams/ExamsAPIService";
@@ -40,7 +40,44 @@ function ExamPage() {
     }
 
     const fillExam = () => {
-        examView?.assignedStudents
+        // let sizeDiff = 99999999;
+        // let biggestRoomNumber = 0;
+        // let biggestRommSize = 0;
+        
+        // examView?.assignedStudents.forEach(room => {
+        //     if(biggestRommSize < room.size){
+        //         biggestRommSize = room.size;
+        //         biggestRoomNumber = room.number
+        //     }
+        // });
+
+        let unassignedStudentsCount = examView?.unassignedStudents.length;
+        let rooms = examView?.assignedStudents;
+
+
+
+        rooms?.sort((a, b)=> b.size - a.size)
+
+        console.log(rooms);
+        
+        rooms?.forEach(room => {
+            if(((unassignedStudentsCount ?? 0) - room.size) >= 0){
+                examView?.assignedStudents.forEach(room => {
+                    const freeSpace = room.size - (room.students?.length ?? 0);
+                if (freeSpace) {
+                    ExamsAPIService.updateRoomAssignments(
+                        examid,
+                        examView.unassignedStudents.slice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))
+                    ).then(()=>{
+                        getExam(examid);
+                    }); 
+                }
+                });
+                unassignedStudentsCount = unassignedStudentsCount ?? 0 - room.size;
+            }
+        });
+
+
     }
 
     return(
@@ -67,6 +104,7 @@ function ExamPage() {
                         }
                     </Text>
                 </Box>
+                <Button onClick={() => fillExam()} marginLeft="auto" justifySelf="end">Wypełnij egzamin</Button>              
             </Flex>
         </Box>
          <Box paddingLeft="1.5vw">
