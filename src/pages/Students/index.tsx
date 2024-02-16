@@ -30,7 +30,7 @@ function StudentsPage() {
   return (
     <Box margin="1vw">
       <Heading>Uczniowie</Heading>
-      <AssignToExamModal open={assignToExam} />
+      <AssignToExamModal selectedStudent={selectedStudent} />
       <TableContainer>
         <Table variant='striped' colorScheme='teal'>
           <Thead>

@@ -16,6 +16,12 @@ const ExamsAPIService = {
     },
     updateRoomAssignments: function(id: number, studentRooms: StudentRoom[]) {
         return axios.put<void>(`${import.meta.env.VITE_API_URL}${import.meta.env.VITE_GET_EXAMS}${id}/assignments`, studentRooms)
+    },
+    assignExamsToStudent: function(id: string, examIds: number[]) {
+        return axios.post<void>(`${import.meta.env.VITE_API_URL}${import.meta.env.VITE_GET_EXAMS}${id}/assignments`, examIds)
+    },
+    getAssignableExams: function(studentId: string) {
+        return axios.get<ExamItem[]>(`${import.meta.env.VITE_GET_EXAMS}assignables/${studentId}`)
     }
 }
 
