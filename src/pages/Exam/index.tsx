@@ -8,13 +8,10 @@ import { AddIcon } from "@chakra-ui/icons";
 import SearchBar from "../../components/searchBar";
 
 function ExamPage() {
-
     const { examid } = useParams() as any as examParams;
-
     const { colorMode } = useColorMode()
-
     const [examView, setExamView] = useState<ExamView>();
-
+    const [unassignedStudents, setUnassignedStudents] = useState<ExamView["unassignedStudents"]>([]);
     const navigate = useNavigate();
 
     useEffect( ()=> {
@@ -27,6 +24,7 @@ function ExamPage() {
     const getExam = (examid: number) => {
         ExamsAPIService.getExam(examid).then((res)=>{
             setExamView(res.data)
+            setUnassignedStudents(res.data.unassignedStudents)
         }).catch((err)=>{
             console.log(err);
         });
@@ -36,9 +34,8 @@ function ExamPage() {
         ExamsAPIService.updateRoomAssignments(examid, [{PESEL : pesel, number : numberp}]).then(()=>{
             getExam(examid);
         });
-        // props.refreshExams();
-        // props.onCloseExam();
     }
+
 
     return(
         <Box display="contents">
@@ -77,7 +74,7 @@ function ExamPage() {
                     </SimpleGrid>
                 </Box>
                 <Box ml="1vw">
-                    <SearchBar/>
+                    <SearchBar filterList={examView?.unassignedStudents} setFilterList={setUnassignedStudents}/>
                     <TableContainer width="46vw">
                         <Table variant='striped' colorScheme='teal'>
                             <Thead>
@@ -90,7 +87,7 @@ function ExamPage() {
                             </Tr>
                             </Thead>
                             <Tbody>
-                                {examView?.unassignedStudents.map((student)=>
+                                {unassignedStudents.map((student)=>
                                     <Tr key={student.PESEL}>
                                         <Td>{student.ordinalNumber}</Td>
                                         <Td>{student.department}</Td>
