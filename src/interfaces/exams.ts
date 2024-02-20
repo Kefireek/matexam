@@ -37,6 +37,11 @@ export interface StudentRoom extends StudentId {
   number: number | null
 }
 
+export interface StudentToExamsAssignments {
+  toAssign: number[],
+  toUnassign: number[]
+}
+
 export interface ExamCsvInput {
   name: string,
   studentIds: string[]

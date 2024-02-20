@@ -20,7 +20,10 @@ function StudentsPage() {
   }
 
   const assignToExam = (student: StudentDescriptive) => {
-    setSelectedStudent(student);
+    setSelectedStudent(undefined)
+    setTimeout(() => {
+      setSelectedStudent(student);
+    })
   }
 
   useEffect(() => {

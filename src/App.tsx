@@ -4,15 +4,17 @@ import { getPage } from "./services/api/healthCheck/HealthCheckService"
 import { useState, useEffect } from "react"
 import ModalSpinner from "./components/modalSpinner"
 import { Outlet } from "react-router-dom"
+import messageContext, { Message } from "./contexts/messageContext"
+import MessagesContainer from "./components/shared/MessagesContainer"
 
 
 function App() {
 
-  
   const [loading, setLoading] = useState<boolean>(true);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   
+  const [message, setMessage] = useState<Message | null>(null);
 
   useEffect(() => {
     onOpen()
@@ -33,7 +35,7 @@ function App() {
   
 
   return (
-    <>
+    <messageContext.Provider value={{ message, setMessage }}>
       <Flex>
         <LeftMenu />
         <Box width="100vw">
@@ -44,7 +46,8 @@ function App() {
           <Outlet />
         </Box>
       </Flex>
-    </>
+      <MessagesContainer />
+    </messageContext.Provider>
   )
 
 }
