@@ -16,7 +16,7 @@ import {
 import { useForm } from "react-hook-form";
 import { ExamType } from "../interfaces/exams";
 import ExamsAPIService from "../services/api/exams/ExamsAPIService";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 
 export type ExamFormModel = {
@@ -34,12 +34,14 @@ const ExamForm = (props: {refreshExams: Function, onCloseExam: Function,  examBo
         formState: {errors, isSubmitting},
     } = useForm<ExamFormModel>();
 
+    const [examName, setExamName] = useState(props.examBody?.name ?? undefined);;
+
     function compareTime(time1: Date, time2: Date) {
         return new Date(time1) < new Date(time2); // true if time2 is later
     }
 
     useEffect(()=>{
-        console.log(props.examBody)
+        
     }, [])
 
     const onSubmit = async (values: ExamFormModel) => {
@@ -68,7 +70,6 @@ const ExamForm = (props: {refreshExams: Function, onCloseExam: Function,  examBo
                         <Input
                             id="name"
                             placeholder="Nazwa"
-                            // value={props.examBody !== undefined ? props.examBody.name : ""}
                             {...register(
                                 'name', {
                                     required: "Pole nie może być puste!",

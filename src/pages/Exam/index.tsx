@@ -40,42 +40,48 @@ function ExamPage() {
     }
 
     const fillExam = () => {
-        // let sizeDiff = 99999999;
-        // let biggestRoomNumber = 0;
-        // let biggestRommSize = 0;
-        
-        // examView?.assignedStudents.forEach(room => {
-        //     if(biggestRommSize < room.size){
-        //         biggestRommSize = room.size;
-        //         biggestRoomNumber = room.number
-        //     }
-        // });
-
         let unassignedStudentsCount = examView?.unassignedStudents.length;
         let rooms = examView?.assignedStudents;
 
-
-
         rooms?.sort((a, b)=> b.size - a.size)
-
-        console.log(rooms);
         
         rooms?.forEach(room => {
-            if(((unassignedStudentsCount ?? 0) - room.size) >= 0){
-                examView?.assignedStudents.forEach(room => {
-                    const freeSpace = room.size - (room.students?.length ?? 0);
+            const freeSpace = room.size - (room.students?.length ?? 0);
+            if(((((unassignedStudentsCount ?? 0) - freeSpace) >= 0) || ((room.students?.length ?? 0) > 0)) && examView){
                 if (freeSpace) {
                     ExamsAPIService.updateRoomAssignments(
                         examid,
-                        examView.unassignedStudents.slice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))
+                        examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))
                     ).then(()=>{
                         getExam(examid);
                     }); 
                 }
-                });
-                unassignedStudentsCount = unassignedStudentsCount ?? 0 - room.size;
+                console.log("dodano do " + room.number)
+                unassignedStudentsCount = unassignedStudentsCount ?? 0 - freeSpace;
             }
         });
+
+        let roomsAscending = rooms?.sort((a, b)=> a.size - b.size)
+
+        console.log(roomsAscending)
+
+        if((unassignedStudentsCount ?? 0) > 0){
+            console.log("essa")
+            roomsAscending?.forEach(room => {
+                const freeSpace = room.size - (room.students?.length ?? 0);
+                if(((unassignedStudentsCount ?? 0) - freeSpace) <= 0 && examView){
+                    if (freeSpace) {
+                        ExamsAPIService.updateRoomAssignments(
+                            examid,
+                            examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))
+                        ).then(()=>{
+                            getExam(examid);
+                        }); 
+                    }
+                    unassignedStudentsCount = unassignedStudentsCount ?? 0 - freeSpace;
+                }
+            });
+        }
 
 
     }
@@ -123,7 +129,7 @@ function ExamPage() {
                             <TableCaption>Nieprzypisani uczniowie</TableCaption>
                             <Thead>
                             <Tr>
-                                <Th>Nr w dzienniku</Th>
+                                <Th>Nr</Th>
                                 <Th>Oddział</Th>
                                 <Th>Nazwisko</Th>
                                 <Th>Imię</Th>
@@ -161,7 +167,7 @@ function ExamPage() {
                             </Tbody>
                             <Tfoot>
                             <Tr>
-                                <Th>Nr w dzienniku</Th>
+                                <Th>Nr</Th>
                                 <Th>Oddział</Th>
                                 <Th>Nazwisko</Th>
                                 <Th>Imię</Th>
