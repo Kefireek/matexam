@@ -1,11 +1,9 @@
-import { BiLogOut } from "react-icons/bi";
-import { Collapse, Avatar, Image } from '@chakra-ui/react'
-import { MoonIcon, SunIcon, AddIcon, SettingsIcon, ChevronDownIcon, HamburgerIcon} from '@chakra-ui/icons'
+import { MoonIcon, SunIcon, AddIcon, SettingsIcon,} from '@chakra-ui/icons'
 
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
-import ExamForm from '../examForm.tsx'
 import { ExamItem } from '../../interfaces/exams.ts'
 import {
+    Image,
     useDisclosure, 
     Card, 
     CardBody, 
@@ -41,10 +39,8 @@ import { Link } from 'react-router-dom'
 import AuthAPIService from '../../services/api/auth/AuthAPIService.ts'
 import { useMediaQuery } from '@chakra-ui/react'
 import { motion } from "framer-motion"
-import RoomForm from '../roomForm.tsx'
 import logo_white from "../../assets/logo_white.png"
 import logo_black from "../../assets/logo_black.png"
-import StudentForm from '../studentForm.tsx'
 import ModalWindow from './ModalWindow.tsx'
 
 
@@ -56,7 +52,7 @@ function LeftMenu() {
     //const {isOpen: isRoomOpen, onOpen: onRoomOpen, onClose: onRoomClose} = useDisclosure();
 
     //const {isOpen: isStudentOpen, onOpen: onStudentOpen, onClose: onStudentClose} = useDisclosure();
-    const {isOpen: isMenuWide, onOpen: onMenuOpen, onClose: onMenuClose, getButtonProps, getDisclosureProps} = useDisclosure({defaultIsOpen: true});
+    const {isOpen: isMenuWide, onOpen: onMenuOpen, onClose: onMenuClose, getDisclosureProps} = useDisclosure({defaultIsOpen: true});
 
     const [hidden, setHidden] = useState(!isMenuWide)
 
@@ -67,11 +63,6 @@ function LeftMenu() {
     const navigate = useNavigate();
 
     const [isLargerThan1800] = useMediaQuery('(min-width: 1800px)')
-
-    type formValues = {
-        fields: {fieldname: string, gridNumber: number}[]
-    }
-
 
     useEffect(()=>{
         getExamsList();

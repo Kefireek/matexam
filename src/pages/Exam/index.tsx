@@ -1,29 +1,41 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Badge, Box, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr, useColorMode } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { Badge, Box, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
+import { useCallback, useEffect, useState } from "react";
 import { ExamView } from "../../interfaces/exams";
 import ExamsAPIService from "../../services/api/exams/ExamsAPIService";
 import ExamDetailsModal from "./ExamDetailsModal";
 import { AddIcon } from "@chakra-ui/icons";
 import SearchBar from "../../components/searchBar";
 
+
 function ExamPage() {
-    const { examid } = useParams() as any as examParams;
-    const { colorMode } = useColorMode()
+    const { examid } = useParams() as unknown as examParams;
     const [examView, setExamView] = useState<ExamView>();
     const [unassignedStudents, setUnassignedStudents] = useState<ExamView["unassignedStudents"]>([]);
     const navigate = useNavigate();
 
     useEffect( ()=> {
+        gotoExam()  
+
+    }, [examid])
+
+    const gotoExam = useCallback(() => {
         if (examid)
             getExam(examid)
         else
             navigate('/error')
     }, [examid])
 
+    useEffect( ()=> {  
+        gotoExam()
+    }, [gotoExam])
+
+    
+
     const getExam = (examid: number) => {
         ExamsAPIService.getExam(examid).then((res)=>{
             setExamView(res.data)
+            console.log(res.data.unassignedStudents)
             setUnassignedStudents(res.data.unassignedStudents)
         }).catch((err)=>{
             console.log(err);

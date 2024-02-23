@@ -1,8 +1,8 @@
-import { 
-    ModalBody, 
-    ModalCloseButton, 
-    ModalContent, 
-    ModalHeader, 
+import {
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalHeader,
     Input,
     FormLabel,
     FormControl,
@@ -16,6 +16,8 @@ import {
     Tbody,
     Td,
     Box,
+    InputGroup,
+    InputLeftAddon,
 } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -39,15 +41,15 @@ const CsvModal = (props: {refreshExams: Function}) => {
     const [errorMsg, setErrorMsg] = useState<string>();
 
     const csvToArr = (stringVal: string) => {
-        var finalObj: CsvInput = {students: [], exams: []};
+        const finalObj: CsvInput = {students: [], exams: []};
         const [keys, ...rest] = stringVal.trim().split("\n").map((item) => item.split(","));
         setHeaders(keys);
         setRows(rest);
-        
+
         rest.forEach((item) => {
-            var studentObject: {[key: string] : string} = {};
+            const studentObject: {[key: string] : string} = {};
             keys.forEach((key, index) => (studentObject[key] = item[index]));
-            finalObj.students.push(studentObject as any as StudentDescriptive);
+            finalObj.students.push(studentObject as unknown as StudentDescriptive);
             let foundExam = finalObj.exams.find((obj) => obj.name === studentObject["examName"]);
             if(!foundExam){
                 foundExam = finalObj.exams[finalObj.exams.push({name: studentObject["examName"], studentIds: []}) - 1];
@@ -66,12 +68,12 @@ const CsvModal = (props: {refreshExams: Function}) => {
                 const file = e.target.files[0];
                 const fileUrl = URL.createObjectURL(file);
                 await fetch(fileUrl).then(async (resp) => {
-                    var data = await resp.text();
+                    const data = await resp.text();
                     console.log(data);
                     const arr = csvToArr(data);
                     setData(arr);
                 })
-                
+
             }
             catch(err){
                 console.log(err);
@@ -95,18 +97,23 @@ const CsvModal = (props: {refreshExams: Function}) => {
             <ModalBody>
                 <form id="csv-form" onSubmit={handleSubmit(onSubmit)}>
                     <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column" >
-                        <Box border="1px dotted" borderColor="gray" p="10" m="5"  borderRadius="xl" transition="0.5">    
+                        <Box border="1px dotted" borderColor="gray"  m="5"  borderRadius="xl" transition="0.5">
                             <FormControl isInvalid={errors.file?.message != null}>
                                 <FormLabel> Dodaj plik </FormLabel>
-                                    <Input size=""
-                                        type="file"
-                                        {...register(
-                                            'file'
-                                        )}
-                                        accept=".csv"
-                                        onChange={handleChange}
-                                        display="none"
-                                    />
+                                <InputGroup>
+                                  <InputLeftAddon>
+                                    
+                                  </InputLeftAddon>
+                                    <Input w="15" h="5"
+                                            type="file"
+                                            {...register(
+                                                'file'
+                                            )}
+                                            accept=".csv"
+                                            onChange={handleChange}
+                                            display="none"
+                                      />
+                                  </InputGroup>
                                 <FormErrorMessage> {errorMsg} </FormErrorMessage>
                             </FormControl>
                             </Box>

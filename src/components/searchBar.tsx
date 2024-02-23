@@ -2,40 +2,40 @@ import {
   Box, 
   Input, 
   InputGroup,
-  InputLeftAddon, 
-  Select, 
-  Spinner 
+  InputLeftAddon,
+  Spinner
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 import { StudentDescriptive } from "../interfaces/students";
 
-const SearchBar = (props: {filterList: StudentDescriptive[] | undefined, setFilterList: Function}) => {
+const SearchBar = ({filterList, setFilterList}: {filterList: StudentDescriptive[] | undefined, setFilterList: Dispatch<SetStateAction<StudentDescriptive[]>>}) => {
     const [searchValue, setSearchValue] = useState<string>('');
     const [debouncedSearchValue, setDebouncedSearchValue] = useState<string>('');
 
-    const searchStudents = (searchValue: string) => {
-      let students: StudentDescriptive[] = [];
-        props.filterList?.filter((item: StudentDescriptive) => {
+    const searchStudents = useCallback( (searchValue: string) =>  {
+      const students: StudentDescriptive[] = [];
+
+        filterList?.filter((item: StudentDescriptive) => {
            if(item.PESEL.includes(searchValue) || item.name.includes(searchValue) || item.surname.includes(searchValue)) {
               students.push(item);
            }
         });
-        props.setFilterList(students);
-    };
+        setFilterList(students);
+    }, [filterList, setFilterList]);
 
     const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.target.value);
     };
     useEffect(() => {
         const timer = setTimeout(() => {
+          console.log("zmiana!")
             setDebouncedSearchValue(searchValue);
             searchStudents(searchValue);
-            
         }, 1000);
         return () => {
             clearTimeout(timer);
         };
-    }, [searchValue, 1000]);
+    }, [searchValue, searchStudents]);
 
   return (
       <Box display="flex">
