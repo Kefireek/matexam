@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Badge, Box, Button, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr, useColorMode } from "@chakra-ui/react";
+import { Badge, Box, Button, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { ExamView } from "../../interfaces/exams";
+import { ExamView, StudentRoom } from "../../interfaces/exams";
 import ExamsAPIService from "../../services/api/exams/ExamsAPIService";
 import ExamDetailsModal from "./ExamDetailsModal";
 import { AddIcon } from "@chakra-ui/icons";
@@ -9,8 +9,6 @@ import { AddIcon } from "@chakra-ui/icons";
 function ExamPage() {
 
     const { examid } = useParams() as any as examParams;
-
-    const { colorMode } = useColorMode()
 
     const [examView, setExamView] = useState<ExamView>();
 
@@ -21,7 +19,7 @@ function ExamPage() {
             getExam(examid)
         else
             navigate('/error')
-    }, [examid])
+    }, [examid, navigate])
 
     const getExam = (examid: number) => {
         ExamsAPIService.getExam(examid).then((res)=>{
@@ -41,49 +39,43 @@ function ExamPage() {
 
     const fillExam = () => {
         let unassignedStudentsCount = examView?.unassignedStudents.length;
-        let rooms = examView?.assignedStudents;
+        const rooms = examView?.assignedStudents;
 
         rooms?.sort((a, b)=> b.size - a.size)
         
+        let assignments: StudentRoom[] = []
+
         rooms?.forEach(room => {
             const freeSpace = room.size - (room.students?.length ?? 0);
-            if(((((unassignedStudentsCount ?? 0) - freeSpace) >= 0) || ((room.students?.length ?? 0) > 0)) && examView){
+            if((((unassignedStudentsCount ?? 0) - freeSpace >= 0) || ((room.students?.length ?? 0) > 0)) && examView){
                 if (freeSpace) {
-                    ExamsAPIService.updateRoomAssignments(
-                        examid,
-                        examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))
-                    ).then(()=>{
-                        getExam(examid);
-                    }); 
+                    assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))) 
                 }
-                console.log("dodano do " + room.number)
                 unassignedStudentsCount = unassignedStudentsCount ?? 0 - freeSpace;
             }
         });
 
-        let roomsAscending = rooms?.sort((a, b)=> a.size - b.size)
-
-        console.log(roomsAscending)
+        rooms?.sort((a, b)=> a.size - b.size)
 
         if((unassignedStudentsCount ?? 0) > 0){
-            console.log("essa")
-            roomsAscending?.forEach(room => {
+            rooms?.forEach(room => {
                 const freeSpace = room.size - (room.students?.length ?? 0);
                 if(((unassignedStudentsCount ?? 0) - freeSpace) <= 0 && examView){
                     if (freeSpace) {
-                        ExamsAPIService.updateRoomAssignments(
-                            examid,
-                            examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))
-                        ).then(()=>{
-                            getExam(examid);
-                        }); 
+                        assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number})))
                     }
                     unassignedStudentsCount = unassignedStudentsCount ?? 0 - freeSpace;
                 }
             });
         }
 
-
+        if(assignments.length > 0)
+            ExamsAPIService.updateRoomAssignments(
+                examid,
+                assignments
+            ).then(()=>{
+                getExam(examid);
+            });
     }
 
     return(
