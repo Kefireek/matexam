@@ -42,6 +42,11 @@ export interface StudentToExamsAssignments {
   toUnassign: number[]
 }
 
+export interface Assignments {
+  assigned: ExamItem[]
+  unassigned: ExamItem[]
+}
+
 export interface ExamCsvInput {
   name: string,
   studentIds: string[]
