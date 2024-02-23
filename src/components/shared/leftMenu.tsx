@@ -55,7 +55,6 @@ function LeftMenu() {
     const { isOpen: isOpenEdit, onOpen: onOpenEdit, onClose: onCloseEdit } = useDisclosure();
     const {isOpen: isCsvOpen, onOpen: onCsvOpen, onClose: onCsvClose} = useDisclosure();
     const {isOpen: isRoomOpen, onOpen: onRoomOpen, onClose: onRoomClose} = useDisclosure();
-
     const {isOpen: isStudentOpen, onOpen: onStudentOpen, onClose: onStudentClose} = useDisclosure();
     const {isOpen: isMenuWide, onOpen: onMenuOpen, onClose: onMenuClose, getButtonProps, getDisclosureProps} = useDisclosure({defaultIsOpen: true});
 
@@ -141,7 +140,7 @@ function LeftMenu() {
                 <Modal isOpen={isRoomOpen} onClose={onRoomClose}>
                     <ModalOverlay/>
                     <RoomForm onRoomClose={onRoomClose}/>
-                    <ModalWindow onClose={onClose} dataInterface={""} />
+                    {/* <ModalWindow onClose={onClose} dataInterface={""} /> */}
                 </Modal>
                 <Button fontSize="1vw" width="90%" onClick={onStudentOpen} margin="0.5vw">Dodaj ucznia</Button>
                 <Modal isOpen={isStudentOpen} onClose={onStudentClose} size="lg">
@@ -156,7 +155,7 @@ function LeftMenu() {
                             <Box as="span" flex='1' textAlign='left'>
                                 <HStack>
                                     <Text fontSize="1.2vw">Egzaminy</Text>
-                                    {exams?.length ?
+                                    {exams?.length != undefined && exams?.length >= 0 ?
                                         <Badge>{exams?.length}</Badge>
                                         : <Spinner size="sm" />
                                     }
@@ -166,6 +165,15 @@ function LeftMenu() {
                         </AccordionButton>
                         </h2>
                         <AccordionPanel pb={4} height="40vh" overflowY="auto" overflowX="hidden" >
+                            {exams?.length !== undefined && exams?.length <= 0 &&
+                                <Card height="100%">
+                                    <CardBody>
+                                        <Flex height="100%" width="100%" justifyContent="center" alignItems="center">
+                                            <Text overflowWrap="break-word" whiteSpace="pre-wrap" fontSize="0.8vw">Nie ma tu jeszcze żadnego egzaminu.</Text>
+                                        </Flex>
+                                    </CardBody>
+                                </Card>
+                            }
                             <Stack spacing="3">
                                 {exams?.map((exam: ExamItem) =>
                                 <>

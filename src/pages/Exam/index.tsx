@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Badge, Box, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr, useColorMode } from "@chakra-ui/react";
+import { Badge, Box, Button, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr, useColorMode } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { ExamView } from "../../interfaces/exams";
 import ExamsAPIService from "../../services/api/exams/ExamsAPIService";
@@ -39,6 +39,53 @@ function ExamPage() {
         // props.onCloseExam();
     }
 
+    const fillExam = () => {
+        let unassignedStudentsCount = examView?.unassignedStudents.length;
+        let rooms = examView?.assignedStudents;
+
+        rooms?.sort((a, b)=> b.size - a.size)
+        
+        rooms?.forEach(room => {
+            const freeSpace = room.size - (room.students?.length ?? 0);
+            if(((((unassignedStudentsCount ?? 0) - freeSpace) >= 0) || ((room.students?.length ?? 0) > 0)) && examView){
+                if (freeSpace) {
+                    ExamsAPIService.updateRoomAssignments(
+                        examid,
+                        examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))
+                    ).then(()=>{
+                        getExam(examid);
+                    }); 
+                }
+                console.log("dodano do " + room.number)
+                unassignedStudentsCount = unassignedStudentsCount ?? 0 - freeSpace;
+            }
+        });
+
+        let roomsAscending = rooms?.sort((a, b)=> a.size - b.size)
+
+        console.log(roomsAscending)
+
+        if((unassignedStudentsCount ?? 0) > 0){
+            console.log("essa")
+            roomsAscending?.forEach(room => {
+                const freeSpace = room.size - (room.students?.length ?? 0);
+                if(((unassignedStudentsCount ?? 0) - freeSpace) <= 0 && examView){
+                    if (freeSpace) {
+                        ExamsAPIService.updateRoomAssignments(
+                            examid,
+                            examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))
+                        ).then(()=>{
+                            getExam(examid);
+                        }); 
+                    }
+                    unassignedStudentsCount = unassignedStudentsCount ?? 0 - freeSpace;
+                }
+            });
+        }
+
+
+    }
+
     return(
         <Box display="contents">
         <Box paddingLeft="1.5vw">
@@ -63,6 +110,7 @@ function ExamPage() {
                         }
                     </Text>
                 </Box>
+                <Button onClick={() => fillExam()} marginLeft="auto" justifySelf="end">Wypełnij egzamin</Button>              
             </Flex>
         </Box>
          <Box paddingLeft="1.5vw">
@@ -81,7 +129,7 @@ function ExamPage() {
                             <TableCaption>Nieprzypisani uczniowie</TableCaption>
                             <Thead>
                             <Tr>
-                                <Th>Nr w dzienniku</Th>
+                                <Th>Nr</Th>
                                 <Th>Oddział</Th>
                                 <Th>Nazwisko</Th>
                                 <Th>Imię</Th>
@@ -119,7 +167,7 @@ function ExamPage() {
                             </Tbody>
                             <Tfoot>
                             <Tr>
-                                <Th>Nr w dzienniku</Th>
+                                <Th>Nr</Th>
                                 <Th>Oddział</Th>
                                 <Th>Nazwisko</Th>
                                 <Th>Imię</Th>
