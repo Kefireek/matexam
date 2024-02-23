@@ -52,7 +52,12 @@ const ExamForm = (props: {refreshExams: Function, onCloseExam: Function,  examBo
         }
         else{
             const exam = {name, type, startTime, endTime}
-            await ExamsAPIService.addExam(exam);
+            if(props.examBody === undefined){
+                await ExamsAPIService.addExam(exam);
+            }
+            else{
+                await ExamsAPIService.editExam(exam, props.examBody.id)
+            }
             props.refreshExams();
             props.onCloseExam();
         }
@@ -70,9 +75,11 @@ const ExamForm = (props: {refreshExams: Function, onCloseExam: Function,  examBo
                         <Input
                             id="name"
                             placeholder="Nazwa"
+                            value={examName}
                             {...register(
                                 'name', {
                                     required: "Pole nie może być puste!",
+                                    onChange: (e)=> setExamName(e.target.value),
                                     maxLength: 100
                                 }
                             )} />

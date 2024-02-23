@@ -18,7 +18,7 @@ const ExamsAPIService = {
         return axios.put<void>(`${import.meta.env.VITE_API_URL}${import.meta.env.VITE_GET_EXAMS}${id}/assignments`, studentRooms)
     },
     editExam: function(examBody: ExamBody, id: number) {
-        return axios.post<ExamItem>(`${import.meta.env.VITE_API_URL}${import.meta.env.VITE_GET_EXAMS}${id}`, examBody)
+        return axios.put<ExamItem>(`${import.meta.env.VITE_API_URL}${import.meta.env.VITE_GET_EXAMS}${id}`, examBody)
     }
 }
 
