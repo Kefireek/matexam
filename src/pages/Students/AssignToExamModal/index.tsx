@@ -1,9 +1,9 @@
-import { Button, Checkbox, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, useDisclosure } from "@chakra-ui/react";
+import { Button, Checkbox, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, useDisclosure } from "@chakra-ui/react";
 import { StudentDescriptive } from "../../../interfaces/students";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ExamsAPIService from "../../../services/api/exams/ExamsAPIService";
 import { Assignments } from "../../../interfaces/exams";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import messageContext from "../../../contexts/messageContext";
 
 function AssignToExamModal({selectedStudent}: {selectedStudent?: StudentDescriptive}) {
@@ -15,36 +15,42 @@ function AssignToExamModal({selectedStudent}: {selectedStudent?: StudentDescript
   const { 
     handleSubmit,
     register,
-    reset,
+    control,
     formState: {isSubmitting},
-  } = useForm<{[key: string]: boolean}>();
+  } = useForm();
+
+  const { fields, replace } = useFieldArray({
+    control,
+    name: "assignments",
+  });
 
   useEffect(() => {
-    if (selectedStudent)
+    console.log(selectedStudent)
+    if (selectedStudent) {
+      ExamsAPIService.getAssignableExams(selectedStudent?.PESEL).then(res => {
+        setAssignableExams(res.data);
+        replace([
+          ...(res.data.assigned.map(i => ({id: i.id, value: true}))),
+          ...(res.data.unassigned.map(i => ({id: i.id, value: false})))
+        ])
+        return;
+      })
       onOpen()
-    else
-      onClose()
-  }, [selectedStudent, onOpen, onClose])
-
-  const fetchAssignableExams = useCallback(() => {
-    if(!selectedStudent) return
-    ExamsAPIService.getAssignableExams(selectedStudent?.PESEL).then(res => {
-      setAssignableExams(res.data);
-    })
-  }, [selectedStudent])
-
-  const onSubmit = (values: {[key: string]: boolean}) => {
-    console.log(assignableExams)
-    console.log(Object.entries(values))
-    const assignments = {
-      toAssign: assignableExams.unassigned.filter(e => !(Object.entries(values).filter(e => !e[1]).map(e => Number(e[0])).includes(e.id))).map(e => e.id),
-      toUnassign: assignableExams.assigned.filter(e => !(Object.entries(values).filter(e => e[1]).map(e => Number(e[0])).includes(e.id))).map(e => e.id),
     }
-    console.log(assignments)
+    else {
+      onClose()
+    }
+  }, [selectedStudent, onOpen, onClose, replace])
+
+  const onSubmit = (values: any) => {
+    const assignments = {
+      toAssign: assignableExams.unassigned.filter(e => !(values.assignments.filter(v => !v.value).map(v => v.id).includes(e.id))).map(e => e.id),
+      toUnassign: assignableExams.assigned.filter(e => !(values.assignments.filter(v => v.value).map(v => v.id).includes(e.id))).map(e => e.id),
+    }
     if (assignments.toAssign.length + assignments.toUnassign.length > 0)
       ExamsAPIService.assignExamsToStudent(selectedStudent!.PESEL, assignments).then(() => {
         setMessage({
-          title: 'Pomyślnie przypisano do egzaminu',
+          title: 'Pomyślnie zapisano przypisania do egzaminu',
           description: null,
           status: 'success',
         })
@@ -58,16 +64,6 @@ function AssignToExamModal({selectedStudent}: {selectedStudent?: StudentDescript
     onClose()
   }
 
-  useEffect(() => {
-    fetchAssignableExams()
-  }, [fetchAssignableExams])
-
-  useEffect(() => {
-    reset()
-    assignableExams.assigned.forEach(e => register(e.id.toString(), {value: true}))
-    assignableExams.unassigned.forEach(e => register(e.id.toString(), {value: false}))
-  }, [assignableExams, reset, register])
-
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -78,12 +74,7 @@ function AssignToExamModal({selectedStudent}: {selectedStudent?: StudentDescript
           <ModalBody>
             <Stack direction='column'>
               {
-                assignableExams.assigned.length + assignableExams.unassigned.length > 0 ? 
-                <>
-                  {assignableExams.assigned.map(r => <Checkbox {...register(r.id.toString())} key={r.id}>{r.name}</Checkbox>)}
-                  {assignableExams.unassigned.map(r => <Checkbox {...register(r.id.toString())} key={r.id}>{r.name}</Checkbox>)}
-                </> :
-                <Text color="gray" as='i'>Brak możliwych egzaminów do przypisania</Text>
+                fields.map((field, index) => <Checkbox {...register(`assignments.${index}.value` as const)} key={field.id}>{[...assignableExams.assigned, ...assignableExams.unassigned][index].name}</Checkbox>)
               }
             </Stack>
           </ModalBody>
@@ -91,7 +82,7 @@ function AssignToExamModal({selectedStudent}: {selectedStudent?: StudentDescript
             <Button variant='ghost' mr={3} onClick={onClose}>
               Zamknij
             </Button>
-            <Button colorScheme='blue' type="submit" isLoading={isSubmitting}>Dodaj</Button>
+            <Button colorScheme='blue' type="submit" isLoading={isSubmitting}>Zapisz</Button>
           </ModalFooter>
         </form>
       </ModalContent>
