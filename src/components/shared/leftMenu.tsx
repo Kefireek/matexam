@@ -1,10 +1,9 @@
 import { Image } from '@chakra-ui/react'
 import { MoonIcon, SunIcon, AddIcon, SettingsIcon} from '@chakra-ui/icons'
-
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
-import ExamForm from '../examForm.tsx'
 import { ExamItem } from '../../interfaces/exams.ts'
 import {
+    Image,
     useDisclosure, 
     Card, 
     CardBody, 
@@ -40,10 +39,10 @@ import { Link } from 'react-router-dom'
 import AuthAPIService from '../../services/api/auth/AuthAPIService.ts'
 import { useMediaQuery } from '@chakra-ui/react'
 import { motion } from "framer-motion"
-import RoomForm from '../roomForm.tsx'
 import logo_white from "../../assets/logo_white.png"
 import logo_black from "../../assets/logo_black.png"
 import StudentForm from '../studentForm.tsx'
+import ModalWindow from './ModalWindow.tsx'
 
 
 
@@ -67,7 +66,6 @@ function LeftMenu() {
     const navigate = useNavigate();
 
     const [isLargerThan1800] = useMediaQuery('(min-width: 1800px)')
-
 
     useEffect(()=>{
         getExamsList();
@@ -141,13 +139,8 @@ function LeftMenu() {
                     <ModalOverlay/>
                     <RoomForm onRoomClose={onRoomClose}/>
                     {/* <ModalWindow onClose={onClose} dataInterface={""} /> */}
+                    <ModalWindow onClose={onClose} fields={[{fieldname: "imie", gridNumber:1}, {fieldname: "essa", gridNumber: 1}]} />
                 </Modal>
-                <Button fontSize="1vw" width="90%" onClick={onStudentOpen} margin="0.5vw">Dodaj ucznia</Button>
-                <Modal isOpen={isStudentOpen} onClose={onStudentClose} size="lg">
-                    <ModalOverlay/>
-                    <StudentForm onStudentClose={onStudentClose}/>
-                </Modal>
-
                 <Accordion allowMultiple>
                     <AccordionItem>
                         <h2>
@@ -245,7 +238,7 @@ function LeftMenu() {
                             <AddIcon marginLeft="0.5vw"/>
                             <Modal isOpen={isCsvOpen} onClose={onCsvClose} size="full">
                                 <ModalOverlay/>
-                                <CsvModal refreshExams={getExamsList}/>
+                                <CsvModal refreshExams={getExamsList} />
                             </Modal>
                         </Button>
                 </Flex>

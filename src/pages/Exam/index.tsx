@@ -1,29 +1,45 @@
 import { useNavigate, useParams } from "react-router-dom";
+
 import { Badge, Box, Button, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ExamView, StudentRoom } from "../../interfaces/exams";
+
 import ExamsAPIService from "../../services/api/exams/ExamsAPIService";
 import ExamDetailsModal from "./ExamDetailsModal";
 import { AddIcon } from "@chakra-ui/icons";
+import SearchBar from "../../components/searchBar";
+
 
 function ExamPage() {
-
-    const { examid } = useParams() as any as examParams;
+    const { examid } = useParams() as unknown as examParams;
 
     const [examView, setExamView] = useState<ExamView>();
-
+    const [unassignedStudents, setUnassignedStudents] = useState<ExamView["unassignedStudents"]>([]);
     const navigate = useNavigate();
 
     useEffect( ()=> {
+        gotoExam()  
+
+    }, [examid])
+
+    const gotoExam = useCallback(() => {
         if (examid)
             getExam(examid)
         else
             navigate('/error')
     }, [examid, navigate])
 
+    useEffect( ()=> {  
+        gotoExam()
+    }, [gotoExam])
+
+    
+
     const getExam = (examid: number) => {
         ExamsAPIService.getExam(examid).then((res)=>{
             setExamView(res.data)
+            console.log(res.data.unassignedStudents)
+            setUnassignedStudents(res.data.unassignedStudents)
         }).catch((err)=>{
             console.log(err);
         });
@@ -33,9 +49,8 @@ function ExamPage() {
         ExamsAPIService.updateRoomAssignments(examid, [{PESEL : pesel, number : numberp}]).then(()=>{
             getExam(examid);
         });
-        // props.refreshExams();
-        // props.onCloseExam();
     }
+
 
     const fillExam = () => {
         let unassignedStudentsCount = examView?.unassignedStudents.length;
@@ -116,9 +131,9 @@ function ExamPage() {
                     </SimpleGrid>
                 </Box>
                 <Box ml="1vw">
+                    <SearchBar filterList={examView?.unassignedStudents} setFilterList={setUnassignedStudents}/>
                     <TableContainer width="46vw">
                         <Table variant='striped' colorScheme='teal'>
-                            <TableCaption>Nieprzypisani uczniowie</TableCaption>
                             <Thead>
                             <Tr>
                                 <Th>Nr</Th>
@@ -129,7 +144,7 @@ function ExamPage() {
                             </Tr>
                             </Thead>
                             <Tbody>
-                                {examView?.unassignedStudents.map((student)=>
+                                {unassignedStudents.map((student)=>
                                     <Tr key={student.PESEL}>
                                         <Td>{student.ordinalNumber}</Td>
                                         <Td>{student.department}</Td>

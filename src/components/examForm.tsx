@@ -26,7 +26,8 @@ export type ExamFormModel = {
     type: ExamType
 }
 
-const ExamForm = ({refreshExams, onCloseExam, examBody}: {refreshExams: () => unknown, onCloseExam: () => unknown,  examBody?: ExamItem}) => {
+const ExamForm = ({refreshExams, onCloseExam, examBody}: {refreshExams: () => void, onCloseExam: () => () => void,  examBody?: ExamItem}) => {
+
     
     const { 
         handleSubmit,

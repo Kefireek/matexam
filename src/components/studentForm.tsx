@@ -16,7 +16,7 @@ import {
 import studentService from '../services/students/StudentService';
 
 
-const StudentForm = (props: {onStudentClose: Function}) => {
+const StudentForm = (props: {onStudentClose: () => void}) => {
 
     const { 
         handleSubmit,
@@ -27,6 +27,7 @@ const StudentForm = (props: {onStudentClose: Function}) => {
     const onSubmit = async (values: StudentDescriptive) => {
         const {PESEL,name,surname,department,ordinalNumber,phone,email,document} = values;
         await studentService.addStudent({PESEL, name, surname, department, ordinalNumber, phone, email, document})
+        props.onStudentClose();
     }
 
     return (

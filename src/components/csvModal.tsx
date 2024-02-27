@@ -1,10 +1,9 @@
-import { 
-    ModalBody, 
-    ModalCloseButton, 
-    ModalContent, 
-    ModalHeader, 
+import {
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalHeader,
     Input,
-    FormLabel,
     FormControl,
     FormErrorMessage,
     Button,
@@ -16,15 +15,19 @@ import {
     Tbody,
     Td,
     Box,
+    InputGroup,
+    InputLeftAddon,
+    InputRightAddon,
 } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { CsvInput } from "../interfaces/data";
 import { StudentDescriptive } from "../interfaces/students";
 import DataService from "../services/api/data/dataService";
+import { PlusSquareIcon } from "@chakra-ui/icons";
 
 
-const CsvModal = (props: {refreshExams: Function}) => {
+const CsvModal = (props: {refreshExams: () => void}) => {
 
     const {
         handleSubmit,
@@ -39,15 +42,15 @@ const CsvModal = (props: {refreshExams: Function}) => {
     const [errorMsg, setErrorMsg] = useState<string>();
 
     const csvToArr = (stringVal: string) => {
-        var finalObj: CsvInput = {students: [], exams: []};
+        const finalObj: CsvInput = {students: [], exams: []};
         const [keys, ...rest] = stringVal.trim().split("\n").map((item) => item.split(","));
         setHeaders(keys);
         setRows(rest);
-        
+
         rest.forEach((item) => {
-            var studentObject: {[key: string] : string} = {};
+            const studentObject: {[key: string] : string} = {};
             keys.forEach((key, index) => (studentObject[key] = item[index]));
-            finalObj.students.push(studentObject as any as StudentDescriptive);
+            finalObj.students.push(studentObject as unknown as StudentDescriptive);
             let foundExam = finalObj.exams.find((obj) => obj.name === studentObject["examName"]);
             if(!foundExam){
                 foundExam = finalObj.exams[finalObj.exams.push({name: studentObject["examName"], studentIds: []}) - 1];
@@ -66,12 +69,12 @@ const CsvModal = (props: {refreshExams: Function}) => {
                 const file = e.target.files[0];
                 const fileUrl = URL.createObjectURL(file);
                 await fetch(fileUrl).then(async (resp) => {
-                    var data = await resp.text();
+                    const data = await resp.text();
                     console.log(data);
                     const arr = csvToArr(data);
                     setData(arr);
                 })
-                
+
             }
             catch(err){
                 console.log(err);
@@ -79,11 +82,20 @@ const CsvModal = (props: {refreshExams: Function}) => {
         }
     }
     const onSubmit = async () => {
-        await DataService.postData(data!).then(
-            (res) => {
-                setResult(res.data)
-            }
-        );
+        if(data == undefined){
+            setErrorMsg("Nie wybrano pliku!");
+            return;
+        }
+        else {
+            await DataService.postData(data!).then(
+                (res) => {
+                    setResult(res.data)
+                    props.refreshExams();
+                }
+            ).catch((err) => {
+                setErrorMsg(err.response.data);
+            })
+        }
     }
 
     return (
@@ -93,23 +105,35 @@ const CsvModal = (props: {refreshExams: Function}) => {
             </ModalHeader>
             <ModalBody>
                 <form id="csv-form" onSubmit={handleSubmit(onSubmit)}>
-                    <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column" >
-                        <Box border="1px dotted" borderColor="gray" p="10" m="5"  borderRadius="xl" transition="0.5">    
+                    <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column">
+                        <Box transition="0.5" flexDirection="row">
                             <FormControl isInvalid={errors.file?.message != null}>
-                                <FormLabel> Dodaj plik </FormLabel>
-                                    <Input size=""
-                                        type="file"
-                                        {...register(
-                                            'file'
-                                        )}
-                                        accept=".csv"
-                                        onChange={handleChange}
-                                        display="none"
-                                    />
+                                <InputGroup>
+                                  <InputLeftAddon>
+                                    <PlusSquareIcon/>
+                                  </InputLeftAddon>
+                                    <Input
+                                        alignItems={"center"}
+                                        justifyContent={"center"}
+                                            id="file"
+                                            placeholder="Wybierz plik..."
+                                            variant="filled"
+                                            type="file"
+                                            {...register(
+                                                'file'
+                                            )}
+                                            accept=".csv"
+                                            onChange={handleChange}
+                                            multiple={false}
+                                      />
+                                      <InputRightAddon>
+                                        .csv
+                                      </InputRightAddon>
+                                  </InputGroup>
                                 <FormErrorMessage> {errorMsg} </FormErrorMessage>
                             </FormControl>
                             </Box>
-                        <Button type="submit" id="csv-form" isLoading={isSubmitting} colorScheme='teal' disabled={data != undefined}>Zatwierdź!</Button>
+                        <Button type="submit" id="csv-form" isLoading={isSubmitting} colorScheme='teal' disabled={data == undefined}>Zatwierdź!</Button>
                     </Box>
                 </form>
                 <TableContainer>
