@@ -10,12 +10,13 @@ import {
     FormErrorMessage,
     RadioGroup,
     HStack,
-    Radio
+    Radio,
 } from "@chakra-ui/react";
 
 import { useForm } from "react-hook-form";
-import { ExamType } from "../interfaces/exams";
+import { ExamItem, ExamType } from "../interfaces/exams";
 import ExamsAPIService from "../services/api/exams/ExamsAPIService";
+import { useEffect, useState } from "react";
 
 
 export type ExamFormModel = {
@@ -25,13 +26,24 @@ export type ExamFormModel = {
     type: ExamType
 }
 
-const ExamForm = (props: {refreshExams: () => void, onCloseExam: () => void}) => {
+const ExamForm = ({refreshExams, onCloseExam, examBody}: {refreshExams: () => void, onCloseExam: () => () => void,  examBody?: ExamItem}) => {
+
     
     const { 
         handleSubmit,
         register,
         formState: {errors, isSubmitting},
     } = useForm<ExamFormModel>();
+
+    const [examName, setExamName] = useState(examBody?.name);
+    const [examType, setExamType] = useState(examBody?.type);
+    const [examStartTime, setExamStartTime] = useState(examBody?.startTime);
+    const [examEndTime, setExamEndTime] = useState(examBody?.endTime);
+
+    useEffect(()=>{
+        setExamName(examBody?.name)
+        setExamType(examBody?.type)
+    }, [examBody])
 
     function compareTime(time1: Date, time2: Date) {
         return new Date(time1) < new Date(time2); // true if time2 is later
@@ -45,9 +57,14 @@ const ExamForm = (props: {refreshExams: () => void, onCloseExam: () => void}) =>
         }
         else{
             const exam = {name, type, startTime, endTime}
-            await ExamsAPIService.addExam(exam);
-            props.refreshExams();
-            props.onCloseExam();
+            if(examBody === undefined){
+                await ExamsAPIService.addExam(exam);
+            }
+            else{
+                await ExamsAPIService.editExam(exam, examBody.id)
+            }
+            refreshExams();
+            onCloseExam();
         }
     }
     
@@ -63,9 +80,11 @@ const ExamForm = (props: {refreshExams: () => void, onCloseExam: () => void}) =>
                         <Input
                             id="name"
                             placeholder="Nazwa"
+                            value={examName}
                             {...register(
                                 'name', {
                                     required: "Pole nie może być puste!",
+                                    onChange: (e)=> setExamName(e.target.value),
                                     maxLength: 100
                                 }
                             )} />
@@ -73,11 +92,11 @@ const ExamForm = (props: {refreshExams: () => void, onCloseExam: () => void}) =>
                     </FormControl>
                     <FormControl mb="5">
                         <FormLabel> Rodzaj </FormLabel>
-                        <RadioGroup defaultValue="basic">
+                        <RadioGroup value={examType}>
                             <HStack>
-                                <Radio value="basic" defaultChecked={true} {...register('type')}>podstawowy</Radio>
-                                <Radio value="extended" {...register('type')}>rozszerzony</Radio>
-                                <Radio value="oral" {...register('type')}>ustny</Radio>
+                                <Radio value="basic" checked={examType == "basic" ? true : false } {...register('type', {onChange: ((e)=> setExamType(e.target.value))})}>podstawowy</Radio>
+                                <Radio value="extended" checked={examType == "extended" ? true : false } {...register('type', {onChange: ((e)=> setExamType(e.target.value))})}>rozszerzony</Radio>
+                                <Radio value="oral" checked={examType == "oral" ? true : false } {...register('type', {onChange: ((e)=> setExamType(e.target.value))})}>ustny</Radio>
                             </HStack>
                         </RadioGroup>
                     </FormControl>
@@ -86,9 +105,11 @@ const ExamForm = (props: {refreshExams: () => void, onCloseExam: () => void}) =>
                         <Input
                             id="startDate"
                             type="datetime-local"
+                            value={examStartTime?.toLocaleString("sv-SE") ?? ''}
                             {...register(
                                 'startTime', {
-                                    required: "Pole nie może być puste!"
+                                    required: "Pole nie może być puste!",
+                                    onChange: (e)=>setExamStartTime(e.target.value)
                                 }
                             )} />
                         <FormErrorMessage> {errors.startTime && errors.startTime?.message}</FormErrorMessage>
@@ -98,9 +119,11 @@ const ExamForm = (props: {refreshExams: () => void, onCloseExam: () => void}) =>
                         <Input
                             id="endDate"
                             type="datetime-local"
+                            value={examEndTime?.toLocaleString("sv-SE") ?? ''}
                             {...register(
                                 'endTime', {
-                                    required: "Pole nie może być puste!"
+                                    required: "Pole nie może być puste!",
+                                    onChange: (e)=>setExamEndTime(e.target.value)
                                 }
                             )} />
                         <FormErrorMessage> {errors.endTime && errors.endTime?.message}</FormErrorMessage>

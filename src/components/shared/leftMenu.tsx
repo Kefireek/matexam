@@ -1,5 +1,5 @@
-import { MoonIcon, SunIcon, AddIcon, SettingsIcon,} from '@chakra-ui/icons'
-
+import { Image } from '@chakra-ui/react'
+import { MoonIcon, SunIcon, AddIcon, SettingsIcon} from '@chakra-ui/icons'
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
 import { ExamItem } from '../../interfaces/exams.ts'
 import {
@@ -41,6 +41,7 @@ import { useMediaQuery } from '@chakra-ui/react'
 import { motion } from "framer-motion"
 import logo_white from "../../assets/logo_white.png"
 import logo_black from "../../assets/logo_black.png"
+import StudentForm from '../studentForm.tsx'
 import ModalWindow from './ModalWindow.tsx'
 
 
@@ -48,10 +49,10 @@ import ModalWindow from './ModalWindow.tsx'
 function LeftMenu() {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen: isOpenEdit, onOpen: onOpenEdit, onClose: onCloseEdit } = useDisclosure();
     const {isOpen: isCsvOpen, onOpen: onCsvOpen, onClose: onCsvClose} = useDisclosure();
-    //const {isOpen: isRoomOpen, onOpen: onRoomOpen, onClose: onRoomClose} = useDisclosure();
-
-    //const {isOpen: isStudentOpen, onOpen: onStudentOpen, onClose: onStudentClose} = useDisclosure();
+    const {isOpen: isRoomOpen, onOpen: onRoomOpen, onClose: onRoomClose} = useDisclosure();
+    const {isOpen: isStudentOpen, onOpen: onStudentOpen, onClose: onStudentClose} = useDisclosure();
     const {isOpen: isMenuWide, onOpen: onMenuOpen, onClose: onMenuClose, getDisclosureProps} = useDisclosure({defaultIsOpen: true});
 
     const [hidden, setHidden] = useState(!isMenuWide)
@@ -59,6 +60,8 @@ function LeftMenu() {
     const { colorMode, toggleColorMode } = useColorMode()
 
     const [exams, setExams] = useState<ExamItem[]>();
+
+    const [editedExam, setEditedExam] = useState<ExamItem>()
 
     const navigate = useNavigate();
 
@@ -70,8 +73,8 @@ function LeftMenu() {
 
     const getExamsList = () => {
         ExamsAPIService.getExams().then((res)=>{
-            setExams(res.data)
-            console.log(res.data)
+            setExams(res)
+            console.log(res)
         }).catch((err)=>{
             console.log(err);
         });
@@ -129,6 +132,13 @@ function LeftMenu() {
                 <Button fontSize="1vw" width="90%" onClick={onOpen} margin="0.5vw">Dodaj egzamin <AddIcon ml="0.5vw" /></Button>
                 <Modal isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay/>
+                    <ExamForm refreshExams={getExamsList} onCloseExam={onClose}/>
+                </Modal>
+                <Button fontSize="1vw" width="90%" onClick={onRoomOpen} margin="0.5vw">Dodaj salę</Button>
+                <Modal isOpen={isRoomOpen} onClose={onRoomClose}>
+                    <ModalOverlay/>
+                    <RoomForm onRoomClose={onRoomClose}/>
+                    {/* <ModalWindow onClose={onClose} dataInterface={""} /> */}
                     <ModalWindow onClose={onClose} fields={[{fieldname: "imie", gridNumber:1}, {fieldname: "essa", gridNumber: 1}]} />
                 </Modal>
                 <Accordion allowMultiple>
@@ -138,7 +148,7 @@ function LeftMenu() {
                             <Box as="span" flex='1' textAlign='left'>
                                 <HStack>
                                     <Text fontSize="1.2vw">Egzaminy</Text>
-                                    {exams?.length ?
+                                    {exams?.length != undefined && exams?.length >= 0 ?
                                         <Badge>{exams?.length}</Badge>
                                         : <Spinner size="sm" />
                                     }
@@ -148,8 +158,18 @@ function LeftMenu() {
                         </AccordionButton>
                         </h2>
                         <AccordionPanel pb={4} height="40vh" overflowY="auto" overflowX="hidden" >
+                            {exams?.length !== undefined && exams?.length <= 0 &&
+                                <Card height="100%">
+                                    <CardBody>
+                                        <Flex height="100%" width="100%" justifyContent="center" alignItems="center">
+                                            <Text overflowWrap="break-word" whiteSpace="pre-wrap" fontSize="0.8vw">Nie ma tu jeszcze żadnego egzaminu.</Text>
+                                        </Flex>
+                                    </CardBody>
+                                </Card>
+                            }
                             <Stack spacing="3">
                                 {exams?.map((exam: ExamItem) =>
+                                <>
                                     <Card key={exam.id} variant="elevated" style={{cursor: "pointer"}}>
                                         <Link to={`/exam/${exam.id}`}>
                                         <Menu>
@@ -166,7 +186,7 @@ function LeftMenu() {
                                                     >
                                                     </MenuButton>
                                                     <MenuList>
-                                                        <MenuItem onClick={onOpen}>Edit</MenuItem>
+                                                        <MenuItem onClick={() => {setEditedExam(exam); onOpenEdit()}}>Edit</MenuItem>
                                                         <MenuItem onClick={()=> delExam(exam.id)}>Delete</MenuItem>
                                                     </MenuList>
                                                 </>
@@ -195,15 +215,20 @@ function LeftMenu() {
                                         </CardBody> 
                                         </Link>
                                     </Card>
+                                    </>
                                 ) ?? <Text>Wczytywanie...</Text>}
                             </Stack>
                         </AccordionPanel>
                     </AccordionItem>
                     <Divider />
                 </Accordion>
+                <Modal isOpen={isOpenEdit} onClose={onCloseEdit}>
+                    <ModalOverlay/>
+                    <ExamForm examBody={editedExam} refreshExams={getExamsList} onCloseExam={onCloseEdit}/>
+                </Modal>
                 <Flex position="absolute" bottom="0" direction="column" justifyContent="center" alignItems="center" width="100%" mb="1vw">
                         <Flex width="90%" margin="0.5vw" justifyContent="space-around">
-                            <Button width="65%" fontSize="1vw" onClick={() => logoutUser}>Wyloguj się</Button>
+                            <Button width="65%" fontSize="1vw" onClick={() => logoutUser()}>Wyloguj się</Button>
                             <Button width="25%" fontSize="1vw" onClick={toggleColorMode}>
                                 {colorMode === 'light' ? <MoonIcon></MoonIcon> : <SunIcon></SunIcon>}
                             </Button>
@@ -242,7 +267,7 @@ function LeftMenu() {
                         <Divider width="80%" />
                         <Text fontSize="0.7vw">Egzam.</Text>
                         {exams?.map((exam: ExamItem) =>
-                        <Link to={`/exam/${exam.id}`}>
+                        <Link key={exam.id} to={`/exam/${exam.id}`}>
                             <Tooltip label={exam.name} placement="right">
                                 <Badge fontSize="0.9vw">{Array.from(exam.name)[0]}{Array.from(exam.name)[1]}{Array.from(exam.name)[2]}</Badge>
                             </Tooltip>

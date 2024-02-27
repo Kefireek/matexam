@@ -16,6 +16,14 @@ export interface ExamId {
   id: number
 }
 
+export interface ExamVM {
+  id: number,
+  name: string,
+  type?: ExamType,
+  startTime?: string,
+  endTime?: string
+}
+
 export interface ExamView extends ExamItem {
   assignedStudents: RoomStudents[],
   unassignedStudents: StudentDescriptive[]
@@ -35,6 +43,16 @@ export interface StudentAssignedToRoom extends StudentDescriptive {
 
 export interface StudentRoom extends StudentId {
   number: number | null
+}
+
+export interface StudentToExamsAssignments {
+  toAssign: number[],
+  toUnassign: number[]
+}
+
+export interface Assignments {
+  assigned: ExamItem[]
+  unassigned: ExamItem[]
 }
 
 export interface ExamCsvInput {
