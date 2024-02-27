@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Badge, Box, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr, useColorMode } from "@chakra-ui/react";
+import { Badge, Box, Button, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { ExamView } from "../../interfaces/exams";
+import { ExamView, StudentRoom } from "../../interfaces/exams";
 import ExamsAPIService from "../../services/api/exams/ExamsAPIService";
 import ExamDetailsModal from "./ExamDetailsModal";
 import { AddIcon } from "@chakra-ui/icons";
@@ -9,8 +9,6 @@ import { AddIcon } from "@chakra-ui/icons";
 function ExamPage() {
 
     const { examid } = useParams() as any as examParams;
-
-    const { colorMode } = useColorMode()
 
     const [examView, setExamView] = useState<ExamView>();
 
@@ -21,7 +19,7 @@ function ExamPage() {
             getExam(examid)
         else
             navigate('/error')
-    }, [examid])
+    }, [examid, navigate])
 
     const getExam = (examid: number) => {
         ExamsAPIService.getExam(examid).then((res)=>{
@@ -37,6 +35,47 @@ function ExamPage() {
         });
         // props.refreshExams();
         // props.onCloseExam();
+    }
+
+    const fillExam = () => {
+        let unassignedStudentsCount = examView?.unassignedStudents.length;
+        const rooms = examView?.assignedStudents;
+
+        rooms?.sort((a, b)=> b.size - a.size)
+        
+        let assignments: StudentRoom[] = []
+
+        rooms?.forEach(room => {
+            const freeSpace = room.size - (room.students?.length ?? 0);
+            if((((unassignedStudentsCount ?? 0) - freeSpace >= 0) || ((room.students?.length ?? 0) > 0)) && examView){
+                if (freeSpace) {
+                    assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))) 
+                }
+                unassignedStudentsCount = unassignedStudentsCount ?? 0 - freeSpace;
+            }
+        });
+
+        rooms?.sort((a, b)=> a.size - b.size)
+
+        if((unassignedStudentsCount ?? 0) > 0){
+            rooms?.forEach(room => {
+                const freeSpace = room.size - (room.students?.length ?? 0);
+                if(((unassignedStudentsCount ?? 0) - freeSpace) <= 0 && examView){
+                    if (freeSpace) {
+                        assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number})))
+                    }
+                    unassignedStudentsCount = unassignedStudentsCount ?? 0 - freeSpace;
+                }
+            });
+        }
+
+        if(assignments.length > 0)
+            ExamsAPIService.updateRoomAssignments(
+                examid,
+                assignments
+            ).then(()=>{
+                getExam(examid);
+            });
     }
 
     return(
@@ -63,6 +102,7 @@ function ExamPage() {
                         }
                     </Text>
                 </Box>
+                <Button onClick={() => fillExam()} marginLeft="auto" justifySelf="end">Wypełnij egzamin</Button>              
             </Flex>
         </Box>
          <Box paddingLeft="1.5vw">
@@ -81,7 +121,7 @@ function ExamPage() {
                             <TableCaption>Nieprzypisani uczniowie</TableCaption>
                             <Thead>
                             <Tr>
-                                <Th>Nr w dzienniku</Th>
+                                <Th>Nr</Th>
                                 <Th>Oddział</Th>
                                 <Th>Nazwisko</Th>
                                 <Th>Imię</Th>
@@ -119,7 +159,7 @@ function ExamPage() {
                             </Tbody>
                             <Tfoot>
                             <Tr>
-                                <Th>Nr w dzienniku</Th>
+                                <Th>Nr</Th>
                                 <Th>Oddział</Th>
                                 <Th>Nazwisko</Th>
                                 <Th>Imię</Th>
