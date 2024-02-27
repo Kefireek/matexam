@@ -1,6 +1,5 @@
-import { BiLogOut } from "react-icons/bi";
-import { Collapse, Avatar, Image } from '@chakra-ui/react'
-import { MoonIcon, SunIcon, AddIcon, SettingsIcon, ChevronDownIcon, HamburgerIcon} from '@chakra-ui/icons'
+import { Image } from '@chakra-ui/react'
+import { MoonIcon, SunIcon, AddIcon, SettingsIcon} from '@chakra-ui/icons'
 
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
 import ExamForm from '../examForm.tsx'
@@ -45,7 +44,6 @@ import RoomForm from '../roomForm.tsx'
 import logo_white from "../../assets/logo_white.png"
 import logo_black from "../../assets/logo_black.png"
 import StudentForm from '../studentForm.tsx'
-import ModalWindow from './ModalWindow.tsx'
 
 
 
@@ -56,13 +54,15 @@ function LeftMenu() {
     const {isOpen: isCsvOpen, onOpen: onCsvOpen, onClose: onCsvClose} = useDisclosure();
     const {isOpen: isRoomOpen, onOpen: onRoomOpen, onClose: onRoomClose} = useDisclosure();
     const {isOpen: isStudentOpen, onOpen: onStudentOpen, onClose: onStudentClose} = useDisclosure();
-    const {isOpen: isMenuWide, onOpen: onMenuOpen, onClose: onMenuClose, getButtonProps, getDisclosureProps} = useDisclosure({defaultIsOpen: true});
+    const {isOpen: isMenuWide, onOpen: onMenuOpen, onClose: onMenuClose, getDisclosureProps} = useDisclosure({defaultIsOpen: true});
 
     const [hidden, setHidden] = useState(!isMenuWide)
 
     const { colorMode, toggleColorMode } = useColorMode()
 
     const [exams, setExams] = useState<ExamItem[]>();
+
+    const [editedExam, setEditedExam] = useState<ExamItem>()
 
     const navigate = useNavigate();
 
@@ -75,8 +75,8 @@ function LeftMenu() {
 
     const getExamsList = () => {
         ExamsAPIService.getExams().then((res)=>{
-            setExams(res.data)
-            console.log(res.data)
+            setExams(res)
+            console.log(res)
         }).catch((err)=>{
             console.log(err);
         });
@@ -193,7 +193,7 @@ function LeftMenu() {
                                                     >
                                                     </MenuButton>
                                                     <MenuList>
-                                                        <MenuItem onClick={onOpenEdit}>Edit</MenuItem>
+                                                        <MenuItem onClick={() => {setEditedExam(exam); onOpenEdit()}}>Edit</MenuItem>
                                                         <MenuItem onClick={()=> delExam(exam.id)}>Delete</MenuItem>
                                                     </MenuList>
                                                 </>
@@ -222,10 +222,6 @@ function LeftMenu() {
                                         </CardBody> 
                                         </Link>
                                     </Card>
-                                    <Modal isOpen={isOpenEdit} onClose={onCloseEdit}>
-                                        <ModalOverlay/>
-                                        <ExamForm examBody={{id: exam.id, name: exam.name, type: exam.type, start_time: exam.startTime?.toString(), end_time: exam.endTime?.toString()}} refreshExams={getExamsList} onCloseExam={onCloseEdit}/>
-                                    </Modal>
                                     </>
                                 ) ?? <Text>Wczytywanie...</Text>}
                             </Stack>
@@ -233,9 +229,13 @@ function LeftMenu() {
                     </AccordionItem>
                     <Divider />
                 </Accordion>
+                <Modal isOpen={isOpenEdit} onClose={onCloseEdit}>
+                    <ModalOverlay/>
+                    <ExamForm examBody={editedExam} refreshExams={getExamsList} onCloseExam={onCloseEdit}/>
+                </Modal>
                 <Flex position="absolute" bottom="0" direction="column" justifyContent="center" alignItems="center" width="100%" mb="1vw">
                         <Flex width="90%" margin="0.5vw" justifyContent="space-around">
-                            <Button width="65%" fontSize="1vw" onClick={() => logoutUser}>Wyloguj się</Button>
+                            <Button width="65%" fontSize="1vw" onClick={() => logoutUser()}>Wyloguj się</Button>
                             <Button width="25%" fontSize="1vw" onClick={toggleColorMode}>
                                 {colorMode === 'light' ? <MoonIcon></MoonIcon> : <SunIcon></SunIcon>}
                             </Button>

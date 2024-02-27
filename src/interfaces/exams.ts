@@ -16,6 +16,14 @@ export interface ExamId {
   id: number
 }
 
+export interface ExamVM {
+  id: number,
+  name: string,
+  type?: ExamType,
+  startTime?: string,
+  endTime?: string
+}
+
 export interface ExamView extends ExamItem {
   assignedStudents: RoomStudents[],
   unassignedStudents: StudentDescriptive[]

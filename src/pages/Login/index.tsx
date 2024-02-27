@@ -65,8 +65,8 @@ export default function HookForm() {
             onChange={ (e) => {setPassword(e.target.value)}}
           />
         </FormControl>
-        <Button marginBottom="10vh" mt={4} colorScheme='teal' isLoading={isSubmitting} type='submit'>
-          Submit
+        <Button id="submitBtn" marginBottom="10vh" mt={4} colorScheme='teal' isLoading={isSubmitting} type='submit'>
+          Zaloguj się
         </Button>
       </form>
     </Box>

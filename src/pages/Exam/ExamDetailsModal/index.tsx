@@ -1,10 +1,9 @@
 import { AiOutlineDesktop } from "react-icons/ai";
-import { Badge, Box, Button, Card, CardBody, CardFooter, CardHeader, Collapse, Flex, Heading, Icon, IconButton, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr, useColorMode, useDisclosure } from "@chakra-ui/react";
+import { Badge, Box, Button, Card, CardBody, CardFooter, CardHeader, Collapse, Flex, Heading, Icon, IconButton, SimpleGrid, Text, useColorMode, useDisclosure } from "@chakra-ui/react";
 import { CloseIcon, MinusIcon } from "@chakra-ui/icons";
 import { RoomStudents } from "../../../interfaces/rooms";
 import ExamsAPIService from "../../../services/api/exams/ExamsAPIService";
 import { FaUserPlus } from "react-icons/fa";
-import { ExamView, StudentRoom } from "../../../interfaces/exams";
 import { StudentDescriptive } from "../../../interfaces/students";
 
 function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam: CallableFunction, unassignedStudents: StudentDescriptive[]}) {
