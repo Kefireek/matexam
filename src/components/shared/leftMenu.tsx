@@ -1,4 +1,3 @@
-import { Image } from '@chakra-ui/react'
 import { MoonIcon, SunIcon, AddIcon, SettingsIcon} from '@chakra-ui/icons'
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
 import { ExamItem } from '../../interfaces/exams.ts'
@@ -43,6 +42,8 @@ import logo_white from "../../assets/logo_white.png"
 import logo_black from "../../assets/logo_black.png"
 import StudentForm from '../studentForm.tsx'
 import ModalWindow from './ModalWindow.tsx'
+import ExamForm from '../examForm.tsx';
+import RoomForm from '../roomForm.tsx';
 
 
 
