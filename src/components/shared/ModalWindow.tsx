@@ -10,7 +10,7 @@ import {
   } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 
-const ModalWindow = (props: {onClose: Function, fields: {fieldname: string, gridNumber: number}[]}) => {
+const ModalWindow = (props: {onClose: () => void, fields: {fieldname: string, gridNumber: number}[]}) => {
 
 
   const {

@@ -4,7 +4,6 @@ import {
     ModalContent,
     ModalHeader,
     Input,
-    FormLabel,
     FormControl,
     FormErrorMessage,
     Button,
@@ -18,15 +17,17 @@ import {
     Box,
     InputGroup,
     InputLeftAddon,
+    InputRightAddon,
 } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { CsvInput } from "../interfaces/data";
 import { StudentDescriptive } from "../interfaces/students";
 import DataService from "../services/api/data/dataService";
+import { PlusSquareIcon } from "@chakra-ui/icons";
 
 
-const CsvModal = (props: {refreshExams: Function}) => {
+const CsvModal = (props: {refreshExams: () => void}) => {
 
     const {
         handleSubmit,
@@ -81,12 +82,20 @@ const CsvModal = (props: {refreshExams: Function}) => {
         }
     }
     const onSubmit = async () => {
-        await DataService.postData(data!).then(
-            (res) => {
-                setResult(res.data)
-                props.refreshExams();
-            }
-        );
+        if(data == undefined){
+            setErrorMsg("Nie wybrano pliku!");
+            return;
+        }
+        else {
+            await DataService.postData(data!).then(
+                (res) => {
+                    setResult(res.data)
+                    props.refreshExams();
+                }
+            ).catch((err) => {
+                setErrorMsg(err.response.data);
+            })
+        }
     }
 
     return (
@@ -96,28 +105,35 @@ const CsvModal = (props: {refreshExams: Function}) => {
             </ModalHeader>
             <ModalBody>
                 <form id="csv-form" onSubmit={handleSubmit(onSubmit)}>
-                    <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column" >
-                        <Box border="1px dotted" borderColor="gray"  m="5"  borderRadius="xl" transition="0.5">
+                    <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column">
+                        <Box transition="0.5" flexDirection="row">
                             <FormControl isInvalid={errors.file?.message != null}>
-                                <FormLabel> Dodaj plik </FormLabel>
                                 <InputGroup>
                                   <InputLeftAddon>
-                                    
+                                    <PlusSquareIcon/>
                                   </InputLeftAddon>
-                                    <Input w="15" h="5"
+                                    <Input
+                                        alignItems={"center"}
+                                        justifyContent={"center"}
+                                            id="file"
+                                            placeholder="Wybierz plik..."
+                                            variant="filled"
                                             type="file"
                                             {...register(
                                                 'file'
                                             )}
                                             accept=".csv"
                                             onChange={handleChange}
-                                            display="none"
+                                            multiple={false}
                                       />
+                                      <InputRightAddon>
+                                        .csv
+                                      </InputRightAddon>
                                   </InputGroup>
                                 <FormErrorMessage> {errorMsg} </FormErrorMessage>
                             </FormControl>
                             </Box>
-                        <Button type="submit" id="csv-form" isLoading={isSubmitting} colorScheme='teal' disabled={data != undefined}>Zatwierdź!</Button>
+                        <Button type="submit" id="csv-form" isLoading={isSubmitting} colorScheme='teal' disabled={data == undefined}>Zatwierdź!</Button>
                     </Box>
                 </form>
                 <TableContainer>

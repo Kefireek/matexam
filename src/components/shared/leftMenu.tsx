@@ -213,7 +213,7 @@ function LeftMenu() {
                             <AddIcon marginLeft="0.5vw"/>
                             <Modal isOpen={isCsvOpen} onClose={onCsvClose} size="full">
                                 <ModalOverlay/>
-                                <CsvModal refreshExams={getExamsList}/>
+                                <CsvModal refreshExams={getExamsList} />
                             </Modal>
                         </Button>
                 </Flex>

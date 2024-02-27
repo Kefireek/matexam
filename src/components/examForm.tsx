@@ -25,7 +25,7 @@ export type ExamFormModel = {
     type: ExamType
 }
 
-const ExamForm = (props: {refreshExams: Function, onCloseExam: Function}) => {
+const ExamForm = (props: {refreshExams: () => void, onCloseExam: () => void}) => {
     
     const { 
         handleSubmit,

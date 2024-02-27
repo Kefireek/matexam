@@ -15,7 +15,7 @@ import RoomService from "../services/api/rooms/RoomsService";
 import { RoomDescriptive } from "../interfaces/rooms";
 
 
-const RoomForm = (props: {onRoomClose: Function}) => {
+const RoomForm = (props: {onRoomClose: () => void}) => {
     const { 
         handleSubmit,
         register,
