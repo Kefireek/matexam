@@ -34,14 +34,13 @@ import { useColorMode } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import CsvModal from '../csvModal.tsx';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'
-import AuthAPIService from '../../services/api/auth/AuthAPIService.ts'
-import { useMediaQuery } from '@chakra-ui/react'
-import { motion } from "framer-motion"
-import logo_white from "../../assets/logo_white.png"
-import logo_black from "../../assets/logo_black.png"
-import StudentForm from '../studentForm.tsx'
-import ModalWindow from './ModalWindow.tsx'
+import { Link } from 'react-router-dom';
+import AuthAPIService from '../../services/api/auth/AuthAPIService.ts';
+import { useMediaQuery } from '@chakra-ui/react';
+import { motion } from "framer-motion";
+import logo_white from "../../assets/logo_white.png";
+import logo_black from "../../assets/logo_black.png";
+import StudentForm from '../studentForm.tsx';
 import ExamForm from '../examForm.tsx';
 import RoomForm from '../roomForm.tsx';
 
@@ -139,8 +138,11 @@ function LeftMenu() {
                 <Modal isOpen={isRoomOpen} onClose={onRoomClose}>
                     <ModalOverlay/>
                     <RoomForm onRoomClose={onRoomClose}/>
-                    {/* <ModalWindow onClose={onClose} dataInterface={""} /> */}
-                    <ModalWindow onClose={onClose} fields={[{fieldname: "imie", gridNumber:1}, {fieldname: "essa", gridNumber: 1}]} />
+                </Modal>
+                <Button fontSize="1vw" width="90%" onClick={onStudentOpen} margin="0.5vw">Dodaj ucznia</Button>
+                <Modal isOpen={isStudentOpen} onClose={onStudentClose}>
+                    <ModalOverlay/>
+                    <StudentForm onStudentClose={onStudentClose}/>
                 </Modal>
                 <Accordion allowMultiple>
                     <AccordionItem>
