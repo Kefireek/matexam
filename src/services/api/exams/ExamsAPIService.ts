@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ExamBody, ExamItem, ExamVM, ExamView, StudentRoom } from '../../../interfaces/exams'
+import { Assignments, ExamBody, ExamItem, ExamVM, ExamView, StudentRoom, StudentToExamsAssignments } from '../../../interfaces/exams'
 
 const ExamsAPIService = {
     getExams: async function() {
@@ -17,6 +17,12 @@ const ExamsAPIService = {
     },
     updateRoomAssignments: function(id: number, studentRooms: StudentRoom[]) {
         return axios.put<void>(`${import.meta.env.VITE_API_URL}${import.meta.env.VITE_GET_EXAMS}${id}/assignments`, studentRooms)
+    },
+    assignExamsToStudent: function(PESEL: string, assignments: StudentToExamsAssignments) {
+        return axios.put<void>(`${import.meta.env.VITE_GET_EXAMS}assignables/${PESEL}`, assignments)
+    },
+    getAssignableExams: function(studentId: string) {
+        return axios.get<Assignments>(`${import.meta.env.VITE_GET_EXAMS}assignables/${studentId}`)
     },
     editExam: function(examBody: ExamBody, id: number) {
         return axios.put<ExamItem>(`${import.meta.env.VITE_API_URL}${import.meta.env.VITE_GET_EXAMS}${id}`, examBody)

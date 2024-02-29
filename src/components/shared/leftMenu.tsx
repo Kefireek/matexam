@@ -1,10 +1,8 @@
-import { Image } from '@chakra-ui/react'
 import { MoonIcon, SunIcon, AddIcon, SettingsIcon} from '@chakra-ui/icons'
-
 import ExamsAPIService from '../../services/api/exams/ExamsAPIService.ts'
-import ExamForm from '../examForm.tsx'
 import { ExamItem } from '../../interfaces/exams.ts'
 import {
+    Image,
     useDisclosure, 
     Card, 
     CardBody, 
@@ -36,14 +34,15 @@ import { useColorMode } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import CsvModal from '../csvModal.tsx';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'
-import AuthAPIService from '../../services/api/auth/AuthAPIService.ts'
-import { useMediaQuery } from '@chakra-ui/react'
-import { motion } from "framer-motion"
-import RoomForm from '../roomForm.tsx'
-import logo_white from "../../assets/logo_white.png"
-import logo_black from "../../assets/logo_black.png"
-import StudentForm from '../studentForm.tsx'
+import { Link } from 'react-router-dom';
+import AuthAPIService from '../../services/api/auth/AuthAPIService.ts';
+import { useMediaQuery } from '@chakra-ui/react';
+import { motion } from "framer-motion";
+import logo_white from "../../assets/logo_white.png";
+import logo_black from "../../assets/logo_black.png";
+import StudentForm from '../studentForm.tsx';
+import ExamForm from '../examForm.tsx';
+import RoomForm from '../roomForm.tsx';
 
 
 
@@ -67,7 +66,6 @@ function LeftMenu() {
     const navigate = useNavigate();
 
     const [isLargerThan1800] = useMediaQuery('(min-width: 1800px)')
-
 
     useEffect(()=>{
         getExamsList();
@@ -143,13 +141,11 @@ function LeftMenu() {
                 <Modal isOpen={isRoomOpen} onClose={onRoomClose}>
                     <ModalOverlay/>
                     <RoomForm onRoomClose={onRoomClose}/>
-                    {/* <ModalWindow onClose={onClose} dataInterface={""} /> */}
                 </Modal>
                 <Modal isOpen={isStudentOpen} onClose={onStudentClose} size="lg">
                     <ModalOverlay/>
                     <StudentForm onStudentClose={onStudentClose}/>
                 </Modal>
-
                 <Accordion allowMultiple>
                     <AccordionItem>
                         <h2>
@@ -247,7 +243,7 @@ function LeftMenu() {
                             <AddIcon marginLeft="0.5vw"/>
                             <Modal isOpen={isCsvOpen} onClose={onCsvClose} size="full">
                                 <ModalOverlay/>
-                                <CsvModal refreshExams={getExamsList}/>
+                                <CsvModal refreshExams={getExamsList} />
                             </Modal>
                         </Button>
                 </Flex>
