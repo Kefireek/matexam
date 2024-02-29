@@ -129,18 +129,20 @@ function LeftMenu() {
                 hidden={hidden}
                 initial={false}
                 animate={{opacity: isMenuWide ? "100%" : "0%" }}>
-                <Button fontSize="1vw" width="90%" onClick={onOpen} margin="0.5vw">Dodaj egzamin <AddIcon ml="0.5vw" /></Button>
+                <Flex direction="column">
+                    <Button fontSize="1vw" width="90%" onClick={onOpen} margin="0.5vw">Dodaj egzamin <AddIcon ml="0.5vw" /></Button>
+                    <Button fontSize="1vw" width="90%" onClick={onRoomOpen} margin="0.5vw">Dodaj salę</Button>
+                    <Button fontSize="1vw" width="90%" onClick={onStudentOpen} margin="0.5vw">Dodaj ucznia</Button>
+                </Flex>
                 <Modal isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay/>
                     <ExamForm refreshExams={getExamsList} onCloseExam={onClose}/>
                 </Modal>
-                <Button fontSize="1vw" width="90%" onClick={onRoomOpen} margin="0.5vw">Dodaj salę</Button>
                 <Modal isOpen={isRoomOpen} onClose={onRoomClose}>
                     <ModalOverlay/>
                     <RoomForm onRoomClose={onRoomClose}/>
                 </Modal>
-                <Button fontSize="1vw" width="90%" onClick={onStudentOpen} margin="0.5vw">Dodaj ucznia</Button>
-                <Modal isOpen={isStudentOpen} onClose={onStudentClose}>
+                <Modal isOpen={isStudentOpen} onClose={onStudentClose} size="lg">
                     <ModalOverlay/>
                     <StudentForm onStudentClose={onStudentClose}/>
                 </Modal>
