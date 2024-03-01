@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 
-import { Badge, Box, Button, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
+import { Badge, Box, Button, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import { ExamView, StudentRoom } from "../../interfaces/exams";
 
@@ -8,6 +8,7 @@ import ExamsAPIService from "../../services/api/exams/ExamsAPIService";
 import ExamDetailsModal from "./ExamDetailsModal";
 import { AddIcon } from "@chakra-ui/icons";
 import SearchBar from "../../components/searchBar";
+import { StudentDescriptive } from "../../interfaces/students";
 
 
 function ExamPage() {
@@ -17,17 +18,17 @@ function ExamPage() {
     const [unassignedStudents, setUnassignedStudents] = useState<ExamView["unassignedStudents"]>([]);
     const navigate = useNavigate();
 
-    useEffect( ()=> {
-        gotoExam()  
-
-    }, [examid])
-
     const gotoExam = useCallback(() => {
         if (examid)
             getExam(examid)
         else
             navigate('/error')
     }, [examid, navigate])
+
+    useEffect( ()=> {
+        gotoExam()  
+    }, [gotoExam])
+
 
     useEffect( ()=> {  
         gotoExam()
@@ -50,6 +51,19 @@ function ExamPage() {
             getExam(examid);
         });
     }
+
+    const searchStudents = useCallback( (searchValue: string) =>  {
+        searchValue = searchValue.toLowerCase();
+        const students: StudentDescriptive[] = [];
+    
+        examView?.unassignedStudents?.forEach((item: StudentDescriptive) => {
+          if(item.PESEL.includes(searchValue) || item.name.toLowerCase().includes(searchValue) || item.surname.toLowerCase().includes(searchValue)) {
+            students.push(item);
+          }
+        });
+        
+        setUnassignedStudents(students);
+      }, [examView?.unassignedStudents, setUnassignedStudents]);
 
 
     const fillExam = () => {
@@ -131,7 +145,7 @@ function ExamPage() {
                     </SimpleGrid>
                 </Box>
                 <Box ml="1vw">
-                    <SearchBar filterList={examView?.unassignedStudents} setFilterList={setUnassignedStudents}/>
+                    <SearchBar search={searchStudents} />
                     <TableContainer width="46vw">
                         <Table variant='striped' colorScheme='teal'>
                             <Thead>
