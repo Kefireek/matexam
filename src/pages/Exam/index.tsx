@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 
-import { Badge, Box, Button, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
+import { Badge, Box, Button, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import { ExamView, StudentRoom } from "../../interfaces/exams";
 
@@ -54,11 +54,24 @@ function ExamPage() {
 
     const fillExam = () => {
         let unassignedStudentsCount = examView?.unassignedStudents.length;
+        const unassignedStudentsCountConst = examView?.unassignedStudents.length;
         const rooms = examView?.assignedStudents;
 
         rooms?.sort((a, b)=> b.size - a.size)
         
         let assignments: StudentRoom[] = []
+
+
+        // ?????? dla jednego tylko
+        rooms?.forEach(room => {
+            const freeSpace = room.size - (room.students?.length ?? 0);
+            if((((unassignedStudentsCountConst ?? 0) - freeSpace <= 0)) && examView){
+                if (freeSpace) {
+                    assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))) 
+                }
+                unassignedStudentsCount = unassignedStudentsCount ?? 0 - freeSpace;
+            }
+        });
 
         rooms?.forEach(room => {
             const freeSpace = room.size - (room.students?.length ?? 0);
@@ -130,60 +143,64 @@ function ExamPage() {
                         }
                     </SimpleGrid>
                 </Box>
-                <Box ml="1vw">
-                    <SearchBar filterList={examView?.unassignedStudents} setFilterList={setUnassignedStudents}/>
-                    <TableContainer width="46vw">
-                        <Table variant='striped' colorScheme='teal'>
-                            <Thead>
-                            <Tr>
-                                <Th>Nr</Th>
-                                <Th>Oddział</Th>
-                                <Th>Nazwisko</Th>
-                                <Th>Imię</Th>
-                                <Th>PESEL</Th>
-                            </Tr>
-                            </Thead>
-                            <Tbody>
-                                {unassignedStudents.map((student)=>
-                                    <Tr key={student.PESEL}>
-                                        <Td>{student.ordinalNumber}</Td>
-                                        <Td>{student.department}</Td>
-                                        <Td>{student.surname}</Td>
-                                        <Td>{student.name}</Td>
-                                        <Td>{student.PESEL}</Td>
-                                        <Td>
-                                            <Menu>
-                                                <MenuButton
-                                                    as={IconButton}
-                                                    aria-label='Options'
-                                                    icon={<AddIcon />}
-                                                    variant='outline'
-                                                />
-                                                <MenuList>
-                                                    <MenuGroup title="Dodaj do sali">
-                                                    {examView?.assignedStudents.map((room) =>
-                                                        <MenuItem key={room.number} onClick={()=> assignStudent(student.PESEL, room.number)}> Sala nr {room.number}</MenuItem>
-                                                    )
-                                                    }
-                                                    </MenuGroup>
-                                                </MenuList>
-                                            </Menu>
-                                        </Td>
+                <Flex direction="column">
+                    <Box ml="1vw">
+                        <SearchBar filterList={examView?.unassignedStudents} setFilterList={setUnassignedStudents}/>
+                    </Box>
+                    <Box ml="1vw" overflowY="scroll" overflowX="hidden" height="70vh">
+                        <TableContainer width="46vw">
+                            <Table variant='striped' colorScheme='teal'>
+                                <Thead>
+                                    <Tr>
+                                        <Th>Nr</Th>
+                                        <Th>Oddział</Th>
+                                        <Th>Nazwisko</Th>
+                                        <Th>Imię</Th>
+                                        <Th>PESEL</Th>
                                     </Tr>
-                                )}
-                            </Tbody>
-                            <Tfoot>
-                            <Tr>
-                                <Th>Nr</Th>
-                                <Th>Oddział</Th>
-                                <Th>Nazwisko</Th>
-                                <Th>Imię</Th>
-                                <Th>PESEL</Th>
-                            </Tr>
-                            </Tfoot>
-                        </Table>
-                    </TableContainer>
+                                </Thead>
+                                <Tbody>
+                                    {unassignedStudents.map((student)=>
+                                        <Tr key={student.PESEL}>
+                                            <Td>{student.ordinalNumber}</Td>
+                                            <Td>{student.department}</Td>
+                                            <Td>{student.surname}</Td>
+                                            <Td>{student.name}</Td>
+                                            <Td>{student.PESEL}</Td>
+                                            <Td>
+                                                <Menu>
+                                                    <MenuButton
+                                                        as={IconButton}
+                                                        aria-label='Options'
+                                                        icon={<AddIcon />}
+                                                        variant='outline'
+                                                    />
+                                                    <MenuList>
+                                                        <MenuGroup title="Dodaj do sali">
+                                                        {examView?.assignedStudents.map((room) =>
+                                                            <MenuItem key={room.number} onClick={()=> assignStudent(student.PESEL, room.number)}> Sala nr {room.number}</MenuItem>
+                                                        )
+                                                        }
+                                                        </MenuGroup>
+                                                    </MenuList>
+                                                </Menu>
+                                            </Td>
+                                        </Tr>
+                                    )}
+                                </Tbody>
+                                <Tfoot>
+                                <Tr>
+                                    <Th>Nr</Th>
+                                    <Th>Oddział</Th>
+                                    <Th>Nazwisko</Th>
+                                    <Th>Imię</Th>
+                                    <Th>PESEL</Th>
+                                </Tr>
+                                </Tfoot>
+                            </Table>
+                        </TableContainer>
                 </Box>
+                </Flex>
             </Box>
         </Box>
         </Box>

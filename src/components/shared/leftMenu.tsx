@@ -131,8 +131,9 @@ function LeftMenu() {
                 animate={{opacity: isMenuWide ? "100%" : "0%" }}>
                 <Flex direction="column">
                     <Button fontSize="1vw" width="90%" onClick={onOpen} margin="0.5vw">Dodaj egzamin <AddIcon ml="0.5vw" /></Button>
-                    <Button fontSize="1vw" width="90%" onClick={onRoomOpen} margin="0.5vw">Dodaj salę</Button>
-                    <Button fontSize="1vw" width="90%" onClick={onStudentOpen} margin="0.5vw">Dodaj ucznia</Button>
+                    <Button fontSize="1vw" width="90%" onClick={onRoomOpen} margin="0.5vw">Dodaj salę <AddIcon ml="0.5vw" /></Button>
+                    <Button fontSize="1vw" width="90%" onClick={onStudentOpen} margin="0.5vw">Dodaj ucznia <AddIcon ml="0.5vw" /></Button>
+                    <Button fontSize="1vw" width="90%" margin="0.5vw"><Link to={"/students"}>Uczniowie</Link></Button>
                 </Flex>
                 <Modal isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay/>
