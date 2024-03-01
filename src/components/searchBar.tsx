@@ -28,7 +28,6 @@ const SearchBar = ({filterList, setFilterList}: {filterList: StudentDescriptive[
     };
     useEffect(() => {
         const timer = setTimeout(() => {
-          console.log("zmiana!")
             setDebouncedSearchValue(searchValue);
             searchStudents(searchValue);
         }, 1000);
@@ -42,7 +41,7 @@ const SearchBar = ({filterList, setFilterList}: {filterList: StudentDescriptive[
         <InputGroup>
           <Input placeholder="Szukaj..." variant="filled" onChange={(e) => onSearchChange(e)} value={searchValue}/>
           <InputLeftAddon backgroundColor="gray.800" border="none">
-            { <Spinner size="sm" opacity={(searchValue != debouncedSearchValue) ? 1 : 0 }/>}
+            { <Spinner size="sm" opacity={(searchValue != debouncedSearchValue) ? 1 : 0 } background="none"/>}
           </InputLeftAddon>
         </InputGroup>
       </Box>

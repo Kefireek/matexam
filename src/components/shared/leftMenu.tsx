@@ -230,6 +230,7 @@ function LeftMenu() {
                     <ExamForm examBody={editedExam} refreshExams={getExamsList} onCloseExam={onCloseEdit}/>
                 </Modal>
                 <Flex position="absolute" bottom="0" direction="column" justifyContent="center" alignItems="center" width="100%" mb="1vw">
+                    <Button onClick={() => navigate("/rooms")}>Test</Button>
                         <Flex width="90%" margin="0.5vw" justifyContent="space-around">
                             <Button width="65%" fontSize="1vw" onClick={() => logoutUser()}>Wyloguj się</Button>
                             <Button width="25%" fontSize="1vw" onClick={toggleColorMode}>

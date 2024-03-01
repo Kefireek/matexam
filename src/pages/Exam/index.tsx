@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 
-import { Badge, Box, Button, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableCaption, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
+import { Badge, Box, Button, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import { ExamView, StudentRoom } from "../../interfaces/exams";
 
@@ -32,8 +32,6 @@ function ExamPage() {
     useEffect( ()=> {  
         gotoExam()
     }, [gotoExam])
-
-    
 
     const getExam = (examid: number) => {
         ExamsAPIService.getExam(examid).then((res)=>{
