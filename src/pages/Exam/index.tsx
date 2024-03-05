@@ -67,57 +67,76 @@ function ExamPage() {
 
 
     const fillExam = () => {
+        if(!examView) return
         let unassignedStudentsCount = examView?.unassignedStudents.length;
-        const unassignedStudentsCountConst = examView?.unassignedStudents.length;
         const rooms = examView?.assignedStudents;
 
         rooms?.sort((a, b)=> b.size - a.size)
         
         let assignments: StudentRoom[] = []
 
-
-        // ?????? dla jednego tylko
-        rooms?.forEach(room => {
+        rooms?.forEach((room) => {
             const freeSpace = room.size - (room.students?.length ?? 0);
-            if((((unassignedStudentsCountConst ?? 0) - freeSpace <= 0)) && examView){
+            const gap = (unassignedStudentsCount ?? 0) - freeSpace; 
+            if(((room.students?.length ?? 0) > 0) && gap >= 0){
+                console.log(room.number + " " +  unassignedStudentsCount + " " + freeSpace)
                 if (freeSpace) {
                     assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))) 
                 }
-                unassignedStudentsCount = unassignedStudentsCount ?? 0 - freeSpace;
+                unassignedStudentsCount = (unassignedStudentsCount ?? 0) - freeSpace;
             }
         });
 
-        rooms?.forEach(room => {
-            const freeSpace = room.size - (room.students?.length ?? 0);
-            if((((unassignedStudentsCount ?? 0) - freeSpace >= 0) || ((room.students?.length ?? 0) > 0)) && examView){
-                if (freeSpace) {
-                    assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))) 
-                }
-                unassignedStudentsCount = unassignedStudentsCount ?? 0 - freeSpace;
-            }
-        });
+        // rooms?.forEach((room, index) => {
+        //     const freeSpace = room.size - (room.students?.length ?? 0);
+        //     const gap = (unassignedStudentsCount ?? 0) - freeSpace; 
+        //     if(freeSpace === 0){
+        //         return
+        //     }
+        //     else if(gap===0 || ((room.students?.length ?? 0) > 0)){
+        //         console.log(room.number + " " +  unassignedStudentsCount + " " + freeSpace)
+        //         if (freeSpace) {
+        //             assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))) 
+        //         }
+        //         unassignedStudentsCount = (unassignedStudentsCount ?? 0) - freeSpace;
+        //     }
+        //     else if(gap > 0){
+        //         console.log(room.number + " " +  unassignedStudentsCount + " " + freeSpace)
+        //         if (freeSpace) {
+        //             assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))) 
+        //         }
+        //         unassignedStudentsCount = (unassignedStudentsCount ?? 0) - freeSpace;
+        //     }
+        //     else if((gap < 0) && index + 1 < rooms.length - 1 && ((unassignedStudentsCount ?? 0)-(rooms[index + 1].size - (rooms[index + 1].students?.length ?? 0)) > 0) && (rooms[index + 1].size - (rooms[index + 1].students?.length ?? 0)) != 0){
+        //         console.log(room.number + " " +  unassignedStudentsCount + " " + freeSpace)
+        //         if (freeSpace) {
+        //             assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))) 
+        //         }
+        //         unassignedStudentsCount = (unassignedStudentsCount ?? 0) - freeSpace;
+        //     }
+        // });
 
-        rooms?.sort((a, b)=> a.size - b.size)
+        // rooms?.sort((a, b)=> a.size - b.size)
 
-        if((unassignedStudentsCount ?? 0) > 0){
-            rooms?.forEach(room => {
-                const freeSpace = room.size - (room.students?.length ?? 0);
-                if(((unassignedStudentsCount ?? 0) - freeSpace) <= 0 && examView){
-                    if (freeSpace) {
-                        assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number})))
-                    }
-                    unassignedStudentsCount = unassignedStudentsCount ?? 0 - freeSpace;
-                }
-            });
-        }
+        // if((unassignedStudentsCount ?? 0) > 0){
+        //     rooms?.forEach(room => {
+        //         const freeSpace = room.size - (room.students?.length ?? 0);
+        //         if(((unassignedStudentsCount ?? 0) - freeSpace) <= 0 && examView){
+        //             if (freeSpace) {
+        //                 assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number})))
+        //             }
+        //             unassignedStudentsCount = unassignedStudentsCount ?? 0 - freeSpace;
+        //         }
+        //     });
+        // }
 
-        if(assignments.length > 0)
-            ExamsAPIService.updateRoomAssignments(
-                examid,
-                assignments
-            ).then(()=>{
-                getExam(examid);
-            });
+        // if(assignments.length > 0)
+        //     ExamsAPIService.updateRoomAssignments(
+        //         examid,
+        //         assignments
+        //     ).then(()=>{
+        //         getExam(examid);
+        //     });
     }
 
     return(
