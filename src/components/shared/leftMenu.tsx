@@ -43,6 +43,7 @@ import logo_black from "../../assets/logo_black.png";
 import StudentForm from '../studentForm.tsx';
 import ExamForm from '../examForm.tsx';
 import RoomForm from '../roomForm.tsx';
+import RoomService from '../../services/api/rooms/RoomsService.ts';
 
 
 
@@ -134,10 +135,11 @@ function LeftMenu() {
                     <ModalOverlay/>
                     <ExamForm refreshExams={getExamsList} onCloseExam={onClose}/>
                 </Modal>
+                <Button onClick={() => navigate("/rooms")}>Sale</Button>
                 <Button fontSize="1vw" width="90%" onClick={onRoomOpen} margin="0.5vw">Dodaj salę</Button>
                 <Modal isOpen={isRoomOpen} onClose={onRoomClose}>
                     <ModalOverlay/>
-                    <RoomForm onRoomClose={onRoomClose}/>
+                    <RoomForm onRoomClose={onRoomClose} refreshRooms={RoomService.getRooms}/>
                 </Modal>
                 <Button fontSize="1vw" width="90%" onClick={onStudentOpen} margin="0.5vw">Dodaj ucznia</Button>
                 <Modal isOpen={isStudentOpen} onClose={onStudentClose}>
@@ -230,7 +232,6 @@ function LeftMenu() {
                     <ExamForm examBody={editedExam} refreshExams={getExamsList} onCloseExam={onCloseEdit}/>
                 </Modal>
                 <Flex position="absolute" bottom="0" direction="column" justifyContent="center" alignItems="center" width="100%" mb="1vw">
-                    <Button onClick={() => navigate("/rooms")}>Test</Button>
                         <Flex width="90%" margin="0.5vw" justifyContent="space-around">
                             <Button width="65%" fontSize="1vw" onClick={() => logoutUser()}>Wyloguj się</Button>
                             <Button width="25%" fontSize="1vw" onClick={toggleColorMode}>
