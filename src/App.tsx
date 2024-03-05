@@ -36,7 +36,7 @@ function App() {
 
   return (
     <messageContext.Provider value={{ message, setMessage }}>
-      <Flex>
+      <Flex overflow="hidden">
         <LeftMenu />
         <Box width="100vw">
           {loading &&
