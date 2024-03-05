@@ -162,13 +162,13 @@ function ExamPage() {
                     <TableContainer width="46vw">
                         <Table variant='striped' colorScheme='teal'>
                             <Thead>
-                            <Tr>
-                                <Th>Nr</Th>
-                                <Th>Oddział</Th>
-                                <Th>Nazwisko</Th>
-                                <Th>Imię</Th>
-                                <Th>PESEL</Th>
-                            </Tr>
+                                <Tr>
+                                    <Th>Nr</Th>
+                                    <Th>Oddział</Th>
+                                    <Th>Nazwisko</Th>
+                                    <Th>Imię</Th>
+                                    <Th>PESEL</Th>
+                                </Tr>
                             </Thead>
                             <Tbody>
                                 {unassignedStudents.map((student)=>
@@ -197,37 +197,9 @@ function ExamPage() {
                                             </Menu>
                                         </Td>
                                     </Tr>
-                                </Thead>
-                                <Tbody>
-                                    {unassignedStudents.map((student)=>
-                                        <Tr key={student.PESEL}>
-                                            <Td>{student.ordinalNumber}</Td>
-                                            <Td>{student.department}</Td>
-                                            <Td>{student.surname}</Td>
-                                            <Td>{student.name}</Td>
-                                            <Td>{student.PESEL}</Td>
-                                            <Td>
-                                                <Menu>
-                                                    <MenuButton
-                                                        as={IconButton}
-                                                        aria-label='Options'
-                                                        icon={<AddIcon />}
-                                                        variant='outline'
-                                                    />
-                                                    <MenuList>
-                                                        <MenuGroup title="Dodaj do sali">
-                                                        {examView?.assignedStudents.map((room) =>
-                                                            <MenuItem key={room.number} onClick={()=> assignStudent(student.PESEL, room.number)}> Sala nr {room.number}</MenuItem>
-                                                        )
-                                                        }
-                                                        </MenuGroup>
-                                                    </MenuList>
-                                                </Menu>
-                                            </Td>
-                                        </Tr>
-                                    )}
-                                </Tbody>
-                                <Tfoot>
+                                )}
+                            </Tbody>
+                            <Tfoot>
                                 <Tr>
                                     <Th>Nr</Th>
                                     <Th>Oddział</Th>
@@ -235,11 +207,10 @@ function ExamPage() {
                                     <Th>Imię</Th>
                                     <Th>PESEL</Th>
                                 </Tr>
-                                </Tfoot>
-                            </Table>
-                        </TableContainer>
+                            </Tfoot>
+                        </Table>
+                    </TableContainer>
                 </Box>
-                </Flex>
             </Box>
         </Box>
         </Box>
