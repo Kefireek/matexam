@@ -34,8 +34,6 @@ function ExamPage() {
         gotoExam()
     }, [gotoExam])
 
-    
-
     const getExam = (examid: number) => {
         ExamsAPIService.getExam(examid).then((res)=>{
             setExamView(res.data)

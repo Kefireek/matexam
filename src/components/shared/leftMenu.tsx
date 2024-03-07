@@ -42,6 +42,7 @@ import logo_white from "../../assets/logo_white.png";
 import logo_black from "../../assets/logo_black.png";
 import ExamForm from '../examForm.tsx';
 import RoomForm from '../roomForm.tsx';
+import RoomService from '../../services/api/rooms/RoomsService.ts';
 
 
 
@@ -136,9 +137,11 @@ function LeftMenu() {
                     <ModalOverlay/>
                     <ExamForm refreshExams={getExamsList} onCloseExam={onClose}/>
                 </Modal>
+                <Button onClick={() => navigate("/rooms")}>Sale</Button>
+                <Button fontSize="1vw" width="90%" onClick={onRoomOpen} margin="0.5vw">Dodaj salę</Button>
                 <Modal isOpen={isRoomOpen} onClose={onRoomClose}>
                     <ModalOverlay/>
-                    <RoomForm onRoomClose={onRoomClose}/>
+                    <RoomForm onRoomClose={onRoomClose} refreshRooms={RoomService.getRooms}/>
                 </Modal>
                 <Accordion allowMultiple>
                     <AccordionItem>

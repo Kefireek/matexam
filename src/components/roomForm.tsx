@@ -15,7 +15,7 @@ import RoomService from "../services/api/rooms/RoomsService";
 import { RoomDescriptive } from "../interfaces/rooms";
 
 
-const RoomForm = (props: {onRoomClose: () => void}) => {
+const RoomForm = (props: {onRoomClose: () => void, refreshRooms: () => void}) => {
     const { 
         handleSubmit,
         register,
@@ -26,6 +26,7 @@ const RoomForm = (props: {onRoomClose: () => void}) => {
         const {number, size, computers} = values;
         console.log(number, size)
         await RoomService.createRoom({number, size, computers});
+        props.refreshRooms();
         props.onRoomClose();
     }
 

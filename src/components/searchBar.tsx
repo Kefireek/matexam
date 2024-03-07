@@ -35,6 +35,7 @@ const SearchBar = ({search}: {search: (value: string) => void }) => {
         </InputLeftAddon>
       </InputGroup>
     </Box>
+
   )
 }
 export default SearchBar;
