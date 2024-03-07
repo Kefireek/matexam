@@ -41,8 +41,7 @@ import { motion } from "framer-motion";
 import logo_white from "../../assets/logo_white.png";
 import logo_black from "../../assets/logo_black.png";
 import ExamForm from '../examForm.tsx';
-import RoomForm from '../roomForm.tsx';
-import RoomService from '../../services/api/rooms/RoomsService.ts';
+
 
 
 
@@ -51,7 +50,6 @@ function LeftMenu() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isOpenEdit, onOpen: onOpenEdit, onClose: onCloseEdit } = useDisclosure();
     const {isOpen: isCsvOpen, onOpen: onCsvOpen, onClose: onCsvClose} = useDisclosure();
-    const {isOpen: isRoomOpen, onOpen: onRoomOpen, onClose: onRoomClose} = useDisclosure();
     const {isOpen: isMenuWide, onOpen: onMenuOpen, onClose: onMenuClose, getDisclosureProps} = useDisclosure({defaultIsOpen: true});
 
     const [hidden, setHidden] = useState(!isMenuWide)
@@ -130,18 +128,12 @@ function LeftMenu() {
                 animate={{opacity: isMenuWide ? "100%" : "0%" }}>
                 <Flex direction="column">
                     <Button fontSize="1vw" width="90%" onClick={onOpen} margin="0.5vw">Dodaj egzamin <AddIcon ml="0.5vw" /></Button>
-                    <Button fontSize="1vw" width="90%" onClick={onRoomOpen} margin="0.5vw">Dodaj salę <AddIcon ml="0.5vw" /></Button>
                     <Button fontSize="1vw" width="90%" margin="0.5vw"><Link to={'/students'}>Uczniowie</Link></Button>
+                    <Button fontSize="1vw" width="90%" margin="0.5vw" onClick={() => navigate("/rooms")}>Sale</Button>
                 </Flex>
                 <Modal isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay/>
                     <ExamForm refreshExams={getExamsList} onCloseExam={onClose}/>
-                </Modal>
-                <Button onClick={() => navigate("/rooms")}>Sale</Button>
-                <Button fontSize="1vw" width="90%" onClick={onRoomOpen} margin="0.5vw">Dodaj salę</Button>
-                <Modal isOpen={isRoomOpen} onClose={onRoomClose}>
-                    <ModalOverlay/>
-                    <RoomForm onRoomClose={onRoomClose} refreshRooms={RoomService.getRooms}/>
                 </Modal>
                 <Accordion allowMultiple>
                     <AccordionItem>
