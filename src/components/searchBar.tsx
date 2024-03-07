@@ -1,3 +1,4 @@
+import { CheckIcon } from "@chakra-ui/icons";
 import { 
   Box, 
   Input, 
@@ -5,46 +6,36 @@ import {
   InputLeftAddon,
   Spinner
 } from "@chakra-ui/react";
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
-import { StudentDescriptive } from "../interfaces/students";
+import { useEffect, useState } from "react";
 
-const SearchBar = ({filterList, setFilterList}: {filterList: StudentDescriptive[] | undefined, setFilterList: Dispatch<SetStateAction<StudentDescriptive[]>>}) => {
-    const [searchValue, setSearchValue] = useState<string>('');
-    const [debouncedSearchValue, setDebouncedSearchValue] = useState<string>('');
+const SearchBar = ({search}: {search: (value: string) => void }) => {
+  const [searchValue, setSearchValue] = useState<string>('');
+  const [debouncedSearchValue, setDebouncedSearchValue] = useState<string>('');
 
-    const searchStudents = useCallback( (searchValue: string) =>  {
-      const students: StudentDescriptive[] = [];
+  const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+  };
 
-        filterList?.filter((item: StudentDescriptive) => {
-           if(item.PESEL.includes(searchValue) || item.name.includes(searchValue) || item.surname.includes(searchValue)) {
-              students.push(item);
-           }
-        });
-        setFilterList(students);
-    }, [filterList, setFilterList]);
-
-    const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchValue(e.target.value);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchValue(searchValue);
+      search(searchValue);
+    }, 1000);
+    return () => {
+      clearTimeout(timer);
     };
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setDebouncedSearchValue(searchValue);
-            searchStudents(searchValue);
-        }, 1000);
-        return () => {
-            clearTimeout(timer);
-        };
-    }, [searchValue, searchStudents]);
+  }, [searchValue, search]);
 
   return (
-      <Box display="flex">
-        <InputGroup>
-          <Input placeholder="Szukaj..." variant="filled" onChange={(e) => onSearchChange(e)} value={searchValue}/>
-          <InputLeftAddon backgroundColor="gray.800" border="none">
-            { <Spinner size="sm" opacity={(searchValue != debouncedSearchValue) ? 1 : 0 } background="none"/>}
-          </InputLeftAddon>
-        </InputGroup>
-      </Box>
+    <Box display="flex" width='100%'>
+      <InputGroup>
+        <Input placeholder="Szukaj..." variant="filled" onChange={(e) => onSearchChange(e)} value={searchValue} width='100%' height='100%' paddingY='6px' />
+        <InputLeftAddon backgroundColor="gray.800" border="none" height='100%'>
+          {searchValue != debouncedSearchValue ? <Spinner size="sm" /> : <CheckIcon boxSize={4} />}
+        </InputLeftAddon>
+      </InputGroup>
+    </Box>
+
   )
 }
 export default SearchBar;

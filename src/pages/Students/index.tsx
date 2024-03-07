@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
 import StudentsAPIService from "../../services/api/students/StudentsAPIService";
 import { StudentDescriptive } from "../../interfaces/students";
-import { Box, Heading, IconButton, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, IconButton, Modal, ModalOverlay, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import AssignToExamModal from "./AssignToExamModal";
+import StudentForm from "../../components/studentForm";
+import SearchBar from "../../components/searchBar";
 
 function StudentsPage() {
 
   const [studentsList, setStudentsList] = useState<StudentDescriptive[]>()
 
   const [selectedStudent, setSelectedStudent] = useState<StudentDescriptive>()
+
+  const {isOpen: isStudentOpen, onOpen: onStudentOpen, onClose: onStudentClose} = useDisclosure();
 
   const getStudentsList = () => {
     StudentsAPIService.getStudentsList().then((res)=>{
@@ -32,13 +36,21 @@ function StudentsPage() {
 
   return (
     <Box margin="1vw">
-      <Heading>Uczniowie</Heading>
+      <Flex direction='row' width='100%' gap='1vw' justifyContent='space-between'>
+        <Heading>Uczniowie</Heading>
+        <SearchBar search={getStudentsList} />
+        <Button fontSize="1vw" onClick={onStudentOpen} paddingX='1.5vw'>Dodaj ucznia <AddIcon ml="0.5vw" /></Button>
+      </Flex>
+      <Modal isOpen={isStudentOpen} onClose={onStudentClose} size="lg">
+        <ModalOverlay/>
+        <StudentForm onStudentClose={onStudentClose}/>
+      </Modal>
       <AssignToExamModal selectedStudent={selectedStudent} />
       <TableContainer>
         <Table variant='striped' colorScheme='teal'>
           <Thead>
             <Tr>
-              <Th>Nr w dzienniku</Th>
+              <Th>Nr</Th>
               <Th>Oddział</Th>
               <Th>Nazwisko</Th>
               <Th>Imię</Th>
