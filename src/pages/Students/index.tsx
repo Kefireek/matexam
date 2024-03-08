@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import StudentsAPIService from "../../services/api/students/StudentsAPIService";
 import { StudentDescriptive } from "../../interfaces/students";
 import { Box, Button, Flex, Heading, IconButton, Modal, ModalOverlay, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
@@ -6,22 +6,27 @@ import { AddIcon } from "@chakra-ui/icons";
 import AssignToExamModal from "./AssignToExamModal";
 import StudentForm from "../../components/studentForm";
 import SearchBar from "../../components/searchBar";
+import Pagination from "../../components/pagination";
 
 function StudentsPage() {
 
-  const [studentsList, setStudentsList] = useState<StudentDescriptive[]>()
-
-  const [selectedStudent, setSelectedStudent] = useState<StudentDescriptive>()
+  const [studentsList, setStudentsList] = useState<StudentDescriptive[]>();
+  const [selectedStudent, setSelectedStudent] = useState<StudentDescriptive>();
 
   const {isOpen: isStudentOpen, onOpen: onStudentOpen, onClose: onStudentClose} = useDisclosure();
 
-  const getStudentsList = () => {
-    StudentsAPIService.getStudentsList().then((res)=>{
-      setStudentsList(res.data)
+  const [total, setTotal] = useState(0);
+  const [skip, setSkip] = useState(0);
+  const take = 10;
+
+  const getStudentsList = useCallback((value: string) => {
+    StudentsAPIService.searchStudentsList(value, skip, take).then((res)=>{
+      setStudentsList(res.data.items)
+      setTotal(res.data.total)
     }).catch((err)=>{
       console.log(err);
     });
-  }
+  }, [skip])
 
   const assignToExam = (student: StudentDescriptive) => {
     setSelectedStudent(undefined)
@@ -31,11 +36,11 @@ function StudentsPage() {
   }
 
   useEffect(() => {
-    getStudentsList()
-  }, [])
+    getStudentsList('')
+  }, [getStudentsList])
 
   return (
-    <Box margin="1vw">
+    <Flex margin="1vw" direction='column'>
       <Flex direction='row' width='100%' gap='1vw' justifyContent='space-between'>
         <Heading>Uczniowie</Heading>
         <SearchBar search={getStudentsList} />
@@ -80,7 +85,10 @@ function StudentsPage() {
           </Tbody>
         </Table>
       </TableContainer>
-    </Box>
+      <Box alignSelf='flex-end' marginTop='10px'>
+        <Pagination total={total} skipChanged={setSkip} take={take} />
+      </Box>
+    </Flex>
   )
 }
 

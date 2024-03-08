@@ -163,7 +163,7 @@ function LeftMenu() {
                             }
                             <Stack spacing="3">
                                 {exams?.map((exam: ExamItem) =>
-                                <>
+                                
                                     <Card key={exam.id} variant="elevated" style={{cursor: "pointer"}}>
                                         <Link to={`/exam/${exam.id}`}>
                                         <Menu>
@@ -209,7 +209,7 @@ function LeftMenu() {
                                         </CardBody> 
                                         </Link>
                                     </Card>
-                                    </>
+                                
                                 ) ?? <Text>Wczytywanie...</Text>}
                             </Stack>
                         </AccordionPanel>

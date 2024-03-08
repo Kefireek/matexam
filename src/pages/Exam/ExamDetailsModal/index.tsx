@@ -76,7 +76,7 @@ function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam:
                         </Heading>
                         <Button onClick={onToggle}><CloseIcon /></Button>
                     </Flex>
-                    <Box overflowY="scroll" height="100%" mt="1vw">
+                    <Box overflowY="scroll" height="90%" mt="1vw">
                         <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(15vw, 1fr))'>
                             {props.room.students?.map((student)=>
                                 <Card key={student.PESEL} padding={4} bg={colorMode=="light" ? "RGBA(0, 0, 0, 0.08)" : "RGBA(0, 0, 0, 0.4)"}>
