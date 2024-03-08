@@ -14,9 +14,13 @@ import {
     ModalHeader 
 } from '@chakra-ui/react';
 import studentService from '../services/students/StudentService';
-
+import messageContext from '../contexts/messageContext';
+import { useContext } from 'react';
 
 const StudentForm = (props: {onStudentClose: () => void}) => {
+
+    const { setMessage } = useContext(messageContext)
+    
 
     const { 
         handleSubmit,
@@ -26,7 +30,12 @@ const StudentForm = (props: {onStudentClose: () => void}) => {
     
     const onSubmit = async (values: StudentDescriptive) => {
         const {PESEL,name,surname,department,ordinalNumber,phone,email,document} = values;
-        await studentService.addStudent({PESEL, name, surname, department, ordinalNumber, phone, email, document})
+        await studentService.addStudent({PESEL, name, surname, department, ordinalNumber, phone, email, document});
+        setMessage({
+            title: 'Pomyślnie dodano ucznia',
+            description: null,
+            status: 'success',
+        })
         props.onStudentClose();
     }
 

@@ -12,11 +12,11 @@ import {
     HStack,
     Radio,
 } from "@chakra-ui/react";
-
 import { useForm } from "react-hook-form";
 import { ExamItem, ExamType } from "../interfaces/exams";
 import ExamsAPIService from "../services/api/exams/ExamsAPIService";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import messageContext from "../contexts/messageContext";
 
 
 export type ExamFormModel = {
@@ -28,6 +28,7 @@ export type ExamFormModel = {
 
 const ExamForm = ({refreshExams, onCloseExam, examBody}: {refreshExams: () => void, onCloseExam: () => void,  examBody?: ExamItem}) => {
 
+    const { setMessage } = useContext(messageContext);
     
     const { 
         handleSubmit,
@@ -59,9 +60,19 @@ const ExamForm = ({refreshExams, onCloseExam, examBody}: {refreshExams: () => vo
             const exam = {name, type, startTime, endTime}
             if(examBody === undefined){
                 await ExamsAPIService.addExam(exam);
+                setMessage({
+                    title: 'Pomyślnie dodano egzamin',
+                    description: null,
+                    status: 'success', 
+                })
             }
             else{
                 await ExamsAPIService.editExam(exam, examBody.id)
+                setMessage({
+                    title: 'Pomyślnie zaaktualizowano egzamin',
+                    description: null,
+                    status: 'success', 
+                })
             }
             refreshExams();
             onCloseExam();

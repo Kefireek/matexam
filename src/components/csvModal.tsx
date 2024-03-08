@@ -19,16 +19,17 @@ import {
     InputLeftAddon,
     InputRightAddon,
 } from "@chakra-ui/react";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { CsvInput } from "../interfaces/data";
 import { StudentDescriptive } from "../interfaces/students";
 import DataService from "../services/api/data/dataService";
 import { PlusSquareIcon } from "@chakra-ui/icons";
+import messageContext from "../contexts/messageContext";
 
 
 const CsvModal = (props: {refreshExams: () => void}) => {
-
+    const { setMessage } = useContext(messageContext)
     const {
         handleSubmit,
         register,
@@ -83,7 +84,13 @@ const CsvModal = (props: {refreshExams: () => void}) => {
     }
     const onSubmit = async () => {
         if(data == undefined){
-            setErrorMsg("Nie wybrano pliku!");
+            setMessage(
+                {
+                    title: 'Nie wybrano pliku',
+                    description: null,
+                    status: 'error',
+                }
+            )
             return;
         }
         else {
@@ -91,6 +98,13 @@ const CsvModal = (props: {refreshExams: () => void}) => {
                 (res) => {
                     setResult(res.data)
                     props.refreshExams();
+                    setMessage(
+                        {
+                            title: 'Pomyślnie dodano dane',
+                            description: null,
+                            status: 'success',
+                        }
+                    )
                 }
             ).catch((err) => {
                 setErrorMsg(err.response.data);

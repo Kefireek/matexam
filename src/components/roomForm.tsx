@@ -13,9 +13,12 @@ import {
 import { useForm } from "react-hook-form";
 import RoomService from "../services/api/rooms/RoomsService";
 import { RoomDescriptive } from "../interfaces/rooms";
+import messageContext from "../contexts/messageContext";
+import { useContext } from "react";
 
 
 const RoomForm = (props: {onRoomClose: () => void, refreshRooms: () => void}) => {
+    const { setMessage } = useContext(messageContext);
     const { 
         handleSubmit,
         register,
@@ -26,6 +29,11 @@ const RoomForm = (props: {onRoomClose: () => void, refreshRooms: () => void}) =>
         const {number, size, computers} = values;
         console.log(number, size)
         await RoomService.createRoom({number, size, computers});
+        setMessage({
+            title: 'Pomyślnie dodano salę',
+            description: null,
+            status: 'success',
+        })
         props.refreshRooms();
         props.onRoomClose();
     }

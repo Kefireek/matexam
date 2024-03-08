@@ -33,7 +33,7 @@ import {
 import { useColorMode } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import CsvModal from '../csvModal.tsx';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AuthAPIService from '../../services/api/auth/AuthAPIService.ts';
 import { useMediaQuery } from '@chakra-ui/react';
@@ -41,12 +41,12 @@ import { motion } from "framer-motion";
 import logo_white from "../../assets/logo_white.png";
 import logo_black from "../../assets/logo_black.png";
 import ExamForm from '../examForm.tsx';
-
+import messageContext from '../../contexts/messageContext.ts';
 
 
 
 function LeftMenu() {
-
+    const { setMessage } = useContext(messageContext)
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isOpenEdit, onOpen: onOpenEdit, onClose: onCloseEdit } = useDisclosure();
     const {isOpen: isCsvOpen, onOpen: onCsvOpen, onClose: onCsvClose} = useDisclosure();
@@ -79,6 +79,11 @@ function LeftMenu() {
 
     const delExam = (id: number) => {
         ExamsAPIService.deleteExam(id).then(()=>{
+            setMessage({
+                title: 'Pomyślnie usunięto egzamin',
+                description: null,
+                status: 'success',
+            })
             getExamsList();
         })
     }
