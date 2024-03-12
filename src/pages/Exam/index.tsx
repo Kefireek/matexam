@@ -30,16 +30,9 @@ function ExamPage() {
     }, [gotoExam])
 
 
-    useEffect( ()=> {  
-        gotoExam()
-    }, [gotoExam])
-
-    
-
     const getExam = (examid: number) => {
         ExamsAPIService.getExam(examid).then((res)=>{
             setExamView(res.data)
-            console.log(res.data.unassignedStudents)
             setUnassignedStudents(res.data.unassignedStudents)
         }).catch((err)=>{
             console.log(err);
@@ -67,8 +60,8 @@ function ExamPage() {
 
 
     const fillExam = () => {
-        let unassignedStudentsCount = examView?.unassignedStudents.length;
-        const unassignedStudentsCountConst = examView?.unassignedStudents.length;
+        if(!examView) return
+        let unassignedStudentsCount = examView?.unassignedStudents.length; 
         const rooms = examView?.assignedStudents;
 
         rooms?.sort((a, b)=> b.size - a.size)
@@ -76,40 +69,44 @@ function ExamPage() {
         let assignments: StudentRoom[] = []
 
 
-        // ?????? dla jednego tylko
-        rooms?.forEach(room => {
+        rooms?.forEach((room, index) => {
             const freeSpace = room.size - (room.students?.length ?? 0);
-            if((((unassignedStudentsCountConst ?? 0) - freeSpace <= 0)) && examView){
+            const gap = (unassignedStudentsCount ?? 0) - freeSpace; 
+            if(freeSpace === 0){
+                    return
+            }
+            else if(gap===0 || ((room.students?.length ?? 0) > 0)){
                 if (freeSpace) {
                     assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))) 
                 }
-                unassignedStudentsCount = unassignedStudentsCount ?? 0 - freeSpace;
+                unassignedStudentsCount = (unassignedStudentsCount ?? 0) - freeSpace;
             }
-        });
-
-        rooms?.forEach(room => {
-            const freeSpace = room.size - (room.students?.length ?? 0);
-            if((((unassignedStudentsCount ?? 0) - freeSpace >= 0) || ((room.students?.length ?? 0) > 0)) && examView){
+            else if(gap > 0){
                 if (freeSpace) {
                     assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))) 
                 }
-                unassignedStudentsCount = unassignedStudentsCount ?? 0 - freeSpace;
+                unassignedStudentsCount = (unassignedStudentsCount ?? 0) - freeSpace;
+            }
+            else if((gap < 0) && index + 1 < rooms.length && ((unassignedStudentsCount ?? 0)-(rooms[index + 1].size - (rooms[index + 1].students?.length ?? 0)) > 0) && (rooms[index + 1].size - (rooms[index + 1].students?.length ?? 0)) != 0){
+                if (freeSpace) {
+                    assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))) 
+                }
+                unassignedStudentsCount = (unassignedStudentsCount ?? 0) - freeSpace;
             }
         });
 
-        rooms?.sort((a, b)=> a.size - b.size)
-
-        if((unassignedStudentsCount ?? 0) > 0){
-            rooms?.forEach(room => {
-                const freeSpace = room.size - (room.students?.length ?? 0);
-                if(((unassignedStudentsCount ?? 0) - freeSpace) <= 0 && examView){
-                    if (freeSpace) {
-                        assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number})))
-                    }
-                    unassignedStudentsCount = unassignedStudentsCount ?? 0 - freeSpace;
-                }
-            });
-        }
+        // rooms?.sort((a, b)=> a.size - b.size)
+        // if((unassignedStudentsCount ?? 0) > 0){
+        //     rooms?.forEach(room => {
+        //         const freeSpace = room.size - assignments.filter(a => a.number === room.number).length;
+        //         if(((unassignedStudentsCount ?? 0) - freeSpace) <= 0 || ((room.students?.length ?? 0) > 0)){
+        //             if (freeSpace) {
+        //                 assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number})))
+        //             }
+        //             unassignedStudentsCount = unassignedStudentsCount ?? 0 - freeSpace;
+        //         }
+        //     });
+        // }
 
         if(assignments.length > 0)
             ExamsAPIService.updateRoomAssignments(
@@ -162,13 +159,13 @@ function ExamPage() {
                     <TableContainer width="46vw">
                         <Table variant='striped' colorScheme='teal'>
                             <Thead>
-                            <Tr>
-                                <Th>Nr</Th>
-                                <Th>Oddział</Th>
-                                <Th>Nazwisko</Th>
-                                <Th>Imię</Th>
-                                <Th>PESEL</Th>
-                            </Tr>
+                                <Tr>
+                                    <Th>Nr</Th>
+                                    <Th>Oddział</Th>
+                                    <Th>Nazwisko</Th>
+                                    <Th>Imię</Th>
+                                    <Th>PESEL</Th>
+                                </Tr>
                             </Thead>
                             <Tbody>
                                 {unassignedStudents.map((student)=>
@@ -197,37 +194,9 @@ function ExamPage() {
                                             </Menu>
                                         </Td>
                                     </Tr>
-                                </Thead>
-                                <Tbody>
-                                    {unassignedStudents.map((student)=>
-                                        <Tr key={student.PESEL}>
-                                            <Td>{student.ordinalNumber}</Td>
-                                            <Td>{student.department}</Td>
-                                            <Td>{student.surname}</Td>
-                                            <Td>{student.name}</Td>
-                                            <Td>{student.PESEL}</Td>
-                                            <Td>
-                                                <Menu>
-                                                    <MenuButton
-                                                        as={IconButton}
-                                                        aria-label='Options'
-                                                        icon={<AddIcon />}
-                                                        variant='outline'
-                                                    />
-                                                    <MenuList>
-                                                        <MenuGroup title="Dodaj do sali">
-                                                        {examView?.assignedStudents.map((room) =>
-                                                            <MenuItem key={room.number} onClick={()=> assignStudent(student.PESEL, room.number)}> Sala nr {room.number}</MenuItem>
-                                                        )
-                                                        }
-                                                        </MenuGroup>
-                                                    </MenuList>
-                                                </Menu>
-                                            </Td>
-                                        </Tr>
-                                    )}
-                                </Tbody>
-                                <Tfoot>
+                                )}
+                            </Tbody>
+                            <Tfoot>
                                 <Tr>
                                     <Th>Nr</Th>
                                     <Th>Oddział</Th>
@@ -235,11 +204,10 @@ function ExamPage() {
                                     <Th>Imię</Th>
                                     <Th>PESEL</Th>
                                 </Tr>
-                                </Tfoot>
-                            </Table>
-                        </TableContainer>
+                            </Tfoot>
+                        </Table>
+                    </TableContainer>
                 </Box>
-                </Flex>
             </Box>
         </Box>
         </Box>

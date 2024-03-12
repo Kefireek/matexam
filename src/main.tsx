@@ -12,6 +12,7 @@ import ExamPage from './pages/Exam/index.tsx';
 import { interceptorInit } from './interceptors/authInterceptor.ts';
 import StudentsPage from './pages/Students/index.tsx';
 import { errorInterceptor } from './interceptors/errorInterceptor.ts';
+import RoomPage from './pages/Rooms/index.tsx';
 
 
 export const router = createBrowserRouter([
@@ -29,6 +30,11 @@ export const router = createBrowserRouter([
       {
         path: "/students",
         element: <StudentsPage />,
+        errorElement: <ErrorPage />
+      },
+      {
+        path: "/rooms",
+        element: <RoomPage />,
         errorElement: <ErrorPage />
       }
     ],
