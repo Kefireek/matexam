@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 
-import { Badge, Box, Button, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableContainer, Tbody, Td, Text, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
+import { Badge, Box, Button, Flex, IconButton, Menu, MenuButton, MenuGroup, MenuItem, MenuList, SimpleGrid, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import { ExamView, StudentRoom } from "../../interfaces/exams";
 
@@ -9,10 +9,18 @@ import ExamDetailsModal from "./ExamDetailsModal";
 import { AddIcon } from "@chakra-ui/icons";
 import SearchBar from "../../components/searchBar";
 import { StudentDescriptive } from "../../interfaces/students";
+import Pagination from "../../components/pagination";
 
 
 function ExamPage() {
     const { examid } = useParams() as unknown as examParams;
+
+    const [lastSearch, setLastSearch] = useState('');
+    const [skip, setSkip] = useState(0);
+    const take = 8;
+
+    const [roomSkip, setRoomSkip] = useState(0);
+    const roomTake = 12;
 
     const [examView, setExamView] = useState<ExamView>();
     const [unassignedStudents, setUnassignedStudents] = useState<ExamView["unassignedStudents"]>([]);
@@ -50,18 +58,14 @@ function ExamPage() {
         });
     }
 
-    const searchStudents = useCallback( (searchValue: string) =>  {
-        searchValue = searchValue.toLowerCase();
-        const students: StudentDescriptive[] = [];
-    
-        examView?.unassignedStudents?.forEach((item: StudentDescriptive) => {
-          if(item.PESEL.includes(searchValue) || item.name.toLowerCase().includes(searchValue) || item.surname.toLowerCase().includes(searchValue)) {
-            students.push(item);
-          }
-        });
+    useEffect(() =>  {
+        const searchValue = lastSearch.toLowerCase();
+        const students: StudentDescriptive[] = examView?.unassignedStudents?.filter((item: StudentDescriptive) => {
+            return item.PESEL.includes(searchValue) || item.name.toLowerCase().includes(searchValue) || item.surname.toLowerCase().includes(searchValue)
+        }) ?? []
         
         setUnassignedStudents(students);
-      }, [examView?.unassignedStudents, setUnassignedStudents]);
+      }, [examView?.unassignedStudents, setUnassignedStudents, lastSearch]);
 
 
     const fillExam = () => {
@@ -158,14 +162,17 @@ function ExamPage() {
             <Box marginTop="2vw" display="flex" justifyContent="space-between">
                 <Box>
                     <SimpleGrid width="46vw" spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))'>
-                        {examView?.assignedStudents.map((room) =>
+                        {examView?.assignedStudents.slice(roomSkip, roomSkip + roomTake).map((room) =>
                             <ExamDetailsModal key={room.number} room={room} examid={examid} getExam={getExam} unassignedStudents={examView?.unassignedStudents}/>
                         )
                         }
                     </SimpleGrid>
+                    <Box float={'right'} paddingTop={'10px'}>
+                        <Pagination key={'pag'} total={examView?.assignedStudents.length ?? 0} take={roomTake} skipChanged={setRoomSkip}  />
+                    </Box>
                 </Box>
                 <Box ml="1vw">
-                    <SearchBar search={searchStudents} />
+                    <SearchBar search={setLastSearch} />
                     <TableContainer width="46vw">
                         <Table variant='striped' colorScheme='teal'>
                             <Thead>
@@ -178,7 +185,7 @@ function ExamPage() {
                                 </Tr>
                             </Thead>
                             <Tbody>
-                                {unassignedStudents.map((student)=>
+                                {unassignedStudents.slice(skip, skip + take).map((student)=>
                                     <Tr key={student.PESEL}>
                                         <Td>{student.ordinalNumber}</Td>
                                         <Td>{student.department}</Td>
@@ -206,17 +213,11 @@ function ExamPage() {
                                     </Tr>
                                 )}
                             </Tbody>
-                            <Tfoot>
-                                <Tr>
-                                    <Th>Nr</Th>
-                                    <Th>Oddział</Th>
-                                    <Th>Nazwisko</Th>
-                                    <Th>Imię</Th>
-                                    <Th>PESEL</Th>
-                                </Tr>
-                            </Tfoot>
                         </Table>
                     </TableContainer>
+                    <Box float={'right'} paddingTop={'10px'}>
+                        <Pagination take={take} key={'pag-' + lastSearch} total={unassignedStudents.length} skipChanged={setSkip} />
+                    </Box>
                 </Box>
             </Box>
         </Box>

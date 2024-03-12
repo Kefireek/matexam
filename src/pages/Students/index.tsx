@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import StudentsAPIService from "../../services/api/students/StudentsAPIService";
 import { StudentDescriptive } from "../../interfaces/students";
 import { Box, Button, Flex, Heading, IconButton, Modal, ModalOverlay, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
@@ -10,6 +10,7 @@ import Pagination from "../../components/pagination";
 
 function StudentsPage() {
 
+  const [lastSearch, setLastSearch] = useState('');
   const [studentsList, setStudentsList] = useState<StudentDescriptive[]>();
   const [selectedStudent, setSelectedStudent] = useState<StudentDescriptive>();
 
@@ -19,14 +20,14 @@ function StudentsPage() {
   const [skip, setSkip] = useState(0);
   const take = 10;
 
-  const getStudentsList = useCallback((value: string) => {
-    StudentsAPIService.searchStudentsList(value, skip, take).then((res)=>{
+  useEffect(() => {
+    StudentsAPIService.searchStudentsList(lastSearch, skip, take).then((res)=>{
       setStudentsList(res.data.items)
       setTotal(res.data.total)
     }).catch((err)=>{
       console.log(err);
     });
-  }, [skip])
+  }, [lastSearch, skip])
 
   const assignToExam = (student: StudentDescriptive) => {
     setSelectedStudent(undefined)
@@ -35,15 +36,11 @@ function StudentsPage() {
     })
   }
 
-  useEffect(() => {
-    getStudentsList('')
-  }, [getStudentsList])
-
   return (
     <Flex margin="1vw" direction='column'>
       <Flex direction='row' width='100%' gap='1vw' justifyContent='space-between'>
         <Heading>Uczniowie</Heading>
-        <SearchBar search={getStudentsList} />
+        <SearchBar search={setLastSearch} />
         <Button fontSize="1vw" onClick={onStudentOpen} paddingX='1.5vw'>Dodaj ucznia <AddIcon ml="0.5vw" /></Button>
       </Flex>
       <Modal isOpen={isStudentOpen} onClose={onStudentClose} size="lg">
@@ -86,7 +83,7 @@ function StudentsPage() {
         </Table>
       </TableContainer>
       <Box alignSelf='flex-end' marginTop='10px'>
-        <Pagination total={total} skipChanged={setSkip} take={take} />
+        <Pagination total={total} skipChanged={setSkip} take={take} key={'pag-' + lastSearch} />
       </Box>
     </Flex>
   )
