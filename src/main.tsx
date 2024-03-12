@@ -13,6 +13,7 @@ import { interceptorInit } from './interceptors/authInterceptor.ts';
 import StudentsPage from './pages/Students/index.tsx';
 import { errorInterceptor } from './interceptors/errorInterceptor.ts';
 import RoomPage from './pages/Rooms/index.tsx';
+import MainPage from './pages/Main/index.tsx';
 
 
 export const router = createBrowserRouter([
@@ -22,6 +23,11 @@ export const router = createBrowserRouter([
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        path: "/",
+        element: <MainPage />,
+        errorElement: <ErrorPage />
+      },
       {
         path: "/exam/:examid",
         element: <ExamPage />,

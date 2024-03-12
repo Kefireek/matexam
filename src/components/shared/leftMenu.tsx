@@ -150,7 +150,7 @@ function LeftMenu() {
                             <AccordionIcon />
                         </AccordionButton>
                         </h2>
-                        <AccordionPanel pb={4} height="40vh" overflowY="auto" overflowX="hidden" >
+                        <AccordionPanel pb={4} height="40vh" overflowY="auto" overflowX="hidden">
                             {exams?.length !== undefined && exams?.length <= 0 &&
                                 <Card height="100%">
                                     <CardBody>
