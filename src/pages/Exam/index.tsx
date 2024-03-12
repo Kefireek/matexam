@@ -30,14 +30,9 @@ function ExamPage() {
     }, [gotoExam])
 
 
-    useEffect( ()=> {  
-        gotoExam()
-    }, [gotoExam])
-
     const getExam = (examid: number) => {
         ExamsAPIService.getExam(examid).then((res)=>{
             setExamView(res.data)
-            console.log(res.data.unassignedStudents)
             setUnassignedStudents(res.data.unassignedStudents)
         }).catch((err)=>{
             console.log(err);
@@ -71,10 +66,8 @@ function ExamPage() {
 
         rooms?.sort((a, b)=> b.size - a.size)
         
-        console.log(rooms);
         let assignments: StudentRoom[] = []
 
-        console.log("ds");
 
         rooms?.forEach((room, index) => {
             const freeSpace = room.size - (room.students?.length ?? 0);
@@ -83,21 +76,18 @@ function ExamPage() {
                     return
             }
             else if(gap===0 || ((room.students?.length ?? 0) > 0)){
-                    console.log(room.number + " " +  unassignedStudentsCount + " " + freeSpace)
-                     if (freeSpace) {
+                if (freeSpace) {
                     assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))) 
                 }
                 unassignedStudentsCount = (unassignedStudentsCount ?? 0) - freeSpace;
             }
             else if(gap > 0){
-                console.log(room.number + " " +  unassignedStudentsCount + " " + freeSpace)
                 if (freeSpace) {
                     assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))) 
                 }
                 unassignedStudentsCount = (unassignedStudentsCount ?? 0) - freeSpace;
             }
             else if((gap < 0) && index + 1 < rooms.length && ((unassignedStudentsCount ?? 0)-(rooms[index + 1].size - (rooms[index + 1].students?.length ?? 0)) > 0) && (rooms[index + 1].size - (rooms[index + 1].students?.length ?? 0)) != 0){
-                console.log(room.number + " " +  unassignedStudentsCount + " " + freeSpace)
                 if (freeSpace) {
                     assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))) 
                 }

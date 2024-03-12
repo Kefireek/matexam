@@ -71,7 +71,6 @@ function LeftMenu() {
     const getExamsList = () => {
         ExamsAPIService.getExams().then((res)=>{
             setExams(res)
-            console.log(res)
         }).catch((err)=>{
             console.log(err);
         });
