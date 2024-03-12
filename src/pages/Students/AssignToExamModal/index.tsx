@@ -42,7 +42,7 @@ function AssignToExamModal({selectedStudent}: {selectedStudent?: StudentDescript
     }
   }, [selectedStudent, onOpen, onClose, replace])
 
-  const onSubmit = (values: any) => {
+  const onSubmit = (values: unknown) => {
     const assignments = {
       toAssign: assignableExams.unassigned.filter(e => !(values.assignments.filter(v => !v.value).map(v => v.id).includes(e.id))).map(e => e.id),
       toUnassign: assignableExams.assigned.filter(e => !(values.assignments.filter(v => v.value).map(v => v.id).includes(e.id))).map(e => e.id),
