@@ -30,7 +30,7 @@ const SearchBar = ({search}: {search: (value: string) => void }) => {
     <Box display="flex" width='100%'>
       <InputGroup>
         <Input placeholder="Szukaj..." type="search" variant="filled" onChange={(e) => onSearchChange(e)} value={searchValue} width='100%' height='100%' paddingY='6px' />
-        <InputLeftAddon backgroundColor="gray.800" border="none" height='100%'>
+        <InputLeftAddon backgroundColor="transparent" border="none" height='100%'>
           {searchValue != debouncedSearchValue ? <Spinner size="sm" /> : <CheckIcon boxSize={4} />}
         </InputLeftAddon>
       </InputGroup>

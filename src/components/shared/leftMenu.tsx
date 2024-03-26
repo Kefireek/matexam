@@ -179,8 +179,8 @@ function LeftMenu() {
                                                     >
                                                     </MenuButton>
                                                     <MenuList>
-                                                        <MenuItem onClick={() => {setEditedExam(exam); onOpenEdit()}}>Edit</MenuItem>
-                                                        <MenuItem onClick={()=> delExam(exam.id)}>Delete</MenuItem>
+                                                        <MenuItem onClick={() => {setEditedExam(exam); onOpenEdit()}}>Edytuj</MenuItem>
+                                                        <MenuItem onClick={()=> delExam(exam.id)}>Usuń</MenuItem>
                                                     </MenuList>
                                                 </>
                                             )}

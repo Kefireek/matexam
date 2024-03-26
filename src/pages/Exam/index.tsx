@@ -130,20 +130,24 @@ function ExamPage() {
                     <Badge marginLeft="0.5vw" fontSize="2xl">{examView?.type == "basic" ? "Podstawowy" : (examView?.type == "extended" ? "Rozszerzony" : "Ustny")}</Badge>
                 </Text>
                 <Box ml="1vw">
-                    <Text fontSize="1vw">
-                        Od: <b></b>
-                        {
-                            examView?.startTime &&
-                                new Date(examView?.startTime?.toString()).toLocaleString("pl-PL", {year: "numeric", month: "2-digit", day: "2-digit",hour: '2-digit', minute: "2-digit", weekday: "short"})
-                        }
-                    </Text>
-                    <Text fontSize="1vw">
-                        Do: <b></b>
-                        {
-                            examView?.endTime &&
-                                new Date(examView?.endTime?.toString()).toLocaleString("pl-PL", {year: "numeric", month: "2-digit", day: "2-digit",hour: '2-digit', minute: "2-digit", weekday: "short"})
-                        }
-                    </Text>
+                    {
+                        examView?.startTime && <Text fontSize="1vw">
+                            Od: <b>
+                            {
+                                new Date(examView.startTime.toString()).toLocaleString("pl-PL", {year: "numeric", month: "2-digit", day: "2-digit",hour: '2-digit', minute: "2-digit", weekday: "short"})
+                            }
+                            </b>
+                        </Text>
+                    }
+                    {
+                        examView?.endTime && <Text fontSize="1vw">
+                            Do: <b>
+                            {
+                                new Date(examView.endTime.toString()).toLocaleString("pl-PL", {year: "numeric", month: "2-digit", day: "2-digit",hour: '2-digit', minute: "2-digit", weekday: "short"})
+                            }
+                            </b>
+                        </Text>
+                    }
                 </Box>
                 <Button onClick={() => fillExam()} marginLeft="auto" justifySelf="end">Wypełnij egzamin</Button>              
             </Flex>

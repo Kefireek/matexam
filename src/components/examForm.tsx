@@ -16,7 +16,8 @@ import {
 import { useForm } from "react-hook-form";
 import { ExamItem, ExamType } from "../interfaces/exams";
 import ExamsAPIService from "../services/api/exams/ExamsAPIService";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import messageContext from "../contexts/messageContext";
 
 
 export type ExamFormModel = {
@@ -28,7 +29,6 @@ export type ExamFormModel = {
 
 const ExamForm = ({refreshExams, onCloseExam, examBody}: {refreshExams: () => void, onCloseExam: () => void,  examBody?: ExamItem}) => {
 
-    
     const { 
         handleSubmit,
         register,
@@ -39,6 +39,8 @@ const ExamForm = ({refreshExams, onCloseExam, examBody}: {refreshExams: () => vo
     const [examType, setExamType] = useState(examBody?.type);
     const [examStartTime, setExamStartTime] = useState(examBody?.startTime);
     const [examEndTime, setExamEndTime] = useState(examBody?.endTime);
+
+    const { setMessage } = useContext(messageContext)
 
     useEffect(()=>{
         setExamName(examBody?.name)
@@ -59,9 +61,19 @@ const ExamForm = ({refreshExams, onCloseExam, examBody}: {refreshExams: () => vo
             const exam = {name, type, startTime, endTime}
             if(examBody === undefined){
                 await ExamsAPIService.addExam(exam);
+                setMessage({
+                    title: 'Pomyślnie dodano egzamin',
+                    description: null,
+                    status: 'success'
+                })
             }
             else{
                 await ExamsAPIService.editExam(exam, examBody.id)
+                setMessage({
+                    title: 'Pomyślnie zedytowano egzamin',
+                    description: null,
+                    status: 'success'
+                })
             }
             refreshExams();
             onCloseExam();
