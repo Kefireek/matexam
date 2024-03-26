@@ -5,7 +5,7 @@ const MainPage = () => {
 
   return (
     <Box margin="1vw">
-      <Text>EL</Text>
+      <Text>MainPage MatExam</Text>
     </Box>
   )
 }

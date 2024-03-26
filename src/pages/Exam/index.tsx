@@ -64,30 +64,16 @@ function ExamPage() {
         let unassignedStudentsCount = examView?.unassignedStudents.length; 
         const rooms = examView?.assignedStudents;
 
-        rooms?.sort((a, b)=> b.size - a.size)
+        rooms?.sort((a, b)=> (b.students?.length ?? 0) - (a.students?.length ?? 0) || b.size - a.size)
         
         let assignments: StudentRoom[] = []
 
 
         rooms?.forEach((room, index) => {
             const freeSpace = room.size - (room.students?.length ?? 0);
-            const gap = (unassignedStudentsCount ?? 0) - freeSpace; 
-            if(freeSpace === 0){
-                    return
-            }
-            else if(gap===0 || ((room.students?.length ?? 0) > 0)){
-                if (freeSpace) {
-                    assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))) 
-                }
-                unassignedStudentsCount = (unassignedStudentsCount ?? 0) - freeSpace;
-            }
-            else if(gap > 0){
-                if (freeSpace) {
-                    assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))) 
-                }
-                unassignedStudentsCount = (unassignedStudentsCount ?? 0) - freeSpace;
-            }
-            else if((gap < 0) && index + 1 < rooms.length && ((unassignedStudentsCount ?? 0)-(rooms[index + 1].size - (rooms[index + 1].students?.length ?? 0)) > 0) && (rooms[index + 1].size - (rooms[index + 1].students?.length ?? 0)) != 0){
+            //const gap = (unassignedStudentsCount ?? 0) - freeSpace; 
+            if(freeSpace === 0) return
+            if(((room.students?.length ?? 0) > 0) || ((index + 1 < rooms.length && ((unassignedStudentsCount ?? 0)-(rooms[index + 1].size - (rooms[index + 1].students?.length ?? 0)) > 0) && (rooms[index + 1].size - (rooms[index + 1].students?.length ?? 0)) != 0)) || (index + 1 == rooms.length)){
                 if (freeSpace) {
                     assignments = assignments.concat(examView.unassignedStudents.splice(0, freeSpace).map(st => ({PESEL : st.PESEL, number : room.number}))) 
                 }
