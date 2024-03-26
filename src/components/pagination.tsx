@@ -17,7 +17,7 @@ const Pagination = ({total, take, skipChanged}: {total: number, take: number, sk
         <IconButton aria-label={(currentPage - 1).toString()} onClick={(_) => setCurrentPage(currentPage - 1)} key={currentPage - 1} variant={'ghost'} icon={<span>{currentPage - 1}</span>} /></>
       )}
       {<IconButton key={currentPage} aria-label={currentPage.toString()} icon={<span>{currentPage}</span>} />}
-      {currentPage < Math.floor(total / take) - 1 && (
+      {currentPage < Math.ceil(total / take) - 1 && (
         <><IconButton aria-label={(currentPage + 1).toString()} icon={<span>{currentPage + 1}</span>} onClick={(_) => setCurrentPage(currentPage + 1)} key={currentPage + 1} variant={'ghost'} />
         <IconButton key='dots2' variant={'ghost'} aria-label='dots 2' isDisabled={true} icon={<span>...</span>} /></>
       )}
