@@ -1,4 +1,4 @@
-import { KeyboardEventHandler, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useForm } from 'react-hook-form'
 import {
@@ -32,7 +32,7 @@ export default function HookForm() {
       })
   }
 
-  const handleKeyPress = (e : KeyboardEventHandler<HTMLInputElement>) => {
+  const handleKeyPress = (e : React.KeyboardEvent) => {
     if(e.key === 'Enter'){
       onSubmit();
     }
