@@ -57,6 +57,7 @@ export const router = createBrowserRouter([
 ]);
 
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
+console.log(axios.defaults.baseURL)
 interceptorInit();
 errorInterceptor();
 
