@@ -11,6 +11,7 @@ import {
     RadioGroup,
     HStack,
     Radio,
+    Checkbox,
 } from "@chakra-ui/react";
 
 import { useForm } from "react-hook-form";
@@ -23,7 +24,8 @@ export type ExamFormModel = {
     name: string,
     startTime: Date,
     endTime: Date,
-    type: ExamType
+    type: ExamType,
+    computers: boolean
 }
 
 const ExamForm = ({refreshExams, onCloseExam, examBody}: {refreshExams: () => void, onCloseExam: () => void,  examBody?: ExamItem}) => {
@@ -50,13 +52,13 @@ const ExamForm = ({refreshExams, onCloseExam, examBody}: {refreshExams: () => vo
     }
 
     const onSubmit = async (values: ExamFormModel) => {
-        const {name, startTime, endTime, type} = values;
+        const {name, startTime, endTime, type, computers} = values;
         const validDates = compareTime(startTime, endTime);
         if(validDates !== true){
             alert("Data zakończenia powinna być później niż data rozpoczęcia")
         }
         else{
-            const exam = {name, type, startTime, endTime}
+            const exam = {name, type, startTime, endTime, computers}
             if(examBody === undefined){
                 await ExamsAPIService.addExam(exam);
             }
@@ -128,7 +130,11 @@ const ExamForm = ({refreshExams, onCloseExam, examBody}: {refreshExams: () => vo
                             )} />
                         <FormErrorMessage> {errors.endTime && errors.endTime?.message}</FormErrorMessage>
                     </FormControl>
-                    <Button type="submit" id="exam-form" isLoading={isSubmitting} colorScheme='teal'>Zatwierdź!</Button>
+                    <FormControl>
+                        <FormLabel>Sala komputerowa </FormLabel> 
+                        <Checkbox {...register('computers')}/>
+                    </FormControl>
+                    <Button style={{margin: "10px 0px 10px 0px"}} type="submit" id="exam-form" isLoading={isSubmitting} colorScheme='teal'>Zatwierdź!</Button>
                 </form>
             </ModalBody>
         </ModalContent>

@@ -6,6 +6,7 @@ import ModalSpinner from "./components/modalSpinner"
 import { Outlet } from "react-router-dom"
 import messageContext, { Message } from "./contexts/messageContext"
 import MessagesContainer from "./components/shared/MessagesContainer"
+import MainPage from "./pages/Main"
 
 
 function App() {
