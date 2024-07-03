@@ -1,4 +1,4 @@
-import { Modal, useDisclosure, Box, Flex } from "@chakra-ui/react"
+import { Modal, useDisclosure, Box, Flex, Text } from "@chakra-ui/react"
 import LeftMenu from "./components/shared/leftMenu"
 import { getPage } from "./services/api/healthCheck/HealthCheckService"
 import { useState, useEffect } from "react"
@@ -32,7 +32,8 @@ function App() {
         throw new Error('Unable to load page due to server health check error')
       }
     )
-  }, [])
+  }, [onClose, onOpen])
+  
   
 
   return (
@@ -45,6 +46,7 @@ function App() {
             <ModalSpinner/>
           </Modal>}
           <Outlet />
+
         </Box>
       </Flex>
       <MessagesContainer />

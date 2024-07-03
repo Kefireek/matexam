@@ -3,17 +3,22 @@ import RoomService from "../../services/api/rooms/RoomsService";
 import { RoomDescriptive } from "../../interfaces/rooms";
 import { Box, Button, Flex, Heading, Modal, ModalOverlay, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useDisclosure } from "@chakra-ui/react";
 import RoomForm from "../../components/roomForm";
+import { AddIcon } from "@chakra-ui/icons";
+import Pagination from "../../components/pagination";
 
 const RoomPage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [rooms, setRooms] = useState<RoomDescriptive[]>([]);
+  const [skip, setSkip] = useState(0);
+  const take = 15;
+
   useEffect(() => {
-      updateRooms();
+    updateRooms();
   },[]);
 
   const updateRooms = () => {
     RoomService.getRooms().then((res) => {
-        setRooms(res.data);
+      setRooms(res.data);
     }).catch((err) => {
       console.log(err);
     });
@@ -23,7 +28,7 @@ const RoomPage = () => {
       <TableContainer>
         <Flex justifyContent="space-between">
           <Heading>Sale</Heading>
-          <Button onClick={onOpen}>Dodaj salę</Button>
+          <Button onClick={onOpen}>Dodaj salę <AddIcon ml="0.5vw" /></Button>
               <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay/>
                 <RoomForm onRoomClose={onClose} refreshRooms={updateRooms}/>
@@ -38,7 +43,7 @@ const RoomPage = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {rooms?.map((room, i) => (
+            {rooms?.slice(skip, skip + take).map((room, i) => (
               <Tr key={i}>
                 <Td>{room.number}</Td>
                 <Td>{room.size}</Td>
@@ -48,6 +53,9 @@ const RoomPage = () => {
           </Tbody>
         </Table>
       </TableContainer>
+      <Box float={'right'} paddingTop={'10px'}>
+        <Pagination total={rooms.length} take={take} skipChanged={setSkip} />
+      </Box>
     </Box>
   )
 }

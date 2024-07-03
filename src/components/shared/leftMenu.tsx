@@ -71,7 +71,6 @@ function LeftMenu() {
     const getExamsList = () => {
         ExamsAPIService.getExams().then((res)=>{
             setExams(res)
-            console.log(res)
         }).catch((err)=>{
             console.log(err);
         });
@@ -151,7 +150,7 @@ function LeftMenu() {
                             <AccordionIcon />
                         </AccordionButton>
                         </h2>
-                        <AccordionPanel pb={4} height="40vh" overflowY="auto" overflowX="hidden" >
+                        <AccordionPanel pb={4} height="40vh" overflowY="auto" overflowX="hidden">
                             {exams?.length !== undefined && exams?.length <= 0 &&
                                 <Card height="100%">
                                     <CardBody>
@@ -163,7 +162,7 @@ function LeftMenu() {
                             }
                             <Stack spacing="3">
                                 {exams?.map((exam: ExamItem) =>
-                                <>
+                                
                                     <Card key={exam.id} variant="elevated" style={{cursor: "pointer"}}>
                                         <Link to={`/exam/${exam.id}`}>
                                         <Menu>
@@ -180,8 +179,8 @@ function LeftMenu() {
                                                     >
                                                     </MenuButton>
                                                     <MenuList>
-                                                        <MenuItem onClick={() => {setEditedExam(exam); onOpenEdit()}}>Edit</MenuItem>
-                                                        <MenuItem onClick={()=> delExam(exam.id)}>Delete</MenuItem>
+                                                        <MenuItem onClick={() => {setEditedExam(exam); onOpenEdit()}}>Edytuj</MenuItem>
+                                                        <MenuItem onClick={()=> delExam(exam.id)}>Usuń</MenuItem>
                                                     </MenuList>
                                                 </>
                                             )}
@@ -209,7 +208,7 @@ function LeftMenu() {
                                         </CardBody> 
                                         </Link>
                                     </Card>
-                                    </>
+                                
                                 ) ?? <Text>Wczytywanie...</Text>}
                             </Stack>
                         </AccordionPanel>

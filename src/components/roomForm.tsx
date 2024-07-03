@@ -13,6 +13,8 @@ import {
 import { useForm } from "react-hook-form";
 import RoomService from "../services/api/rooms/RoomsService";
 import { RoomDescriptive } from "../interfaces/rooms";
+import { useContext } from "react";
+import messageContext from "../contexts/messageContext";
 
 
 const RoomForm = (props: {onRoomClose: () => void, refreshRooms: () => void}) => {
@@ -22,10 +24,16 @@ const RoomForm = (props: {onRoomClose: () => void, refreshRooms: () => void}) =>
         formState: {errors, isSubmitting},
     } = useForm<RoomDescriptive>();
 
+    const { setMessage } = useContext(messageContext)
+
     const onSubmit = async (values: RoomDescriptive) => {
         const {number, size, computers} = values;
-        console.log(number, size)
         await RoomService.createRoom({number, size, computers});
+        setMessage({
+            title: 'Pomyślnie dodano salę',
+            description: null,
+            status: 'success'
+        });
         props.refreshRooms();
         props.onRoomClose();
     }
@@ -64,7 +72,7 @@ const RoomForm = (props: {onRoomClose: () => void, refreshRooms: () => void}) =>
                     <FormErrorMessage> {errors.size && errors.size.message}</FormErrorMessage>
                 </FormControl>
                 <FormControl>
-                    <FormLabel>czy sala posiada komputery?</FormLabel> 
+                    <FormLabel>Czy sala posiada komputery?</FormLabel> 
                     <Checkbox {...register('computers')}/>
                 </FormControl>
                 <Button type="submit" id="exam-form" isLoading={isSubmitting} colorScheme='teal'>Zatwierdź!</Button>
