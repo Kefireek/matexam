@@ -38,4 +38,4 @@ Głównym celem aplikacji jest zautomatyzowanie pracy personelu szkolnego, któr
   
    Opcja ta tworzy najkorzystniejsze ułożenie uczniów w salach o róznych rozmiarach, tak aby jak najmniej sal zostało zajętych, jednocześnie wykorzystując jak najwięcej miejsc w używanych już pomieszczeniach. Oznacza to, że unikniemy sytuacji, w której zabralibyśmy możliwość wykorzystywania ich do innych egzaminów lub lekcji.
 
-- Istnieje również możliwość automatycznego wypełnienia wybranej przez nas sali. Dzięki temu użytkownik jest w stanie dostosować indywidualnie wybór sal.
+- Istnieje również możliwość automatycznego wypełnienia wybranej przez nas sali.
