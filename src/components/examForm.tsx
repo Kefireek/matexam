@@ -11,24 +11,26 @@ import {
     RadioGroup,
     HStack,
     Radio,
+    Checkbox,
 } from "@chakra-ui/react";
 
 import { useForm } from "react-hook-form";
 import { ExamItem, ExamType } from "../interfaces/exams";
 import ExamsAPIService from "../services/api/exams/ExamsAPIService";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import messageContext from "../contexts/messageContext";
 
 
 export type ExamFormModel = {
     name: string,
     startTime: Date,
     endTime: Date,
-    type: ExamType
+    type: ExamType,
+    computers: boolean
 }
 
 const ExamForm = ({refreshExams, onCloseExam, examBody}: {refreshExams: () => void, onCloseExam: () => void,  examBody?: ExamItem}) => {
 
-    
     const { 
         handleSubmit,
         register,
@@ -40,6 +42,8 @@ const ExamForm = ({refreshExams, onCloseExam, examBody}: {refreshExams: () => vo
     const [examStartTime, setExamStartTime] = useState(examBody?.startTime);
     const [examEndTime, setExamEndTime] = useState(examBody?.endTime);
 
+    const { setMessage } = useContext(messageContext)
+
     useEffect(()=>{
         setExamName(examBody?.name)
         setExamType(examBody?.type)
@@ -50,18 +54,28 @@ const ExamForm = ({refreshExams, onCloseExam, examBody}: {refreshExams: () => vo
     }
 
     const onSubmit = async (values: ExamFormModel) => {
-        const {name, startTime, endTime, type} = values;
+        const {name, startTime, endTime, type, computers} = values;
         const validDates = compareTime(startTime, endTime);
         if(validDates !== true){
             alert("Data zakończenia powinna być później niż data rozpoczęcia")
         }
         else{
-            const exam = {name, type, startTime, endTime}
+            const exam = {name, type, startTime, endTime, computers}
             if(examBody === undefined){
                 await ExamsAPIService.addExam(exam);
+                setMessage({
+                    title: 'Pomyślnie dodano egzamin',
+                    description: null,
+                    status: 'success'
+                })
             }
             else{
                 await ExamsAPIService.editExam(exam, examBody.id)
+                setMessage({
+                    title: 'Pomyślnie zedytowano egzamin',
+                    description: null,
+                    status: 'success'
+                })
             }
             refreshExams();
             onCloseExam();
@@ -128,7 +142,11 @@ const ExamForm = ({refreshExams, onCloseExam, examBody}: {refreshExams: () => vo
                             )} />
                         <FormErrorMessage> {errors.endTime && errors.endTime?.message}</FormErrorMessage>
                     </FormControl>
-                    <Button type="submit" id="exam-form" isLoading={isSubmitting} colorScheme='teal'>Zatwierdź!</Button>
+                    <FormControl>
+                        <FormLabel>Sala komputerowa </FormLabel> 
+                        <Checkbox {...register('computers')}/>
+                    </FormControl>
+                    <Button style={{margin: "10px 0px 10px 0px"}} type="submit" id="exam-form" isLoading={isSubmitting} colorScheme='teal'>Zatwierdź!</Button>
                 </form>
             </ModalBody>
         </ModalContent>

@@ -32,6 +32,12 @@ export default function HookForm() {
       })
   }
 
+  const handleKeyPress = (e : React.KeyboardEvent) => {
+    if(e.key === 'Enter'){
+      onSubmit();
+    }
+  }
+
 
   return (
     <Box height="100vh" display="flex" alignItems="center" justifyContent="center">
@@ -63,6 +69,7 @@ export default function HookForm() {
               minLength: { value: 4, message: 'Minimalna długość powinna wynosić 4' },
             })}
             onChange={ (e) => {setPassword(e.target.value)}}
+            onKeyDown={handleKeyPress}
           />
         </FormControl>
         <Button id="submitBtn" marginBottom="10vh" mt={4} colorScheme='teal' isLoading={isSubmitting} type='submit'>

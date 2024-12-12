@@ -1,27 +1,41 @@
-# React + TypeScript + Vite
+# matExam 🗃
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Czym jest? 🧐
 
-Currently, two official plugins are available:
+**matExam** to narzędzie pomagające w organizacji egzaminów maturalnych, stworzone dla personelu szkolnego przy pomocy [React.js](https://react.dev) oraz [TypeScript](https://www.typescriptlang.org).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Aplikacja dostępna jest na darmowym hostingu, więc potrzebuje chwili na rozruch, a po dłuższym czasie nieaktywności przechodzi w stan uśpienia.
 
-## Expanding the ESLint configuration
+W celu przetestowania wszystkich funkcjonalności należy zalogować się na [stronie](https://matexam.vercel.app) za pomocą dostępnego konta o loginie: "admin" i haśle: "admin".
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+# Główny cel 🎯
+Głównym celem aplikacji jest zautomatyzowanie pracy personelu szkolnego, który ręcznie musi tworzyć grupy egzaminacyjne biorąc pod uwagę każdy szczegół. Dzięki **matExam** duża część tej pracy zostaje znacznie przyśpieszona.
 
-- Configure the top-level `parserOptions` property like this:
+# Funkcje aplikacji 😊
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+## Wypełnianie danych 📄
+- Zaimportowanie uczniów i egzaminów odbywa się za pomocą oficjalnego pliku przekazanego szkole.
+- Aplikacja odnajduje potrzebne dane, tworzy egzaminy i dodaje do bazy danych uczniów.
+- Mimo powtarzających się danych w pliku, aplikacja stworzy właściwą ilość egzaminów i uczniów.
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Egzaminy 📗
+- Egzamin zawiera nazwę przedmiotu, typ (podstawowy, rozszerzony lub ustny), datę rozpoczęcia i zakończenia.
+- Istnieje możliwość manualnego dodania, edycji i usunięcia egzaminu.
+- Egzamin możemy opisać jako wymagający sali komputerowej, w takiej sytuacji wyświetlane zostaną tylko takie sale.
+
+## Uczniowie 👩‍🎓👨‍🎓
+- Uczeń identyfikowany jest poprzez numer PESEL, imię, nazwisko, klasę, numer w dzienniku i opcjonalnie numer telefonu, email, rodzaj dokumentu.
+- Mamy możliwość manualnego dodania ucznia i dodania go do istniejącego egzaminu.
+
+## Sale 🏫
+- Każda sala ma swój numer, rozmiar i informację o tym, czy jest komputerowa.
+- Po otworzeniu strony danego egzaminu wyświetlą nam się dostępne sale, do których możemy przydzielić uczniów lub ich usuwać.
+- Na dedykowanej stronie możemy zobaczyć wszystkie sale i dodać nową.
+- Jeżeli egzamin jest oznaczony jako komputerowy, wyświetlą nam się jedynie sale komputerowe. W przeciwnym wypadku zobaczymy zwykłe sale lekcyjne.
+
+## Automatyczne przypisywanie do sal ⚙️
+- "Wypełnij egzamin" to przycisk, który automatycznie wypełnia wszystkie sale, biorąc pod uwagę potrzeby szkoły.
+  
+   Opcja ta tworzy najkorzystniejsze ułożenie uczniów w salach o róznych rozmiarach, tak aby jak najmniej sal zostało zajętych, jednocześnie wykorzystując jak najwięcej miejsc w używanych już pomieszczeniach. Oznacza to, że unikniemy sytuacji, w której zabralibyśmy możliwość wykorzystywania ich do innych egzaminów lub lekcji.
+
+- Istnieje również możliwość automatycznego wypełnienia wybranej przez nas sali.

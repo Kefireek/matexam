@@ -43,7 +43,7 @@ const CsvModal = (props: {refreshExams: () => void}) => {
 
     const csvToArr = (stringVal: string) => {
         const finalObj: CsvInput = {students: [], exams: []};
-        const [keys, ...rest] = stringVal.trim().split("\n").map((item) => item.split(","));
+        const [keys, ...rest] = stringVal.trim().split("\n").map((item) => item.split(";"));
         setHeaders(keys);
         setRows(rest);
 

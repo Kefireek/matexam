@@ -7,7 +7,6 @@ import { Outlet } from "react-router-dom"
 import messageContext, { Message } from "./contexts/messageContext"
 import MessagesContainer from "./components/shared/MessagesContainer"
 
-
 function App() {
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -26,12 +25,13 @@ function App() {
       }
     )
     .catch(
-      (err: any) => {
+      (err: Error) => {
         console.log(err)
         throw new Error('Unable to load page due to server health check error')
       }
     )
-  }, [])
+  }, [onClose, onOpen])
+  
   
 
   return (
@@ -44,6 +44,7 @@ function App() {
             <ModalSpinner/>
           </Modal>}
           <Outlet />
+
         </Box>
       </Flex>
       <MessagesContainer />

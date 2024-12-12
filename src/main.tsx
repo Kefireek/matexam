@@ -12,6 +12,8 @@ import ExamPage from './pages/Exam/index.tsx';
 import { interceptorInit } from './interceptors/authInterceptor.ts';
 import StudentsPage from './pages/Students/index.tsx';
 import { errorInterceptor } from './interceptors/errorInterceptor.ts';
+import RoomPage from './pages/Rooms/index.tsx';
+import MainPage from './pages/Main/index.tsx';
 
 
 export const router = createBrowserRouter([
@@ -22,6 +24,11 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
+        path: "/",
+        element: <MainPage />,
+        errorElement: <ErrorPage />
+      },
+      {
         path: "/exam/:examid",
         element: <ExamPage />,
         errorElement: <ErrorPage />
@@ -29,6 +36,11 @@ export const router = createBrowserRouter([
       {
         path: "/students",
         element: <StudentsPage />,
+        errorElement: <ErrorPage />
+      },
+      {
+        path: "/rooms",
+        element: <RoomPage />,
         errorElement: <ErrorPage />
       }
     ],
@@ -45,6 +57,7 @@ export const router = createBrowserRouter([
 ]);
 
 axios.defaults.baseURL = import.meta.env.VITE_API_URL;
+console.log(axios.defaults.baseURL)
 interceptorInit();
 errorInterceptor();
 

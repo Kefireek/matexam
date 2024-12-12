@@ -5,6 +5,7 @@ import { RoomStudents } from "../../../interfaces/rooms";
 import ExamsAPIService from "../../../services/api/exams/ExamsAPIService";
 import { FaUserPlus } from "react-icons/fa";
 import { StudentDescriptive } from "../../../interfaces/students";
+import { StudentRoom } from "../../../interfaces/exams";
 
 function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam: CallableFunction, unassignedStudents: StudentDescriptive[]}) {
 
@@ -33,6 +34,24 @@ function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam:
                 props.getExam(props.examid);
             }); 
         }
+    }
+
+    const deleteAll = () => {
+
+        let students : StudentRoom[] = [];
+
+        if(props.room.students){
+            props.room.students.forEach(student => {
+                students = students.concat({PESEL : student.PESEL, number : null}) 
+            });
+        }
+
+        ExamsAPIService.updateRoomAssignments(
+            props.examid,
+            students
+        ).then(()=>{
+            props.getExam(props.examid);
+        }); 
     }
 
     return(
@@ -74,9 +93,12 @@ function ExamDetailsModal(props : {room : RoomStudents, examid: number, getExam:
                             Sala {props.room.number} <Badge></Badge>
                             <Text fontSize="18px" fontWeight="medium">Pojemność: {props.room.students?.length}/{props.room.size}</Text>
                         </Heading>
-                        <Button onClick={onToggle}><CloseIcon /></Button>
+                        <Flex direction="row">
+                            <Button mr="1vw" colorScheme="red" onClick={deleteAll}>Usuń wszystkich</Button>
+                            <Button onClick={onToggle}><CloseIcon /></Button>
+                        </Flex>
                     </Flex>
-                    <Box overflowY="scroll" height="100%" mt="1vw">
+                    <Box overflowY="auto" height="90%" mt="1vw">
                         <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(15vw, 1fr))'>
                             {props.room.students?.map((student)=>
                                 <Card key={student.PESEL} padding={4} bg={colorMode=="light" ? "RGBA(0, 0, 0, 0.08)" : "RGBA(0, 0, 0, 0.4)"}>

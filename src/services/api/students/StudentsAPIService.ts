@@ -1,9 +1,9 @@
 import axios from 'axios'
-import { StudentDescriptive } from '../../../interfaces/students';
+import { StudentList } from '../../../interfaces/students';
 
 const StudentsAPIService = {
-  getStudentsList: function() {
-    return axios.get<StudentDescriptive[]>(`${import.meta.env.VITE_GET_STUDENTS}`)
+  searchStudentsList: function(query: string, skip: number, take: number) {
+    return axios.post<StudentList>(`${import.meta.env.VITE_SEARCH_STUDENTS}`.replace('{query}', query).replace('{skip}', skip.toString()).replace('{take}', take.toString()))
   },
 }
 
